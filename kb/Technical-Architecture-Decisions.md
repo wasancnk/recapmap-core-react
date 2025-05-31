@@ -10,78 +10,173 @@ This document captures the key technical architecture decisions for RecapMap, in
 
 ## Technology Stack Decisions
 
-### Frontend Architecture
+### Frontend Architecture Strategy
 
-#### React + TypeScript Selection
+#### Lean Dependency Philosophy
 ```yaml
-decision: "React 18+ with TypeScript 5+"
+dependency_strategy: "Minimal packages with Unity migration path"
 rationale:
-  react_benefits:
-    - "Mature ecosystem with extensive third-party libraries"
-    - "Excellent developer tooling and debugging"
-    - "Strong community support and documentation"
-    - "Proven track record in enterprise applications"
+  security_first:
+    - "Fewer npm packages = smaller attack surface"
+    - "Zero trust frontend with Java backend as defense line"
+    - "Business logic and YAML generation protected server-side"
+    - "Frontend as presentation layer only"
   
-  typescript_benefits:
-    - "Compile-time error detection for better code quality"
-    - "Enhanced IDE support with autocomplete and refactoring"
-    - "Better collaboration in team environments"
-    - "Easier maintenance of large codebases"
+  migration_readiness:
+    - "React as proof-of-concept and rapid prototyping"
+    - "Unity as target platform for production deployment"
+    - "Lean codebase easier to port to Unity C#"
+    - "Minimal external dependencies reduce migration complexity"
 
-alternatives_considered:
-  vue_3: "Good but smaller ecosystem for complex visual components"
-  angular: "Too heavy for visual design tool requirements"
-  svelte: "Performance benefits but limited enterprise adoption"
+phase_strategy:
+  phase_1a: "React MVP with 5 core packages only"
+  phase_1b: "Java backend integration (secure foundation)"
+  phase_2: "Unity frontend + Java backend (production)"
+  
+evolution_path:
+  current: "React for rapid validation and enterprise demos"
+  target: "Unity for native performance and consolidated architecture"
+  benefits: "Professional visual tools, single codebase, no npm bloat"
 
 confidence_level: 0.95
 decision_date: "2025-05-31"
 ```
 
-#### Build Tool: Vite
+#### React + TypeScript Selection (Interim Solution)
 ```yaml
-decision: "Vite as build tool and dev server"
+decision: "React 18+ with TypeScript 5+ as stepping stone to Unity"
 rationale:
-  performance:
-    - "Lightning-fast hot module replacement (HMR)"
-    - "Optimized production builds with Rollup"
-    - "Excellent TypeScript support out of the box"
+  short_term_benefits:
+    - "Rapid prototyping and concept validation"
+    - "Quick enterprise demos and investor presentations"
+    - "Familiar technology for initial development team"
+    - "Web-based accessibility for early user testing"
   
-  developer_experience:
-    - "Zero-config setup for TypeScript + React"
-    - "Built-in support for modern ES modules"
-    - "Extensible plugin architecture"
+  migration_advantages:
+    - "TypeScript patterns translate well to C# in Unity"
+    - "Component-based architecture maps to Unity prefabs"
+    - "State management concepts apply to Unity ScriptableObjects"
+    - "Business logic already separated in Java backend"
 
 alternatives_considered:
-  create_react_app: "Slower build times and limited configuration"
-  webpack_custom: "More complex setup and maintenance overhead"
-  parcel: "Good but less control over optimization"
+  direct_unity: "Slower initial development, harder to demo web-based concepts"
+  vue_angular: "Additional learning curve with no Unity migration benefits"
+  native_desktop: "Platform-specific development, limits reach"
 
-confidence_level: 0.9
+confidence_level: 0.85
+temporary_solution: true
+migration_target: "Unity 2025+"
 ```
 
-#### Visual Framework: React Flow
+### Minimal Dependencies Strategy
+
+#### Core Package Selection (Phase 1A)
 ```yaml
-decision: "React Flow for mindmap/workflow visualization"
-rationale:
-  capabilities:
-    - "Built specifically for node-based editors"
-    - "Excellent performance with large node counts"
-    - "Customizable node types and edge rendering"
-    - "Built-in features: pan, zoom, selection, minimap"
+essential_packages:
+  visual_canvas:
+    package: "@xyflow/react"
+    purpose: "Node-based visual editor (core requirement)"
+    rationale: "Industry standard, unavoidable for mindmap functionality"
+    risk_level: "acceptable - core platform dependency"
   
-  extensibility:
-    - "Plugin architecture for custom behaviors"
-    - "Flexible styling and theming options"
-    - "TypeScript support with good type definitions"
+  state_management:
+    package: "zustand"
+    purpose: "Lightweight global state (vs Redux complexity)"
+    rationale: "Minimal API, TypeScript-first, small bundle"
+    migration_note: "State patterns translate well to Unity ScriptableObjects"
+  
+  styling_foundation:
+    package: "tailwindcss + postcss + autoprefixer"
+    purpose: "Utility-first CSS system"
+    rationale: "Replaces multiple CSS libraries, purged output"
+    migration_note: "CSS concepts translate to Unity UI styling"
+  
+  utilities:
+    packages: ["clsx", "uuid"]
+    purpose: "Class management and unique ID generation"
+    rationale: "Tiny utilities, essential functionality"
+    
+total_additional_packages: 5
+npm_bloat_prevention: "No speculative dependencies - add only when blocked"
+```
 
-alternatives_considered:
-  d3js: "Too low-level, would require significant custom development"
-  cytoscape: "Good but less React-friendly integration"
-  vis_network: "Limited customization for business node types"
-  custom_canvas: "Would take months to reach React Flow's feature parity"
+#### Deferred Dependencies (Add Only When Needed)
+```yaml
+deferred_until_specific_need:
+  ui_components: "Build custom vs @radix-ui/* initially"
+  animations: "CSS transitions vs framer-motion initially"
+  icons: "SVG sprites vs lucide-react initially"
+  validation: "Manual checks vs zod initially"
+  testing: "Add when component library grows"
 
-confidence_level: 0.9
-implementation_priority: "High - Core platform dependency"
+security_benefits:
+  - "Smaller attack surface with fewer packages"
+  - "Easier security auditing and updates"
+  - "Reduced supply chain risks"
+  - "Faster installation and build times"
+
+unity_migration_benefits:
+  - "Less code to port from React to Unity"
+  - "Fewer external concepts to translate"
+  - "Cleaner architecture for C# implementation"
+```
+
+### Zero-Trust Security Architecture
+
+#### Frontend Security Boundaries
+```yaml
+security_philosophy: "Never trust the frontend - Java backend as fortress"
+frontend_role:
+  responsibility: "Presentation and user interaction only"
+  restrictions:
+    - "No business logic validation"
+    - "No sensitive data storage"
+    - "No direct database access"
+    - "No YAML generation algorithms"
+  
+  capabilities:
+    - "User interface rendering and interaction"
+    - "Visual node manipulation and canvas operations"
+    - "Real-time collaboration UI updates"
+    - "Client-side form validation (UX only, not security)"
+
+backend_fortress:
+  java_responsibilities:
+    - "All business logic validation and processing"
+    - "Authentication and authorization decisions"
+    - "YAML generation and export algorithms (IP protection)"
+    - "Database operations and data integrity"
+    - "Permission checking and access control"
+    - "Node relationship validation and business rules"
+  
+  security_benefits:
+    - "Enterprise security teams trust Java ecosystems"
+    - "Mature Spring Security framework"
+    - "Compile-time type safety and validation"
+    - "Protected intellectual property server-side"
+    - "Centralized security policy enforcement"
+```
+
+#### Dependency Security Strategy
+```yaml
+npm_security_concerns:
+  supply_chain_risks:
+    - "Popular packages can become malware vectors"
+    - "Transitive dependencies create large attack surface"
+    - "Frequent updates introduce instability"
+    - "Frontend packages often have weaker security review"
+
+mitigation_strategies:
+  minimal_packages: "Only 5 essential packages in Phase 1A"
+  server_side_logic: "Critical operations in Java backend"
+  regular_audits: "npm audit on every dependency update"
+  lock_files: "Commit package-lock.json for reproducible builds"
+  
+java_backend_advantages:
+  - "Maven/Gradle dependencies more secure than npm"
+  - "Corporate security teams familiar with Java auditing"
+  - "JVM provides additional runtime security isolation"
+  - "Spring ecosystem has extensive security tooling"
 ```
 
 #### State Management: Zustand
@@ -740,38 +835,105 @@ deployment_risks:
 
 ## Future Architecture Evolution
 
-### Planned Enhancements
+### Unity Migration Strategy
 
-#### Phase 2 Additions
+#### Phase Transition Plan
 ```yaml
-phase_2_architecture:
-  mobile_support:
-    approach: "Progressive Web App (PWA)"
-    rationale: "Reuse React components, add mobile-specific gestures"
+migration_phases:
+  phase_1a_react_mvp:
+    timeline: "Months 1-3"
+    goal: "Prove 8-node system concept with minimal React implementation"
+    deliverables:
+      - "Working visual canvas with custom nodes"
+      - "Basic YAML export functionality"
+      - "Java backend integration"
+      - "Enterprise demos and investor presentations"
+    
+  phase_1b_react_refinement:
+    timeline: "Months 4-6"
+    goal: "Polish React version for early adopters"
+    deliverables:
+      - "Multi-agent chat integration"
+      - "Real-time collaboration features"
+      - "Production-ready security and performance"
+      - "Customer validation and feedback"
   
-  offline_capability:
-    approach: "Service Worker with cache-first strategy"
-    scope: "Read-only mindmap viewing and basic editing"
+  phase_2_unity_development:
+    timeline: "Months 7-12"
+    goal: "Native Unity application with full feature parity"
+    deliverables:
+      - "Unity-based visual editor"
+      - "Cross-platform deployment (Windows, macOS, Linux)"
+      - "Enhanced graphics and performance"
+      - "VR/AR capabilities for immersive design"
+
+unity_advantages:
+  performance:
+    - "Native rendering vs web browser overhead"
+    - "Direct GPU access for complex visualizations"
+    - "Optimized memory management"
+    - "60fps+ guaranteed for large mindmaps"
   
-  plugin_system:
-    approach: "Dynamic module loading with isolated contexts"
-    security: "Sandboxed execution and permission system"
+  consolidation:
+    - "Single C# codebase vs JavaScript + dependencies"
+    - "No npm dependency management"
+    - "Professional visual development tools"
+    - "Integrated asset pipeline and optimization"
+  
+  capabilities:
+    - "Advanced graphics: 3D nodes, particle effects, animations"
+    - "VR/AR support for immersive business logic design"
+    - "Mobile and tablet versions with touch optimization"
+    - "Offline-first architecture with local storage"
 ```
 
-#### Phase 3 Considerations
+#### Migration Technical Strategy
 ```yaml
-phase_3_architecture:
-  microservice_migration:
-    trigger: "When team size exceeds 15 developers"
-    strategy: "Extract domain services gradually"
+code_portability:
+  typescript_to_csharp:
+    - "Similar syntax and type systems"
+    - "Object-oriented patterns translate directly"
+    - "Interface definitions map to C# interfaces"
+    - "Generic types and LINQ similarities"
   
-  edge_computing:
-    purpose: "Reduce latency for global users"
-    implementation: "CDN with edge functions for real-time features"
+  react_to_unity:
+    - "Component patterns → Unity prefabs"
+    - "State management → ScriptableObjects"
+    - "Event handling → Unity Event System"
+    - "Styling → Unity UI Toolkit"
   
-  ai_model_integration:
-    approach: "Local models for privacy-sensitive features"
-    examples: ["code_completion", "natural_language_processing"]
+  preserved_architecture:
+    - "Java backend remains unchanged"
+    - "REST API contracts preserved"
+    - "WebSocket protocols maintained"
+    - "YAML generation logic untouched"
+
+risk_mitigation:
+  parallel_development: "Maintain React version during Unity development"
+  gradual_transition: "Feature-by-feature migration and testing"
+  fallback_option: "React version as backup if Unity faces issues"
+  user_choice: "Offer both platforms during transition period"
+```
+
+### Long-term Technology Vision
+```yaml
+ultimate_architecture:
+  frontend: "Unity-based native application"
+  backend: "Java Spring Boot microservices"
+  deployment: "Desktop apps + cloud backend"
+  platforms: "Windows, macOS, Linux, iOS, Android"
+  
+advantages_over_web:
+  - "No browser compatibility issues"
+  - "Full operating system integration"
+  - "Superior performance and user experience"
+  - "Professional software perception vs web app"
+  - "Enterprise deployment and management capabilities"
+
+market_positioning:
+  tier_1: "Unity native app (premium offering)"
+  tier_2: "React web app (accessibility and demos)"
+  tier_3: "Mobile apps (Unity-derived)"
 ```
 
 ## Conclusion
