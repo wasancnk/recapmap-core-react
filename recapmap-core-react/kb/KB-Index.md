@@ -1,18 +1,34 @@
 # RecapMap Core React - Knowledge Base Index
 
+## 📁 Organized Knowledge Base Structure
+
+### 🏗️ Core Implementation (`core/`)
+Development step documentation for the main RecapMap features.
+
+### 🎨 Design & Architecture (`design/`)
+Design philosophy, color theory, and architectural decisions.
+
+### 🐛 Troubleshooting (`troubleshooting/`)
+Bug fixes and incident documentation with date prefixes (YYYY-MM-DD-Description.md).
+
+### 📋 Best Practices (`best-practices/`)
+Reusable guidelines and patterns extracted from development experience.
+
+---
+
 ## Development Steps Documentation
 
 ### ✅ Completed Steps
 
 #### Step 1: TailwindCSS Design System
-**File**: `Step-1-TailwindCSS-Complete.md`
+**File**: `core/Step-1-TailwindCSS-Complete.md`
 - Complete 8-node color palette implementation
 - Dark theme optimization for long coding sessions
 - Component system with buttons, panels, inputs, and canvas styling
 - TailwindCSS v3.4.0 configuration with PostCSS integration
 
 #### Step 2: Zustand Store Architecture  
-**File**: `Step-2-Zustand-Store-Architecture-Complete.md`
+**File**: `core/Step-2-Zustand-Store-Architecture-Complete.md`
 - Three specialized stores: NodeStore, UIStore, ProjectStore
 - Complete TypeScript integration with strict typing
 - Redux DevTools integration for debugging
@@ -20,7 +36,7 @@
 - Interactive testing component (ZustandTest)
 
 #### Step 3: React Flow Canvas Integration
-**File**: `Step-3-ReactFlow-Canvas-Complete.md`
+**File**: `core/Step-3-ReactFlow-Canvas-Complete.md`
 - Full React Flow canvas with custom 8-node system
 - Bidirectional state synchronization with Zustand stores
 - Interactive toolbar with node creation and statistics
@@ -28,14 +44,100 @@
 - CSS fixes for production readiness
 
 #### Step 3.5: Component Library & Documentation
-**File**: `Step-3.5-Component-Library-Complete.md`
+**File**: `core/Step-3.5-Component-Library-Complete.md`
 - Professional component library at `/template` route
 - 4-tab navigation: Design System, UI Components, State Management, 8-Node System
 - Interactive demos with code examples
 - Complete technical documentation and API reference
 - React Router integration for seamless navigation
 
-### 🚧 Next Steps
+## 🎨 Design & Architecture Documentation
+
+### Design System: Color Philosophy & Dark Theme Strategy
+**File**: `design/Design-System-Color-Philosophy.md`
+- Comprehensive color theory and accessibility strategy
+- WCAG 2.1 AA compliance verification
+- 8-node semantic color system psychology and reasoning
+- Developer-optimized dark theme for extended coding sessions
+- Professional aesthetics inspired by GitHub, Figma, and VS Code
+
+## 🐛 Bug Fixes & Troubleshooting
+
+### 2025-06-01: Scrolling and CommonJS Compatibility Fix
+**File**: `troubleshooting/2025-06-01-Scrolling-CommonJS-Fix.md`
+- **Issue**: Missing scrollbars on documentation pages + CommonJS browser errors
+- **Root Cause**: Global CSS `overflow: hidden` + `require()` statements in ES6 modules
+- **Solution**: Component-specific CSS classes + consistent ES6 import strategy
+- **Impact**: High (blocking functionality) - **Status**: ✅ Resolved
+- **Resolution Time**: ~30 minutes
+
+## 📋 Best Practices & Guidelines
+
+### CSS Architecture Guidelines
+**File**: `best-practices/CSS-Architecture-Guidelines.md`
+- Component-specific styling over global overrides
+- CSS class naming conventions and organization
+- Responsive design patterns and mobile-first approach
+- TailwindCSS integration best practices
+
+### Module System Best Practices
+**File**: `best-practices/Module-System-Best-Practices.md`
+- ES6 module consistency guidelines and patterns
+- Store cross-reference strategies for Zustand
+- Browser compatibility and import/export best practices
+- ESLint configuration for module system enforcement
+
+## 🔄 Documentation Standards
+
+### Naming Conventions
+- **Core Implementation**: `Step-X-Feature-Name-Complete.md`
+- **Design Decisions**: `Design-System-Topic.md`  
+- **Bug Fixes**: `YYYY-MM-DD-Brief-Description.md`
+- **Best Practices**: `Topic-Best-Practices.md`
+
+### Folder Organization
+```
+kb/
+├── core/           # Implementation steps
+├── design/         # Design philosophy & architecture
+├── troubleshooting/# Bug fixes with date prefixes
+└── best-practices/ # Reusable guidelines & patterns
+```
+
+### Update Process
+1. **Incident Documentation**: Add to `troubleshooting/` with date prefix
+2. **Extract Patterns**: Create reusable guides in `best-practices/`
+3. **Update Index**: Reflect changes in this master index file
+4. **Cross-Reference**: Link related documents for easy navigation
+
+---
+
+## 🚀 Next Steps
+
+### Step 4: Enhanced 8-Node Property System (Pending)
+- Advanced node validation and property management
+- YAML export functionality for AI code generation
+- Inter-node relationship mapping and constraints
+
+### Java Backend Integration (Future)
+- API endpoint design for business logic protection
+- Authentication and security implementation
+- Database schema for project persistence
+
+### Unity Migration Path (Future)
+- Native performance optimization strategies
+- Cross-platform compatibility planning
+- WebGL integration for seamless transition
+
+---
+
+*This knowledge base provides comprehensive documentation for RecapMap development, organized for easy navigation and future incident prevention. The structured approach ensures scalable documentation as the project grows.*
+- Resolved missing scrollbars on content pages
+- Fixed CommonJS `require()` errors in browser environment
+- Enhanced CSS architecture with component-specific classes
+- Improved ES6 module import strategies
+
+## 🚧 Next Steps
 
 #### Step 4: Enhanced 8-Node Property System (Planned)
 - Detailed property panels for each node type
