@@ -13,7 +13,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
   position,
   onClose,
 }) => {
-  const { connections, updateConnection, deleteConnection, getNode } = useNodeStore();
+  const { connections, updateConnection, swapConnection, deleteConnection, getNode } = useNodeStore();
   const { addNotification } = useUIStore();
   
   const connection = connections.find(c => c.id === connectionId);
@@ -53,59 +53,78 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
     setFormData(prev => ({ ...prev, [field]: value }));
     setIsModified(true);
   };  const handleSwapDirection = () => {
-    if (!sourceNode || !targetNode) return;
-    
-    console.log('🔄 Swapping connection direction with proper handle mapping:', {
-      from: `${sourceNode.title} → ${targetNode.title}`,
-      to: `${targetNode.title} → ${sourceNode.title}`,
-      currentHandles: {
+    console.log('🚀 === SWAP OPERATION STARTED ===');
+    console.log('📋 Initial state:', {
+      connectionId,
+      sourceNode: sourceNode ? { id: sourceNode.id, title: sourceNode.title } : null,
+      targetNode: targetNode ? { id: targetNode.id, title: targetNode.title } : null,
+      connection: connection ? {
+        id: connection.id,
+        sourceNodeId: connection.sourceNodeId,
+        targetNodeId: connection.targetNodeId,
         sourceHandle: connection.sourceHandle,
-        targetHandle: connection.targetHandle
-      }
+        targetHandle: connection.targetHandle,
+        type: connection.type
+      } : null
     });
     
-    // TWO-LAYER SWAP:
-    // Layer 1: Swap the nodes (A→B becomes B→A)  
-    // Layer 2: Swap the connector types to maintain physical connection points
+    if (!sourceNode || !targetNode) {
+      console.error('❌ Missing node information during swap');
+      addNotification({ 
+        title: 'Error',
+        message: 'Cannot swap connection: Missing node information', 
+        type: 'error',
+        duration: 5000 
+      });
+      return;
+    }
     
-    // Convert handle names: source↔target while keeping position
-    const getSwappedHandle = (handle: string) => {
-      if (!handle) return handle;
+    console.log('🔄 About to call swapConnection with ID:', connectionId);
+    console.log('📊 Current connections count:', connections.length);
+    console.log('🔍 Connection exists in store:', !!connections.find(c => c.id === connectionId));
+    
+    // Use the atomic swapConnection method from the store
+    const swapSuccess = swapConnection(connectionId);
+    
+    console.log('🎯 SwapConnection returned:', swapSuccess);
+    
+    // Check connection state after swap attempt
+    setTimeout(() => {
+      const postSwapConnection = connections.find(c => c.id === connectionId);
+      console.log('📋 Post-swap state:', {
+        connectionStillExists: !!postSwapConnection,
+        postSwapConnection: postSwapConnection ? {
+          id: postSwapConnection.id,
+          sourceNodeId: postSwapConnection.sourceNodeId,
+          targetNodeId: postSwapConnection.targetNodeId,
+          sourceHandle: postSwapConnection.sourceHandle,
+          targetHandle: postSwapConnection.targetHandle
+        } : null,
+        totalConnections: connections.length
+      });
       
-      // If it's a source handle, make it a target handle (and vice versa)
-      if (handle.includes('-source')) {
-        return handle.replace('-source', '-target');
-      } else if (handle.includes('-target')) {
-        return handle.replace('-target', '-source');
+      if (swapSuccess && postSwapConnection) {
+        console.log('✅ Connection swap completed successfully');
+        addNotification({ 
+          title: 'Success',
+          message: `Connection direction swapped: ${targetNode.title} → ${sourceNode.title}`, 
+          type: 'success',
+          duration: 3000 
+        });
+        onClose();
+      } else {
+        console.error('❌ Connection swap failed or connection disappeared');
+        console.error('SwapSuccess:', swapSuccess, 'Connection exists:', !!postSwapConnection);
+        addNotification({ 
+          title: 'Error',
+          message: 'Failed to swap connection direction', 
+          type: 'error',
+          duration: 5000 
+        });
       }
-      return handle; // Fallback for unexpected formats
-    };
-    
-    const newSourceHandle = getSwappedHandle(connection.targetHandle) || 'right-source';
-    const newTargetHandle = getSwappedHandle(connection.sourceHandle) || 'left-target';
-    
-    console.log('✅ Handle mapping:', {
-      oldSource: connection.sourceHandle,
-      oldTarget: connection.targetHandle,
-      newSource: newSourceHandle,
-      newTarget: newTargetHandle
-    });
-    
-    // Apply both layers of the swap
-    updateConnection(connectionId, {
-      sourceNodeId: connection.targetNodeId,  // Layer 1: Swap nodes
-      targetNodeId: connection.sourceNodeId,  // Layer 1: Swap nodes
-      sourceHandle: newSourceHandle,          // Layer 2: Swap connector types
-      targetHandle: newTargetHandle,          // Layer 2: Swap connector types
-    });
-    
-    addNotification({ 
-      title: 'Success',
-      message: `Connection direction swapped: ${targetNode.title} → ${sourceNode.title}`, 
-      type: 'success',
-      duration: 3000 
-    });
-    onClose();
+      
+      console.log('🏁 === SWAP OPERATION COMPLETED ===');
+    }, 50);
   };
   const handleSave = () => {
     updateConnection(connectionId, {

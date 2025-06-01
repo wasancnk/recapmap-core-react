@@ -21,10 +21,10 @@ interface NodeStore {
   selectNodes: (ids: string[]) => void
   clearSelection: () => void
   selectAll: () => void
-  
-  // Actions - Connection Management
+    // Actions - Connection Management
   addConnection: (sourceId: string, targetId: string, type?: 'data' | 'control' | 'dependency') => string
   updateConnection: (id: string, updates: Partial<NodeConnection>) => void
+  swapConnection: (id: string) => boolean
   deleteConnection: (id: string) => void
   deleteNodeConnections: (nodeId: string) => void
   
@@ -230,14 +230,143 @@ export const useNodeStore = create<NodeStore>()(
         }), false, 'addConnection')
         
         return id
-      },
-
-      updateConnection: (id: string, updates: Partial<NodeConnection>) => {
+      },      updateConnection: (id: string, updates: Partial<NodeConnection>) => {
         set((state) => ({
           connections: state.connections.map((conn) =>
             conn.id === id ? { ...conn, ...updates } : conn
           ),
         }), false, 'updateConnection')
+      },
+
+      swapConnection: (id: string) => {
+        console.log('🔄 [STORE] SwapConnection called with ID:', id)
+        
+        const state = get()
+        console.log('📊 [STORE] Current state:', {
+          totalConnections: state.connections.length,
+          totalNodes: state.nodes.length
+        })
+        
+        const connection = state.connections.find((conn) => conn.id === id)
+        if (!connection) {
+          console.error('❌ [STORE] Connection not found in store:', id)
+          console.log('📋 [STORE] Available connections:', state.connections.map(c => ({ id: c.id, source: c.sourceNodeId, target: c.targetNodeId })))
+          return false
+        }
+
+        console.log('✅ [STORE] Connection found:', {
+          id: connection.id,
+          sourceNodeId: connection.sourceNodeId,
+          targetNodeId: connection.targetNodeId,
+          sourceHandle: connection.sourceHandle,
+          targetHandle: connection.targetHandle,
+          type: connection.type
+        })
+
+        // Fixed handle transformation - ONLY use visible -source handles
+        const getSwappedHandle = (handle: string) => {
+          if (!handle) return 'right-source' // fallback
+          
+          // Extract position and always use -source (visible handles)
+          if (handle.includes('top-')) return 'top-source'
+          if (handle.includes('right-')) return 'right-source'
+          if (handle.includes('bottom-')) return 'bottom-source'
+          if (handle.includes('left-')) return 'left-source'
+          
+          return 'right-source' // fallback
+        }
+
+        const newSourceHandle = getSwappedHandle(connection.targetHandle)
+        const newTargetHandle = getSwappedHandle(connection.sourceHandle)
+
+        console.log('🔀 [STORE] Fixed handle transformation:', {
+          oldSourceHandle: connection.sourceHandle,
+          oldTargetHandle: connection.targetHandle,
+          newSourceHandle,
+          newTargetHandle,
+          note: 'Only using visible -source handles'
+        })
+
+        console.log('🔄 [STORE] About to perform atomic swap...')
+
+        // Perform atomic swap of connection
+        set((state) => {
+          console.log('🔄 [STORE] Inside set function, current connections:', state.connections.length)
+          
+          const newConnections = state.connections.map((conn) =>
+            conn.id === id ? {
+              ...conn,
+              sourceNodeId: connection.targetNodeId,  // Layer 1: Swap nodes
+              targetNodeId: connection.sourceNodeId,  // Layer 1: Swap nodes
+              sourceHandle: newSourceHandle,          // Layer 2: Use visible handles only
+              targetHandle: newTargetHandle,          // Layer 2: Use visible handles only
+            } : conn
+          )
+
+          console.log('🔄 [STORE] New connections array created, length:', newConnections.length)
+          const swappedConnection = newConnections.find(c => c.id === id)
+          console.log('✅ [STORE] Swapped connection:', swappedConnection)
+
+          // Update node connection arrays to maintain consistency
+          const newNodes = state.nodes.map((node) => {
+            if (node.id === connection.sourceNodeId) {
+              console.log(`🔄 [STORE] Updating old source node ${node.id}: removing from outputs, adding to inputs`)
+              // Old source becomes new target - remove from outputs, add to inputs
+              return {
+                ...node,
+                connections: {
+                  ...node.connections,
+                  outputs: node.connections.outputs.filter((nodeId) => nodeId !== connection.targetNodeId),
+                  inputs: [...node.connections.inputs, connection.targetNodeId],
+                },
+              }
+            }
+            if (node.id === connection.targetNodeId) {
+              console.log(`🔄 [STORE] Updating old target node ${node.id}: removing from inputs, adding to outputs`)
+              // Old target becomes new source - remove from inputs, add to outputs
+              return {
+                ...node,
+                connections: {
+                  ...node.connections,
+                  inputs: node.connections.inputs.filter((nodeId) => nodeId !== connection.sourceNodeId),
+                  outputs: [...node.connections.outputs, connection.sourceNodeId],
+                },
+              }
+            }
+            return node
+          })
+
+          console.log('🔄 [STORE] Node connection arrays updated')
+
+          return {
+            connections: newConnections,
+            nodes: newNodes,
+          }
+        }, false, 'swapConnection')
+
+        // Verify the swap was successful
+        const updatedState = get()
+        const updatedConnection = updatedState.connections.find((conn) => conn.id === id)
+        
+        console.log('🔍 [STORE] Post-swap verification:', {
+          connectionExists: !!updatedConnection,
+          totalConnections: updatedState.connections.length,
+          updatedConnection: updatedConnection ? {
+            id: updatedConnection.id,
+            sourceNodeId: updatedConnection.sourceNodeId,
+            targetNodeId: updatedConnection.targetNodeId,
+            sourceHandle: updatedConnection.sourceHandle,
+            targetHandle: updatedConnection.targetHandle
+          } : null
+        })
+
+        if (!updatedConnection) {
+          console.error('❌ [STORE] Connection disappeared during swap operation!')
+          return false
+        }
+
+        console.log('✅ [STORE] Swap operation completed successfully')
+        return true
       },
 
       deleteConnection: (id: string) => {
