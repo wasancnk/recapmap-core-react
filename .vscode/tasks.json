@@ -2,13 +2,87 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Start RecapMap Dev Server",
+			"label": "Run Tests",
 			"type": "shell",
-			"command": "npm run dev",
-			"group": "build",
-			"isBackground": true,
-			"problemMatcher": [],
-			"args": []
+			"command": "npm",
+			"args": [
+				"test"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Tests (Summary Log)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm test -- --reporter=basic > test_results/test_summary.txt 2>&1"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run NodeStore Tests Only",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm test -- src/__tests__/stores/nodeStore.test.ts --reporter=verbose > test_results/nodestore_test.txt 2>&1"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run All Tests (Detailed Log)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm test -- --reporter=verbose > test_results/all_tests_detailed.txt 2>&1"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Tests (JSON Output)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm test -- --reporter=json > test_results/test_results.json 2>&1"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Integration Tests Only",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm test -- src/__tests__/integration/ --reporter=verbose > test_results/integration_tests.txt 2>&1"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Component Tests Only",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm test -- src/__tests__/components/ --reporter=verbose > test_results/component_tests.txt 2>&1"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }

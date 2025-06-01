@@ -28,9 +28,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
     priority: connection?.metadata?.priority || 'medium',
   });
 
-  const [isModified, setIsModified] = useState(false);
-
-  useEffect(() => {
+  const [isModified, setIsModified] = useState(false);  useEffect(() => {
     if (connection) {
       setFormData({
         label: connection.label || '',
@@ -42,6 +40,24 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       });
     }
   }, [connection]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (isModified) {
+          const confirmDiscard = confirm('You have unsaved changes. Discard them?');
+          if (!confirmDiscard) return;
+        }
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isModified, onClose]);
 
   if (!connection) {
     return null;
@@ -144,18 +160,16 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       type: 'success',
       duration: 3000 
     });
-  };
-  const handleDelete = () => {
+  };  const handleDelete = () => {
     deleteConnection(connectionId);
     addNotification({ 
       title: 'Success',
-      message: 'Connection deleted', 
+      message: 'Connection deleted successfully', 
       type: 'success',
       duration: 3000 
     });
     onClose();
   };
-
   const handleCancel = () => {
     if (isModified) {
       const confirmDiscard = confirm('You have unsaved changes. Discard them?');

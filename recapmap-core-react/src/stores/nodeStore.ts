@@ -64,17 +64,16 @@ export const useNodeStore = create<NodeStore>()(
           isValid: true,
           createdAt: now,
           updatedAt: now,
-        }
-
-        // Add type-specific properties
+        }        // Add type-specific properties
         const newNode = createTypedNode(baseNode, type)
-          set((state) => ({
+        
+        set((state) => ({
           nodes: [...state.nodes, newNode],
           // Don't auto-select newly created nodes to avoid white border
         }), false, 'addNode')
         
         return id
-      },      updateNode: (id: string, updates: Partial<RecapMapNode>) => {
+      },updateNode: (id: string, updates: Partial<RecapMapNode>) => {
         set((state) => ({
           ...state,
           nodes: state.nodes.map((node) => {
