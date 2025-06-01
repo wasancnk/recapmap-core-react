@@ -4,6 +4,8 @@ import {
   Background,
   Controls,
   MiniMap,
+  Handle,
+  Position,
   type Connection,
   useNodesState,
   useEdgesState,
@@ -44,21 +46,47 @@ const CustomNode = ({
     e.stopPropagation();
     openPanel('node-properties', { nodeId: id });
   };
-
   return (
     <div 
       className={`
         px-4 py-2 rounded-lg border-2 min-w-[120px] text-center 
         transition-all duration-200 hover:shadow-md cursor-pointer
+        relative
         ${baseStyle} ${selectedStyle}
       `}
       onDoubleClick={handleDoubleClick}
       title="Double-click to edit properties"
     >
+      {/* Input Handle - Top Center */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="w-3 h-3 bg-white border-2 border-gray-400 rounded-full"
+        style={{ 
+          background: '#ffffff',
+          border: '2px solid #9ca3af',
+          width: '12px',
+          height: '12px'
+        }}
+      />
+      
       <div className="font-medium text-sm">{data.label}</div>
       {data.description && (
         <div className="text-xs opacity-80 mt-1">{data.description}</div>
       )}
+      
+      {/* Output Handle - Bottom Center */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="w-3 h-3 bg-white border-2 border-gray-400 rounded-full"
+        style={{ 
+          background: '#ffffff',
+          border: '2px solid #9ca3af',
+          width: '12px',
+          height: '12px'
+        }}
+      />
     </div>
   );
 };
