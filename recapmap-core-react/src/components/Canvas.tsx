@@ -7,6 +7,7 @@ import {
   Handle,
   Position,
   MarkerType,
+  ConnectionMode,
   type Connection,
   type Edge,
   useNodesState,
@@ -18,6 +19,21 @@ import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
 import type { NodeType } from '../types';
+
+// Test nodes for connection testing
+const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: number }) => string) => {
+  if (localStorage.getItem('recapmap-test-nodes-created') === 'true') {
+    return; // Don't create test nodes if they already exist
+  }
+
+  // Create a few test nodes
+  addNode('usecase', { x: 100, y: 100 });
+  addNode('screen', { x: 300, y: 100 });
+  addNode('user', { x: 100, y: 250 });
+  addNode('process', { x: 300, y: 250 });
+
+  localStorage.setItem('recapmap-test-nodes-created', 'true');
+};
 
 // Custom node component for our 8-node system
 const CustomNode = ({ 
@@ -73,82 +89,177 @@ const CustomNode = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       title="Double-click to edit properties"
-    >      {/* Dynamic Connectors - Only show when needed */}
-      {showConnectors && (
-        <>
-          {/* TOP Connector - Both source and target */}
-          <Handle
-            type="source"
-            position={Position.Top}
-            id="top"
-            className="!absolute !-top-1 !left-1/2 !transform !-translate-x-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
-          <Handle
-            type="target"
-            position={Position.Top}
-            id="top"
-            className="!absolute !-top-1 !left-1/2 !transform !-translate-x-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
+    >      {/* Connection Handles - Always present for React Flow */}
+      {/* TOP Handles */}
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top-source"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          top: -8,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
+          border: '2px solid white',
+          borderRadius: '50%',
+          cursor: 'crosshair',
+          opacity: showConnectors ? 1 : 0.6,
+          transition: 'all 0.2s ease',
+          zIndex: 10
+        }}
+      />
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="top-target"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          top: -8,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: 'transparent',
+          border: 'none',
+          opacity: 0,
+          pointerEvents: 'none',
+          zIndex: 5
+        }}
+      />
 
-          {/* RIGHT Connector - Both source and target */}
-          <Handle
-            type="source"
-            position={Position.Right}
-            id="right"
-            className="!absolute !-right-1 !top-1/2 !transform !-translate-y-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
-          <Handle
-            type="target"
-            position={Position.Right}
-            id="right"
-            className="!absolute !-right-1 !top-1/2 !transform !-translate-y-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
+      {/* RIGHT Handles */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="right-source"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          right: -8,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
+          border: '2px solid white',
+          borderRadius: '50%',
+          cursor: 'crosshair',
+          opacity: showConnectors ? 1 : 0.6,
+          transition: 'all 0.2s ease',
+          zIndex: 10
+        }}
+      />
+      <Handle
+        type="target"
+        position={Position.Right}
+        id="right-target"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          right: -8,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: 'transparent',
+          border: 'none',
+          opacity: 0,
+          pointerEvents: 'none',
+          zIndex: 5
+        }}
+      />
 
-          {/* BOTTOM Connector - Both source and target */}
-          <Handle
-            type="source"
-            position={Position.Bottom}
-            id="bottom"
-            className="!absolute !-bottom-1 !left-1/2 !transform !-translate-x-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
-          <Handle
-            type="target"
-            position={Position.Bottom}
-            id="bottom"
-            className="!absolute !-bottom-1 !left-1/2 !transform !-translate-x-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
+      {/* BOTTOM Handles */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom-source"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          bottom: -8,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
+          border: '2px solid white',
+          borderRadius: '50%',
+          cursor: 'crosshair',
+          opacity: showConnectors ? 1 : 0.6,
+          transition: 'all 0.2s ease',
+          zIndex: 10
+        }}
+      />
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="bottom-target"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          bottom: -8,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: 'transparent',
+          border: 'none',
+          opacity: 0,
+          pointerEvents: 'none',
+          zIndex: 5
+        }}
+      />
 
-          {/* LEFT Connector - Both source and target */}
-          <Handle
-            type="source"
-            position={Position.Left}
-            id="left"
-            className="!absolute !-left-1 !top-1/2 !transform !-translate-y-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
-          <Handle
-            type="target"
-            position={Position.Left}
-            id="left"
-            className="!absolute !-left-1 !top-1/2 !transform !-translate-y-1/2 !w-3 !h-3 !bg-blue-400 !border-2 !border-white !rounded-full !opacity-80 hover:!opacity-100 hover:!scale-125 !transition-all !cursor-crosshair"
-          />
-        </>
-      )}
-
-      {/* Node Content */}
+      {/* LEFT Handles */}
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="left-source"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          left: -8,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
+          border: '2px solid white',
+          borderRadius: '50%',
+          cursor: 'crosshair',
+          opacity: showConnectors ? 1 : 0.6,
+          transition: 'all 0.2s ease',
+          zIndex: 10
+        }}
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="left-target"
+        isConnectable={true}
+        style={{
+          position: 'absolute',
+          left: -8,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 16,
+          height: 16,
+          backgroundColor: 'transparent',
+          border: 'none',
+          opacity: 0,
+          pointerEvents: 'none',
+          zIndex: 5
+        }}
+      />{/* Node Content */}
       <div className="font-medium text-sm">{data.label}</div>
       {data.description && (
         <div className="text-xs opacity-80 mt-1">{data.description}</div>
-      )}
-
-      {/* Connector indicators when not showing full connectors */}
-      {!showConnectors && (
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Subtle connector hints */}
-          <div className="absolute top-0 left-1/2 w-1 h-px bg-gray-400 opacity-30 transform -translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-1/2 w-1 h-px bg-gray-400 opacity-30 transform -translate-x-1/2"></div>
-          <div className="absolute left-0 top-1/2 w-px h-1 bg-gray-400 opacity-30 transform -translate-y-1/2"></div>
-          <div className="absolute right-0 top-1/2 w-px h-1 bg-gray-400 opacity-30 transform -translate-y-1/2"></div>
-        </div>
       )}
     </div>
   );
@@ -168,16 +279,21 @@ export const Canvas: React.FC = () => {  const {
     updateConnection,
     deleteConnection,
     selectNodes,
+    addNode,
   } = useNodeStore();
 
   const {
     canvas,
   } = useUIStore();
 
+  // Create test nodes on first load for easier testing
+  React.useEffect(() => {
+    createTestNodes(addNode);
+  }, [addNode]);
+
   // Local state for connection property panel
   const [selectedConnectionId, setSelectedConnectionId] = useState<string | null>(null);
   const [connectionPanelPosition, setConnectionPanelPosition] = useState({ x: 0, y: 0 });
-
   // Convert store nodes to React Flow nodes
   const reactFlowNodes = React.useMemo(() => 
     storeNodes.map(node => ({
@@ -190,9 +306,10 @@ export const Canvas: React.FC = () => {  const {
         nodeType: node.type,
       },
       selected: selectedNodeIds.includes(node.id),
+      connectable: true,
     })),
     [storeNodes, selectedNodeIds]
-  );  // Convert store connections to React Flow edges
+  );// Convert store connections to React Flow edges
   const reactFlowEdges = React.useMemo(() =>
     storeConnections.map(connection => {
       // Determine arrow markers based on direction type
@@ -301,21 +418,32 @@ export const Canvas: React.FC = () => {  const {
     });
   }, [onEdgesChange, deleteConnection]);  // Handle new connections
   const onConnect = useCallback((connection: Connection) => {
+    console.log('🔗 Connection attempt detected:', connection);
+    console.log('🔍 Source:', connection.source, 'Handle:', connection.sourceHandle);
+    console.log('🔍 Target:', connection.target, 'Handle:', connection.targetHandle);
+    
     if (connection.source && connection.target) {
+      console.log('✅ Creating connection from', connection.source, 'to', connection.target);
+      
       // Create connection with the store method
       const connectionId = addConnection(
         connection.source, 
         connection.target, 
         'data' // default type
       );
-      
-      // Update the connection with handle information if needed
+
+      console.log('🆔 Connection created with ID:', connectionId);
+
+      // Update the connection with handle information if available
       if (connectionId && (connection.sourceHandle || connection.targetHandle)) {
         updateConnection(connectionId, {
-          sourceHandle: connection.sourceHandle || 'right',
-          targetHandle: connection.targetHandle || 'left'
+          sourceHandle: connection.sourceHandle || 'right-source',
+          targetHandle: connection.targetHandle || 'left-target'
         });
+        console.log('🔧 Connection updated with handles:', connection.sourceHandle, connection.targetHandle);
       }
+    } else {
+      console.error('❌ Missing source or target in connection:', connection);
     }
   }, [addConnection, updateConnection]);
   // Handle canvas click to deselect
@@ -338,8 +466,7 @@ export const Canvas: React.FC = () => {  const {
   const handleConnectionPanelClose = useCallback(() => {
     setSelectedConnectionId(null);
   }, []);  return (
-    <div className="w-full h-full bg-background-tertiary">
-      <ReactFlow
+    <div className="w-full h-full bg-background-tertiary">      <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={handleNodesChange}
@@ -348,6 +475,7 @@ export const Canvas: React.FC = () => {  const {
         onPaneClick={onPaneClick}
         onEdgeClick={onEdgeClick}
         nodeTypes={nodeTypes}
+        connectionMode={ConnectionMode.Loose}
         defaultViewport={{
           x: canvas.center.x,
           y: canvas.center.y,
@@ -358,6 +486,9 @@ export const Canvas: React.FC = () => {  const {
         fitView
         attributionPosition="bottom-left"
         className="canvas-flow"
+        nodesDraggable={true}
+        nodesConnectable={true}
+        elementsSelectable={true}
       >
         <Background 
           variant={BackgroundVariant.Dots} 

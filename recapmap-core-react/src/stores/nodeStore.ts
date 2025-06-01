@@ -67,10 +67,9 @@ export const useNodeStore = create<NodeStore>()(
 
         // Add type-specific properties
         const newNode = createTypedNode(baseNode, type)
-        
-        set((state) => ({
+          set((state) => ({
           nodes: [...state.nodes, newNode],
-          selectedNodeIds: [id], // Auto-select newly created node
+          // Don't auto-select newly created nodes to avoid white border
         }), false, 'addNode')
         
         return id
@@ -194,14 +193,12 @@ export const useNodeStore = create<NodeStore>()(
           color: type === 'data' ? '#3B82F6' : type === 'control' ? '#F59E0B' : '#6B7280',
           thickness: 2,
           priority: 'medium' as const
-        };
-        
-        const newConnection: NodeConnection = {
+        };        const newConnection: NodeConnection = {
           id,
           sourceNodeId: sourceId,
           targetNodeId: targetId,
-          sourceHandle: 'output',
-          targetHandle: 'input',
+          sourceHandle: 'right-source',
+          targetHandle: 'left-target',
           type,
           animated: type === 'control',
           metadata: defaultMetadata
