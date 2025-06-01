@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Canvas } from './Canvas';
 import { Toolbar } from './Toolbar';
+import { PropertyPanelManager } from './PropertyPanelManager';
+import { ExportPanelManager } from './ExportPanelManager';
 
 export const CanvasLayout: React.FC = () => {
   // Apply no-scroll class to body when canvas is active
@@ -12,7 +14,6 @@ export const CanvasLayout: React.FC = () => {
       document.body.classList.remove('canvas-no-scroll');
     };
   }, []);
-
   return (
     <div className="w-full h-screen bg-background-tertiary relative overflow-hidden">
       {/* Main Canvas */}
@@ -20,6 +21,11 @@ export const CanvasLayout: React.FC = () => {
       
       {/* Floating Toolbar */}
       <Toolbar />
+        {/* Property Panel Manager */}
+      <PropertyPanelManager />
+      
+      {/* Export Panel Manager */}
+      <ExportPanelManager />
       
       {/* Status Bar */}
       <div className="absolute bottom-4 right-4 z-panel-base">
@@ -28,6 +34,7 @@ export const CanvasLayout: React.FC = () => {
             <span>🎨 RecapMap Canvas</span>
             <span>Press Space + Drag to pan</span>
             <span>Mouse wheel to zoom</span>
+            <span>Double-click nodes to edit</span>
           </div>
         </div>
       </div>

@@ -22,11 +22,10 @@ interface UIStore {
   setBounds: (bounds: { left: number; top: number; right: number; bottom: number }) => void
   resetCanvas: () => void
   fitToContent: () => void
-  
-  // Panel Actions
-  openPanel: (type: PanelType, data?: any, position?: { x: number; y: number }) => string
+    // Panel Actions
+  openPanel: (type: PanelType, data?: Record<string, string | number | boolean>, position?: { x: number; y: number }) => string
   closePanel: (id: string) => void
-  togglePanel: (type: PanelType, data?: any) => void
+  togglePanel: (type: PanelType, data?: Record<string, string | number | boolean>) => void
   movePanel: (id: string, position: { x: number; y: number }) => void
   resizePanel: (id: string, size: { width: number; height: number }) => void
   minimizePanel: (id: string) => void
@@ -101,10 +100,8 @@ export const useUIStore = create<UIStore>()(
         set((state) => ({
           canvas: { ...state.canvas, bounds },
         }), false, 'setBounds')
-      },
-
-      resetCanvas: () => {
-        set((state) => ({
+      },      resetCanvas: () => {
+        set(() => ({
           canvas: defaultCanvasState,
         }), false, 'resetCanvas')
       },
@@ -113,10 +110,8 @@ export const useUIStore = create<UIStore>()(
         // This would be implemented to fit canvas to all nodes
         // For now, just reset to default
         get().resetCanvas()
-      },
-
-      // Panel Actions
-      openPanel: (type: PanelType, data?: any, position?: { x: number; y: number }) => {
+      },      // Panel Actions
+      openPanel: (type: PanelType, data?: Record<string, string | number | boolean>, position?: { x: number; y: number }) => {
         const id = uuidv4()
         const { maxZIndex } = get()
         
@@ -162,7 +157,7 @@ export const useUIStore = create<UIStore>()(
         }), false, 'closePanel')
       },
 
-      togglePanel: (type: PanelType, data?: any) => {
+      togglePanel: (type: PanelType, data?: Record<string, string | number | boolean>) => {
         const existingPanel = get().getPanelByType(type)
         if (existingPanel) {
           get().closePanel(existingPanel.id)

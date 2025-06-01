@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
-import type { ProjectState, ValidationResult, ValidationError, ExportOptions, ImportResult } from '../types'
+import type { ProjectState, ValidationResult, ValidationError, ValidationWarning, ExportOptions, ImportResult } from '../types'
 import { useNodeStore } from './nodeStore'
 
 // Project Store - Manages project state, validation, and import/export
@@ -112,14 +112,13 @@ export const useProjectStore = create<ProjectStore>()(
         // Validation Actions
         validateProject: async () => {
           set(() => ({ isValidating: true }), false, 'validateProject:start')
-          
-          try {
+            try {
             // Import node store to validate nodes and connections
             const { useNodeStore } = await import('./nodeStore')
-            const { nodes, connections, validateConnections } = useNodeStore.getState()
+            const { nodes, validateConnections } = useNodeStore.getState()
             
             const errors: ValidationError[] = []
-            const warnings: ValidationError[] = []
+            const warnings: ValidationWarning[] = []
             
             // Validate nodes
             nodes.forEach((node) => {
@@ -147,11 +146,10 @@ export const useProjectStore = create<ProjectStore>()(
                   suggestion: 'Consider connecting this node to show relationships',
                 })
               }
-              
-              // Type-specific validations
+                // Type-specific validations
               switch (node.type) {
-                case 'usecase':
-                  const usecaseNode = node as any
+                case 'usecase': {
+                  const usecaseNode = node as { acceptanceCriteria?: string[] }
                   if (!usecaseNode.acceptanceCriteria || usecaseNode.acceptanceCriteria.length === 0) {
                     warnings.push({
                       id: uuidv4(),
@@ -163,9 +161,10 @@ export const useProjectStore = create<ProjectStore>()(
                     })
                   }
                   break
+                }
                   
-                case 'process':
-                  const processNode = node as any
+                case 'process': {
+                  const processNode = node as { inputs?: string[] }
                   if (!processNode.inputs || processNode.inputs.length === 0) {
                     warnings.push({
                       id: uuidv4(),
@@ -177,6 +176,7 @@ export const useProjectStore = create<ProjectStore>()(
                     })
                   }
                   break
+                }
               }
             })
             
@@ -254,7 +254,7 @@ export const useProjectStore = create<ProjectStore>()(
               ...project,
               exportedAt: new Date().toISOString(),
             },
-            nodes: options.includePositions ? nodes : nodes.map(({ position, ...node }) => node),
+            nodes: options.includePositions ? nodes : nodes.map(({ position: _position, ...node }) => node),
             connections,
             metadata: options.includeMetadata ? {
               version: '1.0',
@@ -290,11 +290,9 @@ ${connections.map((conn) => `  - source: "${conn.sourceNodeId}"
             default:
               throw new Error(`Export format ${options.format} not implemented yet`)
           }
-        },
-
-        importProject: async (data: string | File) => {
+        },        importProject: async (data: string | File) => {
           try {
-            let jsonData: any
+            let jsonData: Record<string, unknown>
             
             if (data instanceof File) {
               const text = await data.text()
@@ -312,31 +310,31 @@ ${connections.map((conn) => `  - source: "${conn.sourceNodeId}"
             // Import project info
             if (jsonData.project) {
               get().updateProject({
-                name: jsonData.project.name || 'Imported Project',
-                description: jsonData.project.description || '',
-                version: jsonData.project.version || '1.0.0',
+                name: (jsonData.project as { name?: string }).name || 'Imported Project',
+                description: (jsonData.project as { description?: string }).description || '',
+                version: (jsonData.project as { version?: string }).version || '1.0.0',
               })
-            }
-            
-            // Import nodes
+            }            // Import nodes
             let nodesImported = 0
             if (jsonData.nodes && Array.isArray(jsonData.nodes)) {
-              jsonData.nodes.forEach((nodeData: any) => {
+              jsonData.nodes.forEach((nodeData: Record<string, unknown>) => {
                 // Create node using store action
-                const newId = nodeStore.addNode(nodeData.type, nodeData.position || { x: 0, y: 0 })
+                const nodeType = nodeData.type as string
+                const position = (nodeData.position as { x: number; y: number }) || { x: 0, y: 0 }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const newId = nodeStore.addNode(nodeType as any, position)
                 nodeStore.updateNode(newId, {
-                  title: nodeData.title || 'Imported Node',
-                  description: nodeData.description || '',
-                  metadata: nodeData.metadata || {},
+                  title: (nodeData.title as string) || 'Imported Node',
+                  description: (nodeData.description as string) || '',
+                  metadata: {},
                 })
                 nodesImported++
               })
             }
-            
-            // Import connections (simplified for now)
+              // Import connections (simplified for now)
             let connectionsImported = 0
             if (jsonData.connections && Array.isArray(jsonData.connections)) {
-              jsonData.connections.forEach((connData: any) => {
+              jsonData.connections.forEach(() => {
                 // This would need to map old IDs to new IDs
                 // For now, skip connection import
                 connectionsImported++

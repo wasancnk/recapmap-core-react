@@ -28,6 +28,12 @@ rationale:
     - "Lean codebase easier to port to Unity C#"
     - "Minimal external dependencies reduce migration complexity"
 
+  architectural_clarity:
+    - "Users describe business requirements, not technical implementation"
+    - "React is RecapMap's rendering engine, not user choice"
+    - "No framework selection fields - platform decision, not user decision"
+    - "AI handles all technical translation from business requirements to code"
+
 phase_strategy:
   phase_1a: "React MVP with 5 core packages only"
   phase_1b: "Java backend integration (secure foundation)"
@@ -57,6 +63,12 @@ rationale:
     - "Component-based architecture maps to Unity prefabs"
     - "State management concepts apply to Unity ScriptableObjects"
     - "Business logic already separated in Java backend"
+
+  architectural_consistency:
+    - "Framework selection removed from ScreenNode interface"
+    - "Users focus on business requirements, not implementation"
+    - "React is the platform choice, not user choice"
+    - "Clean separation between business logic and technical implementation"
 
 alternatives_considered:
   direct_unity: "Slower initial development, harder to demo web-based concepts"

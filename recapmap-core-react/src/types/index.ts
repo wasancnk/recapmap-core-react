@@ -10,7 +10,7 @@ export interface BaseNode {
   position: { x: number; y: number }
   title: string
   description?: string
-  metadata: Record<string, any>
+  metadata: Record<string, string | number | boolean>
   connections: {
     inputs: string[]   // IDs of nodes connected as inputs
     outputs: string[]  // IDs of nodes connected as outputs
@@ -32,68 +32,156 @@ export type NodeType =
   | 'error'       // Error handling, rejection flows
   | 'base'        // Abstract base (for templates)
 
-// Specific Node Type Interfaces
+// Specific Node Type Interfaces with Enhanced Properties
+
 export interface UseCaseNode extends BaseNode {
   type: 'usecase'
-  priority: 'high' | 'medium' | 'low'
-  complexity: 'simple' | 'moderate' | 'complex'
+  // Business Context
+  priority: 'critical' | 'high' | 'medium' | 'low'
+  complexity: 'simple' | 'moderate' | 'complex' | 'epic'
+  businessValue: string
   stakeholders: string[]
   acceptanceCriteria: string[]
+  // AI Generation Properties
+  featureName: string
+  businessRules: string[]
+  dependencies: string[]
+  successMetrics: string[]
+  assumptions: string[]
 }
 
 export interface ScreenNode extends BaseNode {
   type: 'screen'
-  screenType: 'page' | 'modal' | 'component' | 'layout'
-  framework: string
+  // UI Context
+  screenType: 'dashboard' | 'form' | 'list' | 'detail' | 'modal' | 'wizard' | 'landing'
+  layoutType: 'grid' | 'flex' | 'fixed' | 'responsive'
   responsive: boolean
   accessibility: boolean
+  // Component Structure
+  components: Array<{
+    type: string
+    properties: Record<string, string | number | boolean>
+    validation?: string[]
+  }>
+  navigationFlow: string[]
+  dataBindings: string[]
+  validationRules: string[]
   wireframeUrl?: string
 }
 
 export interface UserNode extends BaseNode {
   type: 'user'
+  // Actor Definition
   role: string
+  userType: 'admin' | 'power_user' | 'standard_user' | 'guest' | 'system'
   permissions: string[]
+  accessLevel: 'admin' | 'manager' | 'user' | 'read_only'
+  // Behavioral Context
   workflow: string[]
   goals: string[]
   painPoints: string[]
+  expertise: 'beginner' | 'intermediate' | 'expert'
+  // Security Context
+  authenticationMethod: 'password' | 'mfa' | 'sso' | 'oauth' | 'certificate'
+  dataAccess: string[]
 }
 
 export interface ProcessNode extends BaseNode {
   type: 'process'
-  processType: 'manual' | 'automated' | 'hybrid'
+  // Capability Definition
+  capabilityName: string
+  processType: 'computation' | 'integration' | 'notification' | 'validation' | 'transformation'
+  automationLevel: 'manual' | 'semi_automated' | 'fully_automated'  // Input/Output Specification
+  inputParameters: Array<{
+    name: string
+    type: string
+    required: boolean
+    validation?: string
+    default?: string | number | boolean
+  }>
+  outputParameters: Array<{
+    name: string
+    type: string
+    description?: string
+  }>
+  // Technical Context
   tools: string[]
-  inputs: string[]
-  outputs: string[]
+  externalDependencies: string[]
+  errorConditions: string[]
+  // Performance Requirements
   sla?: string
+  throughputRequirements?: string
+  scalingConsiderations?: string
 }
 
 export interface StorageNode extends BaseNode {
   type: 'storage'
-  storageType: 'database' | 'file' | 'cache' | 'api'
+  // Storage Definition
+  storageName: string
+  storageType: 'database' | 'cache' | 'file_system' | 'memory' | 'external_api' | 'blob_storage'
   technology: string
-  schema?: string
-  accessPattern: 'read' | 'write' | 'readwrite'
-  retention?: string
+  // Data Structure
+  dataSchema: Array<{
+    field: string
+    type: string
+    constraints?: string[]
+    indexed?: boolean
+    unique?: boolean
+  }>
+  indexingStrategy: string[]
+  // Access Patterns
+  accessPattern: 'read_heavy' | 'write_heavy' | 'balanced' | 'append_only'
+  queryPatterns: string[]
+  // Operational Requirements
+  backupRequirements: string
+  retentionPolicy: string
+  scalingStrategy: string
+  securityClassification: 'public' | 'internal' | 'confidential' | 'restricted'
 }
 
 export interface ControllerNode extends BaseNode {
   type: 'controller'
-  controlType: 'condition' | 'loop' | 'switch' | 'gateway'
-  logic: string
+  // Decision Logic
+  controllerName: string
+  controlType: 'condition' | 'loop' | 'switch' | 'parallel' | 'gateway' | 'merge'
+  businessRules: string[]
+  // Logic Definition
   conditions: Array<{
+    name: string
     condition: string
     outcome: string
+    priority?: number
     target?: string
   }>
+  // Routing Logic
+  routingRules: Array<{
+    source: string
+    condition: string
+    destination: string
+  }>
+  defaultPath?: string
+  // Performance
+  timeoutSettings?: string
+  parallelProcessing: boolean
 }
 
 export interface ErrorNode extends BaseNode {
   type: 'error'
-  errorType: 'validation' | 'system' | 'business' | 'security'
+  // Error Classification
+  errorType: 'validation' | 'system' | 'network' | 'business_rule' | 'security' | 'data_integrity'
   severity: 'low' | 'medium' | 'high' | 'critical'
-  handling: 'retry' | 'fallback' | 'escalate' | 'ignore'
-  recovery?: string
+  // Detection & Handling
+  detectionConditions: string[]
+  fallbackAction: string
+  retryStrategy: 'none' | 'fixed_delay' | 'exponential_backoff' | 'circuit_breaker'
+  maxRetries?: number
+  // User Experience
+  userNotification: string
+  escalationRules: string[]
+  // Logging & Monitoring
+  loggingRequirements: string[]
+  alertingThreshold?: string
+  recoveryProcedure?: string
 }
 
 // Union type for all node types
@@ -116,7 +204,7 @@ export interface NodeConnection {
   type: 'data' | 'control' | 'dependency'
   label?: string
   animated?: boolean
-  style?: Record<string, any>
+  style?: Record<string, string | number>
 }
 
 // Canvas/Viewport state
@@ -141,7 +229,7 @@ export interface Panel {
   isOpen: boolean
   isMinimized: boolean
   zIndex: number
-  data?: any
+  data?: Record<string, string | number | boolean>
 }
 
 export type PanelType =
@@ -238,4 +326,103 @@ export interface ImportResult {
   warnings: string[]
   nodesImported: number
   connectionsImported: number
+}
+
+// Enhanced Property Validation System
+export interface PropertyDefinition {
+  name: string
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object' | 'enum'
+  required: boolean
+  label: string
+  description?: string
+  placeholder?: string
+  validation?: PropertyValidation
+  defaultValue?: string | number | boolean
+  enumOptions?: Array<{ value: string; label: string }>
+  dependsOn?: string[]
+}
+
+export interface PropertyValidation {
+  minLength?: number
+  maxLength?: number
+  pattern?: string
+  min?: number
+  max?: number
+  custom?: (value: string | number | boolean) => { valid: boolean; message?: string }
+}
+
+export interface NodePropertySchema {
+  [nodeType: string]: PropertyDefinition[]
+}
+
+export interface PropertyValidationResult {
+  isValid: boolean
+  errors: Array<{
+    property: string
+    message: string
+    value?: unknown
+  }>
+  warnings: Array<{
+    property: string
+    message: string
+    value?: unknown
+  }>
+}
+
+// YAML Export System Types
+export interface YAMLExportOptions extends ExportOptions {
+  format: 'yaml'
+  includeComments: boolean
+  aiOptimized: boolean
+  targetPlatform: 'java' | 'python' | 'nodejs' | 'generic'
+}
+
+export interface YAMLNodeSpec {
+  id: string
+  type: string
+  metadata: {
+    title: string
+    description: string
+    created_at: string
+    updated_at: string
+  }
+  properties: Record<string, string | number | boolean | string[]>
+  connections: {
+    inputs: string[]
+    outputs: string[]
+  }
+  validation_status: 'valid' | 'invalid' | 'warning'
+}
+
+export interface YAMLProjectSpec {
+  project: {
+    name: string
+    description: string
+    version: string
+    created_at: string
+    updated_at: string
+    author: string
+  }
+  architecture: {
+    nodes: YAMLNodeSpec[]
+    connections: Array<{
+      id: string
+      source: string
+      target: string
+      type: string
+      description?: string
+    }>
+  }
+  validation: {
+    status: 'valid' | 'invalid' | 'warnings'
+    errors: ValidationError[]
+    warnings: ValidationError[]
+    last_validated: string
+  }
+  ai_generation_hints: {
+    target_platform: string
+    complexity_level: 'simple' | 'moderate' | 'complex'
+    primary_use_cases: string[]
+    technical_constraints: string[]
+  }
 }

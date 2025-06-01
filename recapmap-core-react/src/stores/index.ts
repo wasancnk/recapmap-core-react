@@ -8,6 +8,11 @@ export { useNodeStore } from './nodeStore'
 export { useUIStore } from './uiStore'
 export { useProjectStore } from './projectStore'
 
+// Import stores for internal use
+import { useNodeStore } from './nodeStore'
+import { useUIStore } from './uiStore'
+import { useProjectStore } from './projectStore'
+
 // Export types for convenience
 export type {
   RecapMapNode,

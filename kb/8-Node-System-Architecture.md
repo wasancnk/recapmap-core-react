@@ -77,13 +77,14 @@ acceptance_criteria:
 **Role**: Maps to React components, UI layouts, or frontend specifications
 
 #### Specific Properties:
-- `layout_type`: 'dashboard' | 'form' | 'list' | 'detail' | 'modal' | 'wizard'
+- `screenType`: 'dashboard' | 'form' | 'list' | 'detail' | 'modal' | 'wizard' | 'landing'
+- `layoutType`: 'grid' | 'flex' | 'fixed' | 'responsive'
 - `components`: List of UI elements (buttons, inputs, tables, etc.)
-- `responsive_rules`: Mobile, tablet, desktop behavior
+- `responsive`: Boolean for mobile/tablet behavior
+- `accessibility`: Boolean for WCAG compliance
 - `navigation_flow`: How users move between screens
 - `data_bindings`: What data sources feed this screen
 - `validation_rules`: Frontend validation requirements
-- `accessibility_requirements`: WCAG compliance specifications
 
 #### Business Logic Context:
 - Represents what users see and interact with
@@ -91,18 +92,31 @@ acceptance_criteria:
 - Links to Process/Tool nodes (what actions are available)
 - Associates with Storage nodes (what data is displayed)
 
+#### Architectural Clarity:
+- **No Framework Selection**: Screen nodes describe WHAT interface is needed, not HOW to implement it
+- **Platform Abstraction**: RecapMap's React engine handles all technical implementation
+- **Business Focus**: Users specify functionality and layout, not technology choices
+
 #### YAML Generation Role:
 ```yaml
 screen_name: "login_form"
-layout_type: "form"
+screen_type: "form"
+layout_type: "flex"
+responsive: true
+accessibility: true
 components:
   - type: "email_input"
     validation: "required|email"
-  - type: "password_input"
+  - type: "password_input" 
     validation: "required|min:8"
   - type: "submit_button"
     text: "Login"
+navigation_flow:
+  - on_success: "dashboard"
+  - on_error: "error_screen"
 ```
+
+**Note**: Framework is not specified - RecapMap's React engine handles implementation details.
 
 ---
 

@@ -15,7 +15,17 @@ import { useUIStore } from '../stores/uiStore';
 import type { NodeType } from '../types';
 
 // Custom node component for our 8-node system
-const CustomNode = ({ data, selected }: { data: { label: string; description?: string; nodeType: NodeType }; selected: boolean }) => {
+const CustomNode = ({ 
+  id, 
+  data, 
+  selected 
+}: { 
+  id: string;
+  data: { label: string; description?: string; nodeType: NodeType }; 
+  selected: boolean 
+}) => {
+  const { openPanel } = useUIStore();
+
   const nodeTypeStyles = {
     'usecase': 'bg-blue-500 border-blue-600 text-white',
     'screen': 'bg-green-500 border-green-600 text-white',
@@ -30,12 +40,21 @@ const CustomNode = ({ data, selected }: { data: { label: string; description?: s
   const baseStyle = nodeTypeStyles[data.nodeType] || nodeTypeStyles['usecase'];
   const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';
 
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    openPanel('node-properties', { nodeId: id });
+  };
+
   return (
-    <div className={`
-      px-4 py-2 rounded-lg border-2 min-w-[120px] text-center 
-      transition-all duration-200 hover:shadow-md
-      ${baseStyle} ${selectedStyle}
-    `}>
+    <div 
+      className={`
+        px-4 py-2 rounded-lg border-2 min-w-[120px] text-center 
+        transition-all duration-200 hover:shadow-md cursor-pointer
+        ${baseStyle} ${selectedStyle}
+      `}
+      onDoubleClick={handleDoubleClick}
+      title="Double-click to edit properties"
+    >
       <div className="font-medium text-sm">{data.label}</div>
       {data.description && (
         <div className="text-xs opacity-80 mt-1">{data.description}</div>
@@ -105,13 +124,12 @@ export const Canvas: React.FC = () => {
 
   React.useEffect(() => {
     setEdges(reactFlowEdges);
-  }, [reactFlowEdges, setEdges]);
-
-  // Handle node changes (position, selection, etc.)
+  }, [reactFlowEdges, setEdges]);  // Handle node changes (position, selection, etc.)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleNodesChange = useCallback((changes: any[]) => {
     onNodesChange(changes);
-    
-    changes.forEach(change => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    changes.forEach((change: any) => {
       if (change.type === 'position' && change.position && change.dragging === false) {
         // Update node position in store when drag ends
         updateNode(change.id, { position: change.position });
@@ -123,13 +141,13 @@ export const Canvas: React.FC = () => {
         selectNodes(selectedIds);
       }
     });
-  }, [onNodesChange, updateNode, selectNodes, nodes]);
-
-  // Handle edge changes
+  }, [onNodesChange, updateNode, selectNodes, nodes]);  // Handle edge changes
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEdgesChange = useCallback((changes: any[]) => {
     onEdgesChange(changes);
     
-    changes.forEach(change => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    changes.forEach((change: any) => {
       if (change.type === 'remove') {
         deleteConnection(change.id);
       }

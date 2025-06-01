@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNodeStore, useUIStore, useProjectStore } from '../stores'
+import type { NodeType } from '../types'
 
 /**
  * ZustandTest Component - Tests our state management system
@@ -9,13 +10,13 @@ export const ZustandTest: React.FC = () => {
   // Access stores
   const {
     nodes,
-    connections,
-    selectedNodeIds,
+    // connections,
+    // selectedNodeIds,
     addNode,
     selectNode,
     clearSelection,
     addConnection,
-    getSelectedNodes,
+    // getSelectedNodes,
   } = useNodeStore()
 
   const {
@@ -39,7 +40,7 @@ export const ZustandTest: React.FC = () => {
   } = useProjectStore()
 
   // Test functions
-  const handleAddNode = (type: any) => {
+  const handleAddNode = (type: NodeType) => {
     const position = {
       x: Math.random() * 400,
       y: Math.random() * 300,

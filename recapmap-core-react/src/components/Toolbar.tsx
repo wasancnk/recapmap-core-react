@@ -42,7 +42,7 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 
 export const Toolbar: React.FC = () => {
   const { nodes, connections } = useNodeStore();
-  const { addNotification } = useUIStore();
+  const { addNotification, openPanel } = useUIStore();
 
   const nodeTypes: Array<{
     type: NodeType;
@@ -99,10 +99,10 @@ export const Toolbar: React.FC = () => {
       icon: '🔧'
     },
   ];
-
   const handleClearAll = () => {
     if (nodes.length > 0 || connections.length > 0) {
-      if (window.confirm('Are you sure you want to clear all nodes and connections?')) {        // For now, we'll implement this when we add the clearAll method to the store
+      if (window.confirm('Are you sure you want to clear all nodes and connections?')) {
+        // For now, we'll implement this when we add the clearAll method to the store
         addNotification({ 
           type: 'info', 
           title: 'Info',
@@ -110,6 +110,10 @@ export const Toolbar: React.FC = () => {
         });
       }
     }
+  };
+
+  const handleExport = () => {
+    openPanel('export');
   };
 
   return (
@@ -128,9 +132,7 @@ export const Toolbar: React.FC = () => {
               icon={nodeType.icon}
             />
           ))}
-        </div>
-
-        {/* Canvas Actions */}
+        </div>        {/* Canvas Actions */}
         <div className="border-t border-surface-border pt-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-text-secondary text-xs">
@@ -138,17 +140,31 @@ export const Toolbar: React.FC = () => {
             </span>
           </div>
           
-          <button
-            onClick={handleClearAll}
-            className="
-              w-full px-3 py-2 bg-red-500 border border-red-600 text-white rounded
-              hover:bg-red-600 transition-colors text-sm font-medium
-              disabled:opacity-50 disabled:cursor-not-allowed
-            "
-            disabled={nodes.length === 0 && connections.length === 0}
-          >
-            Clear All
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={handleExport}
+              className="
+                w-full px-3 py-2 bg-accent-primary border border-accent-primary text-white rounded
+                hover:bg-accent-primary/90 transition-colors text-sm font-medium
+                disabled:opacity-50 disabled:cursor-not-allowed
+              "
+              disabled={nodes.length === 0}
+            >
+              Export YAML
+            </button>
+            
+            <button
+              onClick={handleClearAll}
+              className="
+                w-full px-3 py-2 bg-red-500 border border-red-600 text-white rounded
+                hover:bg-red-600 transition-colors text-sm font-medium
+                disabled:opacity-50 disabled:cursor-not-allowed
+              "
+              disabled={nodes.length === 0 && connections.length === 0}
+            >
+              Clear All
+            </button>
+          </div>
         </div>
       </div>
     </div>

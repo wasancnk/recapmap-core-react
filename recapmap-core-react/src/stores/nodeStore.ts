@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
-import type { RecapMapNode, NodeType, NodeConnection } from '../types'
+import type { RecapMapNode, NodeType, NodeConnection, BaseNode } from '../types'
 
 // Node Store - Manages all nodes and their state
 interface NodeStore {
@@ -74,15 +74,22 @@ export const useNodeStore = create<NodeStore>()(
         }), false, 'addNode')
         
         return id
-      },
-
-      updateNode: (id: string, updates: Partial<RecapMapNode>) => {
+      },      updateNode: (id: string, updates: Partial<RecapMapNode>) => {
         set((state) => ({
-          nodes: state.nodes.map((node) =>
-            node.id === id
-              ? { ...node, ...updates, updatedAt: new Date().toISOString() }
-              : node
-          ),
+          ...state,
+          nodes: state.nodes.map((node) => {
+            if (node.id === id) {
+              // Create updated node with proper typing, excluding type changes for safety
+              const updatedNode = { 
+                ...node, 
+                ...updates, 
+                type: node.type, // Preserve original type
+                updatedAt: new Date().toISOString() 
+              }
+              return updatedNode as RecapMapNode
+            }
+            return node
+          }),
         }), false, 'updateNode')
       },
 
@@ -316,77 +323,142 @@ export const useNodeStore = create<NodeStore>()(
   )
 )
 
-// Helper function to create typed nodes
-function createTypedNode(baseNode: any, type: NodeType): RecapMapNode {
-  const now = new Date().toISOString()
+// Helper function to create typed nodes with enhanced properties
+function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
   
   switch (type) {
     case 'usecase':
       return {
         ...baseNode,
         type: 'usecase',
+        // Business Context
         priority: 'medium',
         complexity: 'moderate',
+        businessValue: '',
         stakeholders: [],
         acceptanceCriteria: [],
+        // AI Generation Properties
+        featureName: baseNode.title.toLowerCase().replace(/\s+/g, '_'),
+        businessRules: [],
+        dependencies: [],
+        successMetrics: [],
+        assumptions: [],
       }
-    
-    case 'screen':
+      case 'screen':
       return {
         ...baseNode,
         type: 'screen',
-        screenType: 'page',
-        framework: 'React',
+        // UI Context
+        screenType: 'dashboard',
+        layoutType: 'responsive',
         responsive: true,
         accessibility: true,
+        // Component Structure
+        components: [],
+        navigationFlow: [],
+        dataBindings: [],
+        validationRules: [],
+        wireframeUrl: undefined,
       }
     
     case 'user':
       return {
         ...baseNode,
         type: 'user',
-        role: 'End User',
+        // Actor Definition
+        role: 'Standard User',
+        userType: 'standard_user',
         permissions: [],
+        accessLevel: 'user',
+        // Behavioral Context
         workflow: [],
         goals: [],
         painPoints: [],
+        expertise: 'intermediate',
+        // Security Context
+        authenticationMethod: 'password',
+        dataAccess: [],
       }
     
     case 'process':
       return {
         ...baseNode,
         type: 'process',
-        processType: 'manual',
+        // Capability Definition
+        capabilityName: baseNode.title.toLowerCase().replace(/\s+/g, '_'),
+        processType: 'computation',
+        automationLevel: 'semi_automated',
+        // Input/Output Specification
+        inputParameters: [],
+        outputParameters: [],
+        // Technical Context
         tools: [],
-        inputs: [],
-        outputs: [],
+        externalDependencies: [],
+        errorConditions: [],
+        // Performance Requirements
+        sla: undefined,
+        throughputRequirements: undefined,
+        scalingConsiderations: undefined,
       }
     
     case 'storage':
       return {
         ...baseNode,
         type: 'storage',
+        // Storage Definition
+        storageName: baseNode.title.toLowerCase().replace(/\s+/g, '_'),
         storageType: 'database',
         technology: 'PostgreSQL',
-        accessPattern: 'readwrite',
+        // Data Structure
+        dataSchema: [],
+        indexingStrategy: [],
+        // Access Patterns
+        accessPattern: 'balanced',
+        queryPatterns: [],
+        // Operational Requirements
+        backupRequirements: 'daily',
+        retentionPolicy: '7 years',
+        scalingStrategy: 'vertical',
+        securityClassification: 'internal',
       }
     
     case 'controller':
       return {
         ...baseNode,
         type: 'controller',
+        // Decision Logic
+        controllerName: baseNode.title.toLowerCase().replace(/\s+/g, '_'),
         controlType: 'condition',
-        logic: '',
+        businessRules: [],
+        // Logic Definition
         conditions: [],
+        // Routing Logic
+        routingRules: [],
+        defaultPath: undefined,
+        // Performance
+        timeoutSettings: undefined,
+        parallelProcessing: false,
       }
     
     case 'error':
       return {
         ...baseNode,
         type: 'error',
+        // Error Classification
         errorType: 'validation',
         severity: 'medium',
-        handling: 'retry',
+        // Detection & Handling
+        detectionConditions: [],
+        fallbackAction: 'show_error_message',
+        retryStrategy: 'none',
+        maxRetries: undefined,
+        // User Experience
+        userNotification: 'An error occurred. Please try again.',
+        escalationRules: [],
+        // Logging & Monitoring
+        loggingRequirements: [],
+        alertingThreshold: undefined,
+        recoveryProcedure: undefined,
       }
     
     default:
