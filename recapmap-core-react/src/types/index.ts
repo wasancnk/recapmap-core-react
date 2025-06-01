@@ -205,6 +205,19 @@ export interface NodeConnection {
   label?: string
   animated?: boolean
   style?: Record<string, string | number>
+  // Enhanced Connection Metadata
+  metadata?: {
+    directionType?: 'oneway' | 'twoway' | 'undirected'
+    lineStyle?: 'solid' | 'dashed' | 'dotted'
+    color?: string
+    thickness?: number
+    // Business context properties
+    businessRule?: string
+    priority?: 'low' | 'medium' | 'high' | 'critical'
+    conditions?: string[]
+    dataFlow?: string
+    weight?: number // For importance/strength of relationship
+  }
 }
 
 // Canvas/Viewport state

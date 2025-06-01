@@ -183,11 +183,19 @@ export const useNodeStore = create<NodeStore>()(
             isSelected: true,
           })),
         }), false, 'selectAll')
-      },
-
-      // Connection Management Actions
+      },      // Connection Management Actions
       addConnection: (sourceId: string, targetId: string, type = 'data') => {
         const id = uuidv4()
+        
+        // Set default metadata based on connection type
+        const defaultMetadata = {
+          directionType: 'oneway' as const,
+          lineStyle: type === 'control' ? 'dashed' as const : 'solid' as const,
+          color: type === 'data' ? '#3B82F6' : type === 'control' ? '#F59E0B' : '#6B7280',
+          thickness: 2,
+          priority: 'medium' as const
+        };
+        
         const newConnection: NodeConnection = {
           id,
           sourceNodeId: sourceId,
@@ -196,6 +204,7 @@ export const useNodeStore = create<NodeStore>()(
           targetHandle: 'input',
           type,
           animated: type === 'control',
+          metadata: defaultMetadata
         }
         
         set((state) => ({

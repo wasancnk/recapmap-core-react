@@ -226,4 +226,62 @@
   .shadow-glow {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   }
+
+  /* Connection Type Styles */
+  .connection-data {
+    /* Data flow connections - default blue */
+  }
+
+  .connection-control {
+    /* Process flow connections - orange */
+    stroke: #F59E0B !important;
+  }
+
+  .connection-dependency {
+    /* Dependency connections - gray */
+    stroke: #6B7280 !important;
+  }
+
+  /* Connection Priority Styles */
+  .connection-priority-low {
+    stroke-width: 1 !important;
+    stroke-opacity: 0.7 !important;
+  }
+
+  .connection-priority-medium {
+    stroke-width: 2 !important;
+    stroke-opacity: 0.8 !important;
+  }
+
+  .connection-priority-high {
+    stroke-width: 3 !important;
+    stroke-opacity: 0.9 !important;
+  }
+
+  .connection-priority-critical {
+    stroke-width: 4 !important;
+    stroke-opacity: 1 !important;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+
+  /* Connection hover effects */
+  .react-flow__edge:hover .react-flow__edge-path {
+    stroke-width: 3 !important;
+    stroke-opacity: 0.8 !important;
+  }
+
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke-width: 3 !important;
+    stroke: #3B82F6 !important;
+  }
+
+  /* Dynamic connector animation */
+  @keyframes connector-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .connector-hint {
+    animation: connector-pulse 2s ease-in-out infinite;
+  }
 }

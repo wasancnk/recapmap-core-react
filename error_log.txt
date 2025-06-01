@@ -1,0 +1,32 @@
+Microsoft Windows [Version 10.0.26100.4061]
+(c) Microsoft Corporation. All rights reserved.
+
+D:\workspace_recapmap\recapmap-core-react>cd recapmap-core-react
+
+D:\workspace_recapmap\recapmap-core-react\recapmap-core-react>npm run build
+
+> recapmap-core-react@0.0.0 build
+> tsc -b && vite build
+
+src/components/ConnectionPropertyPanel.tsx:4:1 - error TS6133: 'NodeConnection' is declared but its value is never read.
+
+4 import type { NodeConnection } from '../types';
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/ConnectionPropertyPanel.tsx:66:53 - error TS2554: Expected 1 arguments, but got 2.
+
+66     addNotification('Connection direction swapped', 'success');
+                                                       ~~~~~~~~~
+
+src/components/ConnectionPropertyPanel.tsx:77:43 - error TS2554: Expected 1 arguments, but got 2.
+
+77     addNotification('Connection updated', 'success');
+                                             ~~~~~~~~~
+
+src/components/ConnectionPropertyPanel.tsx:82:43 - error TS2554: Expected 1 arguments, but got 2.
+
+82     addNotification('Connection deleted', 'success');
+                                             ~~~~~~~~~
+
+
+Found 4 errors.
