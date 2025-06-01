@@ -13,7 +13,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
   position,
   onClose,
 }) => {
-  const { connections, updateConnection, deleteConnection, addConnection, getNode } = useNodeStore();
+  const { connections, updateConnection, deleteConnection, getNode } = useNodeStore();
   const { addNotification } = useUIStore();
   
   const connection = connections.find(c => c.id === connectionId);
@@ -52,28 +52,15 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setIsModified(true);
-  };
-  const handleSwapDirection = () => {
+  };  const handleSwapDirection = () => {
     if (!sourceNode || !targetNode) return;
     
-    // Delete current connection
-    deleteConnection(connectionId);
-    
-    // Create new connection with swapped direction
-    // We need to also swap the handle information if available
-    const newConnection = {
+    // Simply swap the source and target node IDs while preserving all other properties
+    updateConnection(connectionId, {
       sourceNodeId: connection.targetNodeId,
       targetNodeId: connection.sourceNodeId,
-      sourceHandle: connection.targetHandle || 'right-out',
-      targetHandle: connection.sourceHandle || 'left-in',
-      type: connection.type,
-      label: connection.label
-    };
-    
-    // This would ideally call a method that accepts full connection details
-    // For now, we use the basic addConnection method
-    // TODO: Enhance addConnection to support handle details
-    addConnection(newConnection.sourceNodeId, newConnection.targetNodeId, newConnection.type);
+      // Keep all other properties including handles, metadata, styling, etc.
+    });
     
     addNotification({ 
       title: 'Success',

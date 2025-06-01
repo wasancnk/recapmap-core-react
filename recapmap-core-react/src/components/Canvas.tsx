@@ -95,19 +95,18 @@ const CustomNode = ({
         type="source"
         position={Position.Top}
         id="top-source"
-        isConnectable={true}
-        style={{
+        isConnectable={true}        style={{
           position: 'absolute',
-          top: -8,
+          top: -4,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 16,
-          height: 16,
+          width: 8,
+          height: 8,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '2px solid white',
+          border: '1px solid white',
           borderRadius: '50%',
           cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0.6,
+          opacity: showConnectors ? 1 : 0,
           transition: 'all 0.2s ease',
           zIndex: 10
         }}
@@ -137,19 +136,18 @@ const CustomNode = ({
         type="source"
         position={Position.Right}
         id="right-source"
-        isConnectable={true}
-        style={{
+        isConnectable={true}        style={{
           position: 'absolute',
-          right: -8,
+          right: -4,
           top: '50%',
           transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
+          width: 8,
+          height: 8,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '2px solid white',
+          border: '1px solid white',
           borderRadius: '50%',
           cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0.6,
+          opacity: showConnectors ? 1 : 0,
           transition: 'all 0.2s ease',
           zIndex: 10
         }}
@@ -179,19 +177,18 @@ const CustomNode = ({
         type="source"
         position={Position.Bottom}
         id="bottom-source"
-        isConnectable={true}
-        style={{
+        isConnectable={true}        style={{
           position: 'absolute',
-          bottom: -8,
+          bottom: -4,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 16,
-          height: 16,
+          width: 8,
+          height: 8,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '2px solid white',
+          border: '1px solid white',
           borderRadius: '50%',
           cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0.6,
+          opacity: showConnectors ? 1 : 0,
           transition: 'all 0.2s ease',
           zIndex: 10
         }}
@@ -221,19 +218,18 @@ const CustomNode = ({
         type="source"
         position={Position.Left}
         id="left-source"
-        isConnectable={true}
-        style={{
+        isConnectable={true}        style={{
           position: 'absolute',
-          left: -8,
+          left: -4,
           top: '50%',
           transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
+          width: 8,
+          height: 8,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '2px solid white',
+          border: '1px solid white',
           borderRadius: '50%',
           cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0.6,
+          opacity: showConnectors ? 1 : 0,
           transition: 'all 0.2s ease',
           zIndex: 10
         }}
