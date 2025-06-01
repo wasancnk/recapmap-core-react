@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
 import type { RecapMapNode, NodeType, NodeConnection, BaseNode } from '../types'
+import { logger } from '../utils/logger'
 
 // Node Store - Manages all nodes and their state
 interface NodeStore {
@@ -236,25 +237,25 @@ export const useNodeStore = create<NodeStore>()(
             conn.id === id ? { ...conn, ...updates } : conn
           ),
         }), false, 'updateConnection')
-      },
-
-      swapConnection: (id: string) => {
-        console.log('🔄 [STORE] SwapConnection called with ID:', id)
+      },      swapConnection: (id: string) => {
+        logger.connectionStart('swapConnection', id)
         
         const state = get()
-        console.log('📊 [STORE] Current state:', {
+        logger.connectionDebug('swapConnection', 'Current state analysis', {
           totalConnections: state.connections.length,
           totalNodes: state.nodes.length
         })
         
         const connection = state.connections.find((conn) => conn.id === id)
         if (!connection) {
-          console.error('❌ [STORE] Connection not found in store:', id)
-          console.log('📋 [STORE] Available connections:', state.connections.map(c => ({ id: c.id, source: c.sourceNodeId, target: c.targetNodeId })))
+          logger.connectionError('swapConnection', id, 'Connection not found in store')
+          logger.connectionDebug('swapConnection', 'Available connections', 
+            state.connections.map(c => ({ id: c.id, source: c.sourceNodeId, target: c.targetNodeId }))
+          )
           return false
         }
 
-        console.log('✅ [STORE] Connection found:', {
+        logger.connectionDebug('swapConnection', 'Connection found', {
           id: connection.id,
           sourceNodeId: connection.sourceNodeId,
           targetNodeId: connection.targetNodeId,
@@ -279,7 +280,7 @@ export const useNodeStore = create<NodeStore>()(
         const newSourceHandle = getSwappedHandle(connection.targetHandle)
         const newTargetHandle = getSwappedHandle(connection.sourceHandle)
 
-        console.log('🔀 [STORE] Fixed handle transformation:', {
+        logger.connectionDebug('swapConnection', 'Fixed handle transformation', {
           oldSourceHandle: connection.sourceHandle,
           oldTargetHandle: connection.targetHandle,
           newSourceHandle,
@@ -287,11 +288,13 @@ export const useNodeStore = create<NodeStore>()(
           note: 'Only using visible -source handles'
         })
 
-        console.log('🔄 [STORE] About to perform atomic swap...')
+        logger.connectionDebug('swapConnection', 'About to perform atomic swap')
 
         // Perform atomic swap of connection
         set((state) => {
-          console.log('🔄 [STORE] Inside set function, current connections:', state.connections.length)
+          logger.connectionDebug('swapConnection', 'Inside set function', { 
+            currentConnections: state.connections.length 
+          })
           
           const newConnections = state.connections.map((conn) =>
             conn.id === id ? {
@@ -303,14 +306,16 @@ export const useNodeStore = create<NodeStore>()(
             } : conn
           )
 
-          console.log('🔄 [STORE] New connections array created, length:', newConnections.length)
+          logger.connectionDebug('swapConnection', 'New connections array created', { 
+            length: newConnections.length 
+          })
           const swappedConnection = newConnections.find(c => c.id === id)
-          console.log('✅ [STORE] Swapped connection:', swappedConnection)
+          logger.connectionDebug('swapConnection', 'Swapped connection details', swappedConnection)
 
           // Update node connection arrays to maintain consistency
           const newNodes = state.nodes.map((node) => {
             if (node.id === connection.sourceNodeId) {
-              console.log(`🔄 [STORE] Updating old source node ${node.id}: removing from outputs, adding to inputs`)
+              logger.connectionDebug('swapConnection', `Updating old source node ${node.id}: removing from outputs, adding to inputs`)
               // Old source becomes new target - remove from outputs, add to inputs
               return {
                 ...node,
@@ -322,7 +327,7 @@ export const useNodeStore = create<NodeStore>()(
               }
             }
             if (node.id === connection.targetNodeId) {
-              console.log(`🔄 [STORE] Updating old target node ${node.id}: removing from inputs, adding to outputs`)
+              logger.connectionDebug('swapConnection', `Updating old target node ${node.id}: removing from inputs, adding to outputs`)
               // Old target becomes new source - remove from inputs, add to outputs
               return {
                 ...node,
@@ -336,7 +341,7 @@ export const useNodeStore = create<NodeStore>()(
             return node
           })
 
-          console.log('🔄 [STORE] Node connection arrays updated')
+          logger.connectionDebug('swapConnection', 'Node connection arrays updated')
 
           return {
             connections: newConnections,
@@ -348,7 +353,7 @@ export const useNodeStore = create<NodeStore>()(
         const updatedState = get()
         const updatedConnection = updatedState.connections.find((conn) => conn.id === id)
         
-        console.log('🔍 [STORE] Post-swap verification:', {
+        logger.connectionDebug('swapConnection', 'Post-swap verification', {
           connectionExists: !!updatedConnection,
           totalConnections: updatedState.connections.length,
           updatedConnection: updatedConnection ? {
@@ -361,11 +366,11 @@ export const useNodeStore = create<NodeStore>()(
         })
 
         if (!updatedConnection) {
-          console.error('❌ [STORE] Connection disappeared during swap operation!')
+          logger.connectionError('swapConnection', id, 'Connection disappeared during swap operation!')
           return false
         }
 
-        console.log('✅ [STORE] Swap operation completed successfully')
+        logger.connectionSuccess('swapConnection', id)
         return true
       },
 

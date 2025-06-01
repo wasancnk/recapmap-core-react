@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
+import { logger } from '../utils/logger';
 
 interface ConnectionPropertyPanelProps {
   connectionId: string;
@@ -52,10 +53,8 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setIsModified(true);
-  };  const handleSwapDirection = () => {
-    console.log('🚀 === SWAP OPERATION STARTED ===');
-    console.log('📋 Initial state:', {
-      connectionId,
+  };  const handleSwapDirection = () => {    
+    logger.connectionStart('swap', connectionId, {
       sourceNode: sourceNode ? { id: sourceNode.id, title: sourceNode.title } : null,
       targetNode: targetNode ? { id: targetNode.id, title: targetNode.title } : null,
       connection: connection ? {
@@ -69,7 +68,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
     });
     
     if (!sourceNode || !targetNode) {
-      console.error('❌ Missing node information during swap');
+      logger.connectionError('swap', connectionId, 'Missing node information during swap');
       addNotification({ 
         title: 'Error',
         message: 'Cannot swap connection: Missing node information', 
@@ -79,19 +78,21 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       return;
     }
     
-    console.log('🔄 About to call swapConnection with ID:', connectionId);
-    console.log('📊 Current connections count:', connections.length);
-    console.log('🔍 Connection exists in store:', !!connections.find(c => c.id === connectionId));
+    logger.connectionDebug('swap', 'About to call swapConnection', {
+      connectionId,
+      currentConnections: connections.length,
+      connectionExists: !!connections.find(c => c.id === connectionId)
+    });
     
     // Use the atomic swapConnection method from the store
     const swapSuccess = swapConnection(connectionId);
     
-    console.log('🎯 SwapConnection returned:', swapSuccess);
+    logger.connectionDebug('swap', 'SwapConnection returned', { swapSuccess });
     
     // Check connection state after swap attempt
     setTimeout(() => {
       const postSwapConnection = connections.find(c => c.id === connectionId);
-      console.log('📋 Post-swap state:', {
+      logger.connectionDebug('swap', 'Post-swap state analysis', {
         connectionStillExists: !!postSwapConnection,
         postSwapConnection: postSwapConnection ? {
           id: postSwapConnection.id,
@@ -104,7 +105,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       });
       
       if (swapSuccess && postSwapConnection) {
-        console.log('✅ Connection swap completed successfully');
+        logger.connectionSuccess('swap', connectionId);
         addNotification({ 
           title: 'Success',
           message: `Connection direction swapped: ${targetNode.title} → ${sourceNode.title}`, 
@@ -113,9 +114,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
         });
         onClose();
       } else {
-        console.error('❌ Connection swap failed or connection disappeared');
-        console.error('SwapSuccess:', swapSuccess, 'Connection exists:', !!postSwapConnection);
-        addNotification({ 
+        logger.connectionError('swap', connectionId, 'Connection swap failed or connection disappeared');        addNotification({ 
           title: 'Error',
           message: 'Failed to swap connection direction', 
           type: 'error',
@@ -123,7 +122,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
         });
       }
       
-      console.log('🏁 === SWAP OPERATION COMPLETED ===');
+      logger.connectionDebug('swap', 'Swap operation completed');
     }, 50);
   };
   const handleSave = () => {
