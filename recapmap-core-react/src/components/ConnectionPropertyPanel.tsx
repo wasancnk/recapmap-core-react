@@ -55,11 +55,48 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
   };  const handleSwapDirection = () => {
     if (!sourceNode || !targetNode) return;
     
-    // Simply swap the source and target node IDs while preserving all other properties
+    console.log('🔄 Swapping connection direction with proper handle mapping:', {
+      from: `${sourceNode.title} → ${targetNode.title}`,
+      to: `${targetNode.title} → ${sourceNode.title}`,
+      currentHandles: {
+        sourceHandle: connection.sourceHandle,
+        targetHandle: connection.targetHandle
+      }
+    });
+    
+    // TWO-LAYER SWAP:
+    // Layer 1: Swap the nodes (A→B becomes B→A)  
+    // Layer 2: Swap the connector types to maintain physical connection points
+    
+    // Convert handle names: source↔target while keeping position
+    const getSwappedHandle = (handle: string) => {
+      if (!handle) return handle;
+      
+      // If it's a source handle, make it a target handle (and vice versa)
+      if (handle.includes('-source')) {
+        return handle.replace('-source', '-target');
+      } else if (handle.includes('-target')) {
+        return handle.replace('-target', '-source');
+      }
+      return handle; // Fallback for unexpected formats
+    };
+    
+    const newSourceHandle = getSwappedHandle(connection.targetHandle) || 'right-source';
+    const newTargetHandle = getSwappedHandle(connection.sourceHandle) || 'left-target';
+    
+    console.log('✅ Handle mapping:', {
+      oldSource: connection.sourceHandle,
+      oldTarget: connection.targetHandle,
+      newSource: newSourceHandle,
+      newTarget: newTargetHandle
+    });
+    
+    // Apply both layers of the swap
     updateConnection(connectionId, {
-      sourceNodeId: connection.targetNodeId,
-      targetNodeId: connection.sourceNodeId,
-      // Keep all other properties including handles, metadata, styling, etc.
+      sourceNodeId: connection.targetNodeId,  // Layer 1: Swap nodes
+      targetNodeId: connection.sourceNodeId,  // Layer 1: Swap nodes
+      sourceHandle: newSourceHandle,          // Layer 2: Swap connector types
+      targetHandle: newTargetHandle,          // Layer 2: Swap connector types
     });
     
     addNotification({ 
