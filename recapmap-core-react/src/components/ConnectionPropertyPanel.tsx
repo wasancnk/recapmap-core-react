@@ -140,27 +140,35 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       
       logger.connectionDebug('swap', 'Swap operation completed');
     }, 50);
-  };
-  const handleSave = () => {
-    updateConnection(connectionId, {
-      label: formData.label,
-      type: formData.type as 'data' | 'control' | 'dependency',
-      metadata: {
-        ...connection.metadata,
-        directionType: formData.directionType as 'oneway' | 'twoway' | 'undirected',
-        lineStyle: formData.style as 'solid' | 'dashed' | 'dotted',
-        color: formData.color,
-        priority: formData.priority as 'low' | 'medium' | 'high' | 'critical'
-      }
-    });
-    setIsModified(false);
-    addNotification({ 
-      title: 'Success',
-      message: 'Connection updated with new styling', 
-      type: 'success',
-      duration: 3000 
-    });
-  };  const handleDelete = () => {
+  };  const handleSave = async () => {
+    try {
+      await updateConnection(connectionId, {
+        label: formData.label,
+        type: formData.type as 'data' | 'control' | 'dependency',
+        metadata: {
+          ...connection.metadata,
+          directionType: formData.directionType as 'oneway' | 'twoway' | 'undirected',
+          lineStyle: formData.style as 'solid' | 'dashed' | 'dotted',
+          color: formData.color,
+          priority: formData.priority as 'low' | 'medium' | 'high' | 'critical'
+        }
+      });
+      setIsModified(false);
+      addNotification({ 
+        title: 'Success',
+        message: 'Connection updated with new styling', 
+        type: 'success',
+        duration: 3000 
+      });
+    } catch (error) {
+      addNotification({
+        title: 'Error', 
+        message: `Failed to update connection: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        type: 'error',
+        duration: 5000
+      });
+    }
+  };const handleDelete = () => {
     deleteConnection(connectionId);
     addNotification({ 
       title: 'Success',

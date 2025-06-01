@@ -93,16 +93,20 @@ describe('ConnectionPropertyPanel', () => {
     });
   });
 
-  describe('Rendering', () => {
-    it('should render the connection property panel with correct data', () => {
+  describe('Rendering', () => {    it('should render the connection property panel with correct data', () => {
       render(<ConnectionPropertyPanel {...defaultProps} />);
 
       expect(screen.getByDisplayValue('Test Connection')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('data')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('oneway')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('solid')).toBeInTheDocument();
+      // Check selects by their actual values rather than display values
+      const typeSelect = screen.getByRole('combobox', { name: /relationship type/i });
+      expect(typeSelect).toHaveValue('data');
+      const directionSelect = screen.getByRole('combobox', { name: /direction type/i });
+      expect(directionSelect).toHaveValue('oneway');
+      const styleSelect = screen.getByRole('combobox', { name: /line style/i });
+      expect(styleSelect).toHaveValue('solid');
       expect(screen.getByDisplayValue('#6B7280')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('medium')).toBeInTheDocument();
+      const prioritySelect = screen.getByRole('combobox', { name: /priority/i });
+      expect(prioritySelect).toHaveValue('medium');
     });
 
     it('should display source and target node information', () => {
@@ -169,26 +173,22 @@ describe('ConnectionPropertyPanel', () => {
       await user.type(labelInput, ' Modified');      // Check if save button becomes enabled (indicates modification state)
       const saveButton = screen.getByText('Save');
       expect(saveButton).not.toBeDisabled();
-    });
-
-    it('should handle connection type changes', async () => {
+    });    it('should handle connection type changes', async () => {
       const user = userEvent.setup();
       render(<ConnectionPropertyPanel {...defaultProps} />);
 
-      const typeSelect = screen.getByDisplayValue('data');
-      await user.selectOptions(typeSelect, 'process');
+      const typeSelect = screen.getByRole('combobox', { name: /relationship type/i });
+      await user.selectOptions(typeSelect, 'control');
 
-      expect(typeSelect).toHaveValue('process');
-    });
-
-    it('should handle direction type changes', async () => {
+      expect(typeSelect).toHaveValue('control');
+    });    it('should handle direction type changes', async () => {
       const user = userEvent.setup();
       render(<ConnectionPropertyPanel {...defaultProps} />);
 
-      const directionSelect = screen.getByDisplayValue('oneway');
-      await user.selectOptions(directionSelect, 'bidirectional');
+      const directionSelect = screen.getByRole('combobox', { name: /direction type/i });
+      await user.selectOptions(directionSelect, 'twoway');
 
-      expect(directionSelect).toHaveValue('bidirectional');
+      expect(directionSelect).toHaveValue('twoway');
     });
 
     it('should handle color changes', async () => {
@@ -234,10 +234,12 @@ describe('ConnectionPropertyPanel', () => {
       await user.type(labelInput, ' Modified');
 
       const saveButton = screen.getByText('Save');
-      await user.click(saveButton);await waitFor(() => {
+      await user.click(saveButton);      await waitFor(() => {
         expect(mockAddNotification).toHaveBeenCalledWith({
           type: 'success',
-          message: 'Connection updated successfully',
+          title: 'Success',
+          message: 'Connection updated with new styling',
+          duration: 3000
         });
       });
     });
@@ -253,12 +255,12 @@ describe('ConnectionPropertyPanel', () => {
       await user.type(labelInput, ' Modified');
 
       const saveButton = screen.getByText('Save');
-      await user.click(saveButton);
-
-      await waitFor(() => {
+      await user.click(saveButton);      await waitFor(() => {
         expect(mockAddNotification).toHaveBeenCalledWith({
           type: 'error',
+          title: 'Error',
           message: 'Failed to update connection: Save failed',
+          duration: 5000
         });
       });
     });
