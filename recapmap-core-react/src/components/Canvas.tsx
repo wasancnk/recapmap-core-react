@@ -61,11 +61,14 @@ const CustomNode = ({
   };
 
   const baseStyle = nodeTypeStyles[data.nodeType] || nodeTypeStyles['usecase'];
-  const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
+  const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';  const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    openPanel('node-properties', { nodeId: id });
+    
+    // Calculate position for the property panel with wider separation from the node
+    const x = e.clientX + 150; // Increased offset to avoid overlapping the node
+    const y = Math.max(50, e.clientY - 100); // Offset up to avoid cursor, but keep on screen
+    
+    openPanel('node-properties', { nodeId: id }, { x, y });
   };
 
   const handleMouseEnter = () => setIsHovered(true);

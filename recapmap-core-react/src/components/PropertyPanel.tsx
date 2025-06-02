@@ -8,20 +8,45 @@ import { useNodeStore } from '../stores'
 import { getPropertySchema, validateNodeProperties } from '../utils/propertySchemas'
 import type { RecapMapNode } from '../types'
 import { PropertyField } from './PropertyField.js'
+import { useDraggable } from '../hooks/useDraggable'
 
 interface PropertyPanelProps {
   nodeId: string | null
   isOpen: boolean
+  position: { x: number; y: number }
   onClose: () => void
 }
 
 export const PropertyPanel: React.FC<PropertyPanelProps> = ({ 
   nodeId, 
   isOpen, 
+  position,
   onClose 
 }) => {
   const { nodes, updateNode } = useNodeStore()
   const node = nodeId ? nodes.find(n => n.id === nodeId) : null
+
+  // Initialize draggable functionality
+  const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
+    initialPosition: position,
+  })
+
+  // Add ESC key listener to close the panel
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen, onClose])
 
   if (!isOpen || !node) {
     return null
@@ -41,7 +66,6 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       updatedAt: new Date().toISOString()
     })
   }
-
   const handleBasicPropertyChange = (field: keyof RecapMapNode, value: string) => {
     updateNode(node.id, {
       ...node,
@@ -51,21 +75,46 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   }
 
   return (
-    <div className="fixed right-0 top-0 h-full w-96 bg-surface-primary border-l border-surface-border z-50 overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-surface-border">
-        <h2 className="text-lg font-bold text-text-primary">
-          {node.type.charAt(0).toUpperCase() + node.type.slice(1)} Properties
-        </h2>
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-surface-secondary rounded-md transition-colors"
-          aria-label="Close property panel"
-        >
-          <svg className="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-        </button>
+    <div 
+      ref={dragRef}
+      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-96"
+      style={{ 
+        left: draggablePosition.x, 
+        top: draggablePosition.y,
+        maxHeight: '600px',
+        overflowY: 'auto'
+      }}
+    >      {/* Header - Draggable */}
+      <div 
+        className="flex flex-col select-none"
+        {...dragHandleProps}
+      >
+        {/* Drag indicator dots - centered at top */}
+        <div className="flex justify-center py-2">
+          <div className="flex space-x-1">
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+          </div>
+        </div>
+        
+        {/* Title and close button */}
+        <div className="flex items-center justify-between px-4 pb-4 border-b border-surface-border">
+          <h2 className="text-lg font-bold text-text-primary">
+            {node.type.charAt(0).toUpperCase() + node.type.slice(1)} Properties
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-surface-secondary rounded-md transition-colors"
+            aria-label="Close property panel"
+            onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking close button
+          >
+            <svg className="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Validation Status */}
