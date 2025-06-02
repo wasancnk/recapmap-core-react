@@ -42,7 +42,7 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 
 export const Toolbar: React.FC = () => {
   const { nodes, connections } = useNodeStore();
-  const { addNotification, openPanel } = useUIStore();
+  const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid } = useUIStore();
 
   const nodeTypes: Array<{
     type: NodeType;
@@ -132,6 +132,42 @@ export const Toolbar: React.FC = () => {
               icon={nodeType.icon}
             />
           ))}
+        </div>
+
+        {/* Grid Controls */}
+        <div className="border-t border-surface-border pt-3 mb-4">
+          <h4 className="text-text-primary font-semibold mb-2 text-xs">Grid Options</h4>
+          
+          <div className="space-y-2">            <button
+              onClick={toggleGrid}
+              className={`
+                w-full px-3 py-2 rounded text-sm font-medium transition-colors
+                ${ui.isGridVisible 
+                  ? 'bg-accent-primary text-white border border-accent-primary hover:bg-accent-primary/90' 
+                  : 'bg-surface-secondary text-text-secondary border border-surface-border hover:bg-surface-tertiary'
+                }
+              `}
+              title="Toggle grid visibility (Ctrl+Shift+G)"
+            >
+              <span className="mr-2">{ui.isGridVisible ? '✓' : '○'}</span>
+              Show Grid
+            </button>
+            
+            <button
+              onClick={toggleSnapToGrid}
+              className={`
+                w-full px-3 py-2 rounded text-sm font-medium transition-colors
+                ${ui.snapToGrid 
+                  ? 'bg-accent-primary text-white border border-accent-primary hover:bg-accent-primary/90' 
+                  : 'bg-surface-secondary text-text-secondary border border-surface-border hover:bg-surface-tertiary'
+                }
+              `}
+              title="Toggle snap to grid (Ctrl+G)"
+            >
+              <span className="mr-2">{ui.snapToGrid ? '⚡' : '○'}</span>
+              Snap to Grid
+            </button>
+          </div>
         </div>        {/* Canvas Actions */}
         <div className="border-t border-surface-border pt-3">
           <div className="flex items-center justify-between mb-2">

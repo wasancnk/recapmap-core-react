@@ -362,7 +362,29 @@ export const Canvas: React.FC = () => {  const {
 
   const {
     canvas,
+    ui,
+    toggleSnapToGrid,
+    toggleGrid,
   } = useUIStore();
+
+  // Keyboard shortcuts for grid controls
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl+G: Toggle snap to grid
+      if (event.ctrlKey && event.key === 'g') {
+        event.preventDefault();
+        toggleSnapToGrid();
+      }
+      // Ctrl+Shift+G: Toggle grid visibility
+      if (event.ctrlKey && event.shiftKey && event.key === 'G') {
+        event.preventDefault();
+        toggleGrid();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSnapToGrid, toggleGrid]);
 
   // Create test nodes on first load for easier testing
   React.useEffect(() => {
@@ -544,7 +566,14 @@ export const Canvas: React.FC = () => {  const {
   const handleConnectionPanelClose = useCallback(() => {
     setSelectedConnectionId(null);
   }, []);  return (
-    <div className="w-full h-full bg-background-tertiary">      <ReactFlow
+    <div className="w-full h-full bg-background-tertiary relative">      {/* Snap-to-Grid Status Indicator */}
+      {ui.snapToGrid && (
+        <div className="absolute top-4 right-4 z-50 bg-accent-primary/90 text-white px-3 py-1 rounded text-xs font-medium shadow-lg flex items-center gap-2">
+          <span>⚡</span>
+          <span>Snap Active</span>
+          <span className="opacity-70 text-xs">(Ctrl+G)</span>
+        </div>
+      )}<ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={handleNodesChange}
@@ -567,12 +596,16 @@ export const Canvas: React.FC = () => {  const {
         nodesDraggable={true}
         nodesConnectable={true}
         elementsSelectable={true}
-      >
-        <Background 
+        snapToGrid={ui.snapToGrid}
+        snapGrid={[ui.gridSize, ui.gridSize]}
+      >        <Background 
           variant={BackgroundVariant.Dots} 
-          gap={20} 
+          gap={ui.gridSize} 
           size={1}
           color="#374151"
+          style={{ 
+            opacity: ui.isGridVisible ? 1 : 0 
+          }}
         />
         <Controls 
           className="controls-panel"
