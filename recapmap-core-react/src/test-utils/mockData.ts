@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import type { RecapMapNode, NodeConnection, MindmapNode } from '../types'
+import type { RecapMapNode, NodeConnection } from '../types'
 
 /**
  * Mock data factory for testing
@@ -7,9 +7,9 @@ import type { RecapMapNode, NodeConnection, MindmapNode } from '../types'
 
 // Mock node creation
 export const createMockNode = (overrides: Partial<RecapMapNode> = {}): RecapMapNode => {
-  const baseNode: RecapMapNode = {
+  const baseNode = {
     id: 'test-node-1',
-    type: 'usecase',
+    type: 'usecase' as const,
     position: { x: 100, y: 100 },
     title: 'Test Use Case',
     description: 'Test description',
@@ -30,10 +30,9 @@ export const createMockNode = (overrides: Partial<RecapMapNode> = {}): RecapMapN
     dependencies: [],
     successMetrics: [],
     assumptions: [],
-    ...overrides,
   }
   
-  return baseNode
+  return { ...baseNode, ...overrides } as RecapMapNode
 }
 
 // Mock connection creation
