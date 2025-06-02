@@ -97,16 +97,13 @@ describe('ConnectionPropertyPanel', () => {
       render(<ConnectionPropertyPanel {...defaultProps} />);
 
       expect(screen.getByDisplayValue('Test Connection')).toBeInTheDocument();
-      // Check selects by their actual values rather than display values
-      const typeSelect = screen.getByRole('combobox', { name: /relationship type/i });
-      expect(typeSelect).toHaveValue('data');
-      const directionSelect = screen.getByRole('combobox', { name: /direction type/i });
-      expect(directionSelect).toHaveValue('oneway');
-      const styleSelect = screen.getByRole('combobox', { name: /line style/i });
-      expect(styleSelect).toHaveValue('solid');
+      // Use getAllByRole and check by index since all selects should have the correct values selected
+      const selects = screen.getAllByRole('combobox');
+      expect(selects[0]).toHaveValue('oneway'); // Direction Type 
+      expect(selects[1]).toHaveValue('solid'); // Line Style
+      expect(selects[2]).toHaveValue('data'); // Relationship Type
+      expect(selects[3]).toHaveValue('medium'); // Priority
       expect(screen.getByDisplayValue('#6B7280')).toBeInTheDocument();
-      const prioritySelect = screen.getByRole('combobox', { name: /priority/i });
-      expect(prioritySelect).toHaveValue('medium');
     });
 
     it('should display source and target node information', () => {
@@ -177,7 +174,8 @@ describe('ConnectionPropertyPanel', () => {
       const user = userEvent.setup();
       render(<ConnectionPropertyPanel {...defaultProps} />);
 
-      const typeSelect = screen.getByRole('combobox', { name: /relationship type/i });
+      const selects = screen.getAllByRole('combobox');
+      const typeSelect = selects[2]; // Relationship Type select is 3rd (index 2)
       await user.selectOptions(typeSelect, 'control');
 
       expect(typeSelect).toHaveValue('control');
@@ -185,7 +183,8 @@ describe('ConnectionPropertyPanel', () => {
       const user = userEvent.setup();
       render(<ConnectionPropertyPanel {...defaultProps} />);
 
-      const directionSelect = screen.getByRole('combobox', { name: /direction type/i });
+      const selects = screen.getAllByRole('combobox');
+      const directionSelect = selects[0]; // Direction Type select is 1st (index 0)
       await user.selectOptions(directionSelect, 'twoway');
 
       expect(directionSelect).toHaveValue('twoway');

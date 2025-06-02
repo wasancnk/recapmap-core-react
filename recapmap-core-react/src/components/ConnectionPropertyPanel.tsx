@@ -241,12 +241,11 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             <span>⇄</span>
             <span>Swap Direction</span>
           </button>
-        </div>
-
-        {/* Label */}
+        </div>        {/* Label */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary">Label</label>
+          <label htmlFor="connectionLabel" className="text-sm font-medium text-text-primary">Label</label>
           <input
+            id="connectionLabel"
             type="text"
             value={formData.label}
             onChange={(e) => handleInputChange('label', e.target.value)}
@@ -258,10 +257,10 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
         {/* Direction & Style */}
         <div className="space-y-3">
           <h4 className="font-semibold text-text-primary">Direction & Style</h4>
-          
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Direction Type</label>
+            <div className="space-y-2">
+            <label htmlFor="directionType" className="text-sm font-medium text-text-primary">Direction Type</label>
             <select
+              id="directionType"
               value={formData.directionType}
               onChange={(e) => handleInputChange('directionType', e.target.value)}
               className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
@@ -273,8 +272,9 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Line Style</label>
+            <label htmlFor="lineStyle" className="text-sm font-medium text-text-primary">Line Style</label>
             <select
+              id="lineStyle"
               value={formData.style}
               onChange={(e) => handleInputChange('style', e.target.value)}
               className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
@@ -304,8 +304,9 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
           </div>
         </div>        {/* Relationship Type */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary">Relationship Type</label>
+          <label htmlFor="relationshipType" className="text-sm font-medium text-text-primary">Relationship Type</label>
           <select
+            id="relationshipType"
             value={formData.type}
             onChange={(e) => handleInputChange('type', e.target.value)}
             className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
@@ -318,8 +319,9 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
 
         {/* Priority */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary">Priority</label>
+          <label htmlFor="priority" className="text-sm font-medium text-text-primary">Priority</label>
           <select
+            id="priority"
             value={formData.priority}
             onChange={(e) => handleInputChange('priority', e.target.value)}
             className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
