@@ -49,20 +49,19 @@ export const useDraggable = ({
     const newPosition = {
       x: e.clientX - dragStart.x,
       y: e.clientY - dragStart.y,
-    }
-
-    // Keep panel within viewport bounds
+    }    // Keep panel within viewport bounds with margin
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
     }
 
-    const panelWidth = dragRef.current?.offsetWidth || 384 // Default to w-96 (384px)
-    const panelHeight = dragRef.current?.offsetHeight || 600
+    const panelWidth = dragRef.current?.offsetWidth || 400 // Default with margin
+    const panelHeight = dragRef.current?.offsetHeight || 620
+    const margin = 10 // Minimum margin from screen edges
 
-    // Constrain position to keep panel visible
-    newPosition.x = Math.max(0, Math.min(newPosition.x, viewport.width - panelWidth))
-    newPosition.y = Math.max(0, Math.min(newPosition.y, viewport.height - panelHeight))
+    // Constrain position to keep panel visible with margin
+    newPosition.x = Math.max(margin, Math.min(newPosition.x, viewport.width - panelWidth - margin))
+    newPosition.y = Math.max(margin, Math.min(newPosition.y, viewport.height - panelHeight - margin))
 
     setPosition(newPosition)
     onPositionChange?.(newPosition)

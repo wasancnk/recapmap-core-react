@@ -73,7 +73,6 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       updatedAt: new Date().toISOString()
     })
   }
-
   return (
     <div 
       ref={dragRef}
@@ -84,12 +83,12 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         maxHeight: '600px',
         overflowY: 'auto'
       }}
-    >      {/* Header - Draggable */}
+      title={`Position: ${draggablePosition.x}, ${draggablePosition.y} | Viewport: ${window.innerWidth}x${window.innerHeight}`}
+    >{/* Header - Draggable */}
       <div 
         className="flex flex-col select-none"
         {...dragHandleProps}
-      >
-        {/* Drag indicator dots - centered at top */}
+      >        {/* Drag indicator dots - centered at top */}
         <div className="flex justify-center py-2">
           <div className="flex space-x-1">
             <div className="w-1 h-1 bg-text-muted rounded-full"></div>
@@ -97,6 +96,12 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
             <div className="w-1 h-1 bg-text-muted rounded-full"></div>
             <div className="w-1 h-1 bg-text-muted rounded-full"></div>
           </div>
+        </div>
+        
+        {/* Debug position info - temporary */}
+        <div className="text-xs text-text-muted text-center pb-1">
+          Pos: {Math.round(draggablePosition.x)},{Math.round(draggablePosition.y)} | 
+          VP: {window.innerWidth}x{window.innerHeight}
         </div>
         
         {/* Title and close button */}

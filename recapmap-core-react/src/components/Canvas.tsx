@@ -63,12 +63,91 @@ const CustomNode = ({
   const baseStyle = nodeTypeStyles[data.nodeType] || nodeTypeStyles['usecase'];
   const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';  const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+      // Calculate adaptive position for the property panel
+    const calculateAdaptivePosition = (mouseX: number, mouseY: number) => {
+      const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+      
+      // Panel dimensions with some safety margin
+      const panelWidth = 400; // w-96 = 384px + some margin for content
+      const panelHeight = 620; // max height + margin
+      
+      // Margins to keep panels away from edges
+      const margin = 20;
+      
+      // Available space calculations
+      const availableRight = viewport.width - mouseX - margin;
+      const availableLeft = mouseX - margin;
+      const availableBelow = viewport.height - mouseY - margin;
+      const availableAbove = mouseY - margin;      // Determine best horizontal position with preference for staying near cursor
+      let x: number;
+      const minHorizontalSpace = Math.min(panelWidth, 320); // Accept smaller space if needed
+      
+      if (availableRight >= minHorizontalSpace) {
+        // Prefer right side with small offset
+        x = Math.min(mouseX + 20, viewport.width - panelWidth - margin);
+      } else if (availableLeft >= minHorizontalSpace) {
+        // Use left side, staying close to cursor
+        x = Math.max(mouseX - panelWidth - 20, margin);
+      } else {
+        // Very constrained space - center in the larger available area
+        if (availableRight >= availableLeft) {
+          // More space on right
+          x = viewport.width - panelWidth - margin;
+        } else {
+          // More space on left
+          x = margin;
+        }
+      }      // Determine best vertical position with preference for staying near cursor
+      let y: number;
+      const minVerticalSpace = Math.min(panelHeight, 400); // Accept smaller space if needed
+      
+      if (availableBelow >= minVerticalSpace) {
+        // Use space below, but keep panel as close to cursor as possible
+        y = Math.min(mouseY + 20, viewport.height - panelHeight - margin);
+      } else if (availableAbove >= minVerticalSpace) {
+        // Use space above, keeping close to cursor
+        y = Math.max(mouseY - panelHeight - 20, margin);
+      } else {
+        // Very constrained space - use the larger available area but stay closer to cursor
+        if (availableBelow >= availableAbove) {
+          // More space below - position as low as possible while fitting
+          y = viewport.height - panelHeight - margin;
+        } else {
+          // More space above - position as high as needed
+          y = margin;
+        }
+      }
+      
+      // Final bounds check to ensure panel is always fully visible
+      x = Math.max(margin, Math.min(x, viewport.width - panelWidth - margin));
+      y = Math.max(margin, Math.min(y, viewport.height - panelHeight - margin));
+      
+      return { x, y };
+    };    
+    const position = calculateAdaptivePosition(e.clientX, e.clientY);
     
-    // Calculate position for the property panel with wider separation from the node
-    const x = e.clientX + 150; // Increased offset to avoid overlapping the node
-    const y = Math.max(50, e.clientY - 100); // Offset up to avoid cursor, but keep on screen
+    // Enhanced debug logging with positioning rationale
+    console.log('🎯 Panel positioning debug:', {
+      cursor: { x: e.clientX, y: e.clientY },
+      viewport: { width: window.innerWidth, height: window.innerHeight },
+      availableSpace: {
+        right: window.innerWidth - e.clientX - 20,
+        left: e.clientX - 20,
+        below: window.innerHeight - e.clientY - 20,
+        above: e.clientY - 20
+      },
+      calculatedPosition: position,
+      panelDimensions: { width: 400, height: 620 },
+      positioningReason: {
+        horizontal: window.innerWidth - e.clientX >= 320 ? 'right-preferred' : e.clientX >= 320 ? 'left-fallback' : 'edge-constrained',
+        vertical: window.innerHeight - e.clientY >= 400 ? 'below-preferred' : e.clientY >= 400 ? 'above-fallback' : 'edge-constrained'
+      }
+    });
     
-    openPanel('node-properties', { nodeId: id }, { x, y });
+    openPanel('node-properties', { nodeId: id }, position);
   };
 
   const handleMouseEnter = () => setIsHovered(true);
