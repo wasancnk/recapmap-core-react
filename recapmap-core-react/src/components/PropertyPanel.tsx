@@ -91,25 +91,25 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         title: 'Node Deleted',
         message: `Successfully deleted node "${node.title}".`,
         duration: 3000
-      })
-    }
+      })    }
   }
+
   return (
     <div 
       ref={dragRef}
-      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-96"
+      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-96 flex flex-col"
       style={{ 
         left: draggablePosition.x, 
         top: draggablePosition.y,
-        maxHeight: '600px',
-        overflowY: 'auto'
+        height: '600px',
+        maxHeight: '600px'
       }}
       title={`Position: ${draggablePosition.x}, ${draggablePosition.y} | Viewport: ${window.innerWidth}x${window.innerHeight}`}
-    >{/* Header - Draggable */}
+    >      {/* Fixed Header - Draggable */}
       <div 
-        className="flex flex-col select-none"
+        className="flex flex-col select-none flex-shrink-0"
         {...dragHandleProps}
-      >        {/* Drag indicator dots - centered at top */}
+      >{/* Drag indicator dots - centered at top */}
         <div className="flex justify-center py-2">
           <div className="flex space-x-1">
             <div className="w-1 h-1 bg-text-muted rounded-full"></div>
@@ -138,26 +138,25 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           >
             <svg className="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
+            </svg>          </button>
         </div>
+
+        {/* Fixed Validation Status */}
+        {!validationResult.isValid && (
+          <div className="mx-4 mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+            <div className="flex items-center">
+              <svg className="w-4 h-4 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm font-medium text-red-800">
+                {validationResult.errors.length} validation error(s)
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Validation Status */}
-      {!validationResult.isValid && (
-        <div className="mx-4 mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-          <div className="flex items-center">
-            <svg className="w-4 h-4 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            <span className="text-sm font-medium text-red-800">
-              {validationResult.errors.length} validation error(s)
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Content */}
+      {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* Basic Properties Section */}
         <div className="space-y-4">

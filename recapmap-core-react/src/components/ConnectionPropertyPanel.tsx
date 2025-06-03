@@ -191,20 +191,19 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       if (!confirmDiscard) return;
     }
     onClose();
-  };
-  return (
+  };  return (
     <div 
       ref={dragRef}
-      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-80"
+      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-80 flex flex-col"
       style={{ 
         left: draggablePosition.x, 
         top: draggablePosition.y,
-        maxHeight: '600px',
-        overflowY: 'auto'
+        height: '600px',
+        maxHeight: '600px'
       }}
-    >      {/* Header - Draggable */}
+    >      {/* Fixed Header - Draggable */}
       <div 
-        className="flex flex-col select-none"
+        className="flex flex-col select-none flex-shrink-0"
         {...dragHandleProps}
       >
         {/* Drag indicator dots - centered at top */}
@@ -229,12 +228,11 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking close button
           >
             ✕
-          </button>
-        </div>
+          </button>        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-4">
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         
         {/* Connection Details */}
         <div className="space-y-3">
