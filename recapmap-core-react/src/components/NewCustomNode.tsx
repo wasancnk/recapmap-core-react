@@ -143,43 +143,41 @@ const NewCustomNode = ({
     e.stopPropagation();
     e.preventDefault();
     deleteNode(id);
-  };  const handleMouseEnter = (e: React.MouseEvent) => {
+  };  const handleMouseEnter = () => {
+    console.log('🐭 Mouse entered node:', id, 'Current hover state:', isHovered);
     setIsHovered(true);
     
     // Clear any existing timeout
     if (tooltipTimeoutRef.current) {
+      console.log('⏰ Clearing existing tooltip timeout');
       clearTimeout(tooltipTimeoutRef.current);
     }
     
-    // Capture the element reference immediately
-    const element = e.currentTarget as HTMLElement;
-    
-    // Show tooltip after a short delay
+    // Simple test - just show tooltip at fixed position first
+    console.log('⏰ Setting timeout for tooltip show');
     tooltipTimeoutRef.current = setTimeout(() => {
-      // Check if element still exists and is connected to DOM
-      if (element && element.isConnected) {
-        const rect = element.getBoundingClientRect();
-        setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top
-        });
-        setShowTooltip(true);
-      }
-    }, 500); // 500ms delay before showing tooltip
-  };
-
-  const handleMouseLeave = () => {
+      console.log('🎯 TIMEOUT FIRED! Showing tooltip for node:', id);
+      console.log('📍 Setting tooltip position to 200, 200');
+      setTooltipPosition({
+        x: 200, // More visible position
+        y: 200
+      });
+      console.log('✅ Setting showTooltip to true');
+      setShowTooltip(true);
+    }, 100);
+  };  const handleMouseLeave = () => {
+    console.log('🐭 Mouse left node:', id, 'Current hover state:', isHovered, 'Tooltip visible:', showTooltip);
     setIsHovered(false);
     setConnectingFromHandle(null);
     setShowTooltip(false);
     
     // Clear timeout if mouse leaves before tooltip shows
     if (tooltipTimeoutRef.current) {
+      console.log('⏰ Mouse left - clearing tooltip timeout');
       clearTimeout(tooltipTimeoutRef.current);
       tooltipTimeoutRef.current = null;
     }
   };
-
   // Cleanup timeout on unmount
   React.useEffect(() => {
     return () => {
@@ -189,8 +187,22 @@ const NewCustomNode = ({
     };
   }, []);
 
+  // TEMP: Force show tooltip for first node to test rendering
+  React.useEffect(() => {
+    if (id.includes('1')) { // Show tooltip for first node
+      console.log('🧪 TEMP TEST: Force showing tooltip for first node');
+      setTimeout(() => {
+        setTooltipPosition({ x: 300, y: 300 });
+        setShowTooltip(true);
+      }, 2000);
+    }
+  }, [id]);
   // Show connectors when hovering or when connecting
   const showConnectors = isHovered || connectingFromHandle || selected;
+  
+  // Debug logging for render state
+  console.log(`🔍 Node ${id} render - isHovered: ${isHovered}, showTooltip: ${showTooltip}, tooltipPosition:`, tooltipPosition);
+  
   return (
     <>
       {/* Tooltip */}
@@ -200,14 +212,14 @@ const NewCustomNode = ({
         data={data}
         nodeId={id}
       />
-      
-      <div 
+        <div 
         className={`
           rounded-lg border-2 
           transition-all duration-200 hover:bg-opacity-90 cursor-pointer
           relative flex flex-col
           node-uniform-size node-grid-aligned
           ${selectedStyle}
+          ${isHovered ? 'ring-2 ring-yellow-400 bg-opacity-80' : ''}
         `}
         style={{
           backgroundColor: config.bgColor,
@@ -390,7 +402,19 @@ const NewCustomNode = ({
           pointerEvents: 'none',
           zIndex: 5
         }}
-      />
+      />      {/* Debug indicator for tooltip state */}
+      <div 
+        className="absolute top-1 right-1 text-xs font-bold"
+        style={{
+          backgroundColor: showTooltip ? 'lime' : (isHovered ? 'orange' : 'transparent'),
+          color: 'black',
+          padding: '2px 4px',
+          borderRadius: '2px',
+          zIndex: 20
+        }}
+      >
+        {showTooltip ? 'TT' : (isHovered ? 'H' : '')}
+      </div>
 
       {/* Node Header - Type and Delete Button */}
       <div className="flex justify-between items-start mb-2">
