@@ -91,12 +91,11 @@ export const Toolbar: React.FC = () => {
       label: 'Error',
       className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
       icon: '⚠️'
-    },
-    {
+    },    {
       type: 'base',
       label: 'Base',
       className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
-      icon: '🔧'
+      icon: '🏗️'
     },
   ];
   const handleClearAll = () => {
