@@ -2,6 +2,7 @@ import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { useUIStore } from '../stores/uiStore';
 import { useNodeStore } from '../stores/nodeStore';
+import NodeTooltip from './NodeTooltip';
 import type { NodeType } from '../types';
 
 // Professional card-style node component
@@ -13,11 +14,13 @@ const NewCustomNode = ({
   id: string;
   data: { label: string; description?: string; nodeType: NodeType }; 
   selected: boolean 
-}) => {
-  const { openPanel } = useUIStore();
+}) => {  const { openPanel } = useUIStore();
   const { deleteNode } = useNodeStore();
   const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
+  const [showTooltip, setShowTooltip] = React.useState(false);
+  const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 });
+  const tooltipTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Node type configurations with icons and colors
   const nodeTypeConfig = {
@@ -141,39 +144,80 @@ const NewCustomNode = ({
     e.preventDefault();
     deleteNode(id);
   };
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    setIsHovered(true);
+    
+    // Clear any existing timeout
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+    }
+    
+    // Show tooltip after a short delay
+    tooltipTimeoutRef.current = setTimeout(() => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top
+      });
+      setShowTooltip(true);
+    }, 500); // 500ms delay before showing tooltip
+  };
 
-  const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => {
     setIsHovered(false);
     setConnectingFromHandle(null);
+    setShowTooltip(false);
+    
+    // Clear timeout if mouse leaves before tooltip shows
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
   };
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (tooltipTimeoutRef.current) {
+        clearTimeout(tooltipTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Show connectors when hovering or when connecting
   const showConnectors = isHovered || connectingFromHandle || selected;
-
   return (
-    <div 
-      className={`
-        rounded-lg border-2 
-        transition-all duration-200 hover:bg-opacity-90 cursor-pointer
-        relative flex flex-col
-        node-uniform-size node-grid-aligned
-        ${selectedStyle}
-      `}
-      style={{
-        backgroundColor: config.bgColor,
-        borderColor: config.borderColor,
-        color: config.textColor,
-        width: '200px',        // Wider for better card layout
-        height: '160px',       // Fixed height for consistency
-        padding: '12px',       // Standard node padding
-      }}
-      onDoubleClick={handleDoubleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      title={`${data.label}${data.description ? ` - ${data.description}` : ''}`}
-      data-node-type={data.nodeType}
-    >
+    <>
+      {/* Tooltip */}
+      <NodeTooltip
+        isVisible={showTooltip}
+        position={tooltipPosition}
+        data={data}
+        nodeId={id}
+      />
+      
+      <div 
+        className={`
+          rounded-lg border-2 
+          transition-all duration-200 hover:bg-opacity-90 cursor-pointer
+          relative flex flex-col
+          node-uniform-size node-grid-aligned
+          ${selectedStyle}
+        `}
+        style={{
+          backgroundColor: config.bgColor,
+          borderColor: config.borderColor,
+          color: config.textColor,
+          width: '200px',        // Wider for better card layout
+          height: '160px',       // Fixed height for consistency
+          padding: '12px',       // Standard node padding
+        }}
+        onDoubleClick={handleDoubleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        title={`${data.label}${data.description ? ` - ${data.description}` : ''}`}
+        data-node-type={data.nodeType}
+      >
       {/* Connection Handles - All positions */}
       {/* TOP Handles */}
       <Handle
@@ -393,10 +437,10 @@ const NewCustomNode = ({
             title={data.description}
           >
             {data.description}
-          </div>
-        )}
+          </div>        )}
       </div>
     </div>
+    </>
   );
 };
 

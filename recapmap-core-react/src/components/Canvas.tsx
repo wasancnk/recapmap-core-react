@@ -152,16 +152,20 @@ export const Canvas: React.FC = () => {  const {
         id: connection.id,
         source: connection.sourceNodeId,
         target: connection.targetNodeId,
-        sourceHandle: connection.sourceHandle || undefined,
-        targetHandle: connection.targetHandle || undefined,
+        sourceHandle: connection.sourceHandle || undefined,        targetHandle: connection.targetHandle || undefined,
         label: connection.label,
         type: 'default',
         style: getLineStyle(lineStyle, lineColor, priorityThickness),
         labelStyle: { 
-          fill: '#374151', 
+          fill: '#ffffff',  // White text
           fontSize: 12,
-          fontWeight: '500' 
-        },        ...getMarkers(directionType),
+          fontWeight: '500',
+          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)', // Subtle shadow for readability
+        },        labelBgStyle: {
+          fill: '#16213e', // Workspace background color (background-tertiary)
+          fillOpacity: 1,
+        },
+        ...getMarkers(directionType),
         // Add connection type and priority styling
         className: `connection-${connection.type} connection-priority-${priority}`,
       };
