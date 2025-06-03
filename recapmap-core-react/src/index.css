@@ -41,19 +41,114 @@
 }
 
 /* Component Layer - Reusable UI patterns */
-@layer components {
-  /* Node Base Styles */
+@layer components {  /* Node Base Styles - Uniform Sizing with Grid Alignment */
   .node-base {
-    @apply w-node-width h-node-height rounded-node border-2 shadow-node transition-all duration-200;
-    @apply flex flex-col p-node-padding cursor-pointer select-none;
+    /* Fixed width to maintain grid alignment */
+    width: 160px;
+    min-height: 120px;
+    max-height: 280px;
+    border-radius: 8px;
+    border-width: 2px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    
+    /* Content handling for auto-expansion */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /* Uniform node sizing classes for consistent layout */
+  .node-uniform-size {
+    width: 160px !important;      /* Fixed width (8 grid units) */
+    min-height: 120px !important; /* Minimum height (6 grid units) */
+    max-height: 280px !important; /* Maximum height (14 grid units) */
+  }
+
+  .node-grid-aligned {
+    /* Ensure all dimensions are multiples of grid size (20px) */
+    width: calc(8 * 20px);   /* 160px exactly */
+    min-height: calc(6 * 20px); /* 120px exactly */
+  }
+
+  /* Content density indicators */
+  .node-content-minimal { height: calc(6 * 20px); }  /* 120px - title only */
+  .node-content-moderate { height: calc(7 * 20px); } /* 140px - short description */
+  .node-content-dense { height: calc(8 * 20px); }    /* 160px - long description */
+
+  /* Node auto-expansion classes for content-based sizing */
+  .node-auto-height {
+    height: auto;
+    min-height: theme('spacing.node-height');
+  }
+  
+  /* Grid-aligned height expansion classes */
+  .node-height-1 { height: calc(theme('spacing.node-height') + 20px); }  /* 140px - 7 grid units */
+  .node-height-2 { height: calc(theme('spacing.node-height') + 40px); }  /* 160px - 8 grid units */
+  .node-height-3 { height: calc(theme('spacing.node-height') + 60px); }  /* 180px - 9 grid units */
+  .node-height-4 { height: calc(theme('spacing.node-height') + 80px); }  /* 200px - 10 grid units */
+  .node-height-5 { height: calc(theme('spacing.node-height') + 100px); } /* 220px - 11 grid units */
+  .node-height-6 { height: calc(theme('spacing.node-height') + 120px); } /* 240px - 12 grid units */
+  .node-height-7 { height: calc(theme('spacing.node-height') + 140px); } /* 260px - 13 grid units */
+  .node-height-8 { height: calc(theme('spacing.node-height') + 160px); } /* 280px - 14 grid units */
+
+  /* Content overflow handling */
+  .node-content {
+    @apply flex-1 overflow-hidden;
+    
+    /* Text handling for long content */
+    .node-title {
+      @apply font-semibold text-sm leading-tight mb-1;
+      /* Allow title to wrap to multiple lines if needed */
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    
+    .node-description {
+      @apply text-xs opacity-80 leading-tight;
+      /* Handle description overflow */
+      overflow-wrap: break-word;
+      hyphens: auto;
+      
+      /* Show ellipsis for very long descriptions */
+      display: -webkit-box;
+      -webkit-line-clamp: 3; /* Show max 3 lines */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    /* Expanded state shows full description */
+    &.expanded .node-description {
+      display: block;
+      -webkit-line-clamp: none;
+      overflow: visible;
+    }
   }
 
   .node-base:hover {
     @apply shadow-node-hover;
+    
+    /* Reveal full content on hover for clipped descriptions */
+    .node-description {
+      -webkit-line-clamp: none;
+      overflow: visible;
+    }
   }
 
   .node-base.selected {
     @apply shadow-node-selected;
+  }
+
+  /* Grid alignment helpers for manual positioning */
+  .snap-to-grid {
+    /* Ensure positions snap to 20px grid increments */
+    transform: translate(
+      calc(round(var(--node-x) / 20px) * 20px),
+      calc(round(var(--node-y) / 20px) * 20px)
+    );
   }
 
   /* Node Type Specific Styles */

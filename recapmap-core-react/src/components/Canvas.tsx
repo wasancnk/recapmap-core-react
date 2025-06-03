@@ -155,23 +155,59 @@ const CustomNode = ({
     setIsHovered(false);
     setConnectingFromHandle(null);
   };
-
   // Show connectors when hovering or when connecting
   const showConnectors = isHovered || connectingFromHandle || selected;
+  // Calculate content-based height for intelligent auto-expansion
+  const getNodeHeight = () => {
+    const baseHeight = 120; // Standard grid-aligned height (6 grid units)
+    
+    // Calculate content requirements
+    const titleLength = data.label ? data.label.length : 0;
+    const descriptionLength = data.description ? data.description.length : 0;
+    const hasDescription = descriptionLength > 0;
+    
+    // Intelligent height calculation based on content density
+    if (!hasDescription) {
+      // Title only - check if title needs wrapping
+      return titleLength > 25 ? baseHeight + 20 : baseHeight; // 140px if long title
+    }
+    
+    // With description - progressive expansion based on total content
+    const totalContentLength = titleLength + descriptionLength;
+    
+    if (totalContentLength > 100) {
+      return baseHeight + 40; // 160px (8 grid units) for dense content
+    } else if (totalContentLength > 50 || descriptionLength > 30) {
+      return baseHeight + 20; // 140px (7 grid units) for moderate content
+    } else {
+      return baseHeight; // 120px (6 grid units) for minimal content
+    }
+  };
 
+  const nodeHeight = getNodeHeight();
   return (
     <div 
       className={`
-        px-4 py-2 rounded-lg border-2 min-w-[120px] text-center 
+        rounded-lg border-2 text-center 
         transition-all duration-200 hover:shadow-md cursor-pointer
-        relative
+        relative flex flex-col
+        node-uniform-size node-grid-aligned
         ${baseStyle} ${selectedStyle}
       `}
+      style={{
+        width: '160px',        // Fixed width for grid alignment (8 grid units)
+        height: `${nodeHeight}px`, // Dynamic height in grid increments
+        minHeight: '120px',    // Minimum base height (6 grid units)
+        maxHeight: '280px',    // Maximum height (14 grid units)
+        padding: '12px',       // Standard node padding
+      }}
       onDoubleClick={handleDoubleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      title="Double-click to edit properties"
-    >      {/* Connection Handles - Always present for React Flow */}
+      title={`${data.label}${data.description ? ` - ${data.description}` : ''}`}
+      data-node-type={data.nodeType}
+      data-grid-height={Math.ceil(nodeHeight / 20)} // Grid units for debugging
+    >{/* Connection Handles - Always present for React Flow */}
       {/* TOP Handles */}
       <Handle
         type="source"
@@ -333,12 +369,44 @@ const CustomNode = ({
           opacity: 0,
           pointerEvents: 'none',
           zIndex: 5
-        }}
-      />{/* Node Content */}
-      <div className="font-medium text-sm">{data.label}</div>
-      {data.description && (
-        <div className="text-xs opacity-80 mt-1">{data.description}</div>
-      )}
+        }}      />
+
+      {/* Node Content Area with improved text handling */}
+      <div className="flex-1 flex flex-col justify-center items-center text-center overflow-hidden">
+        {/* Node Title */}
+        <div 
+          className="font-semibold text-sm leading-tight mb-1 px-1"
+          style={{
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            wordWrap: 'break-word',
+            hyphens: 'auto',
+          }}
+          title={data.label} // Tooltip for full title
+        >
+          {data.label}
+        </div>
+        
+        {/* Node Description */}
+        {data.description && (
+          <div 
+            className="text-xs opacity-80 leading-tight px-1"
+            style={{
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: nodeHeight > 140 ? 4 : 2, // More lines for taller nodes
+              WebkitBoxOrient: 'vertical',
+              wordWrap: 'break-word',
+              hyphens: 'auto',
+            }}
+            title={data.description} // Tooltip for full description
+          >
+            {data.description}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

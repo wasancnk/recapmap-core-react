@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { useNodeStore } from '../stores'
+import { useUIStore } from '../stores/uiStore'
 import { getPropertySchema, validateNodeProperties } from '../utils/propertySchemas'
 import type { RecapMapNode } from '../types'
 import { PropertyField } from './PropertyField.js'
@@ -23,7 +24,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   position,
   onClose 
 }) => {
-  const { nodes, updateNode } = useNodeStore()
+  const { nodes, updateNode, deleteNode } = useNodeStore()
+  const { addNotification } = useUIStore()
   const node = nodeId ? nodes.find(n => n.id === nodeId) : null
 
   // Initialize draggable functionality
@@ -55,10 +57,10 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   const getNodeProperties = (node: RecapMapNode): Record<string, string | number | boolean | string[]> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, type, position, title, description, metadata, connections, isSelected, isValid, createdAt, updatedAt, ...properties } = node
-    return properties as Record<string, string | number | boolean | string[]>
-  }
+    return properties as Record<string, string | number | boolean | string[]>  }
   
   const validationResult = validateNodeProperties(node.type, getNodeProperties(node))
+
   const handlePropertyChange = (propertyName: string, value: string | number | boolean | string[]) => {
     updateNode(node.id, {
       ...node,
@@ -66,12 +68,31 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       updatedAt: new Date().toISOString()
     })
   }
+
   const handleBasicPropertyChange = (field: keyof RecapMapNode, value: string) => {
     updateNode(node.id, {
       ...node,
       [field]: value,
       updatedAt: new Date().toISOString()
     })
+  }
+
+  const handleDeleteNode = () => {
+    if (!node) return
+
+    const confirmMessage = `Are you sure you want to delete the node "${node.title}"? This action cannot be undone.`
+    
+    if (window.confirm(confirmMessage)) {
+      deleteNode(node.id)
+      onClose() // Close the property panel
+      
+      addNotification({
+        type: 'success',
+        title: 'Node Deleted',
+        message: `Successfully deleted node "${node.title}".`,
+        duration: 3000
+      })
+    }
   }
   return (
     <div 
@@ -189,9 +210,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               />
             ))}
           </div>
-        )}
-
-        {/* Metadata Section */}
+        )}        {/* Metadata Section */}
         <div className="space-y-4">
           <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide">
             Metadata
@@ -205,6 +224,24 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               <div>Valid: {node.isValid ? '✅' : '❌'}</div>
             </div>
           </div>
+        </div>
+
+        {/* Delete Section */}
+        <div className="space-y-4 border-t border-surface-border pt-4">
+          <h3 className="text-sm font-semibold text-red-600 uppercase tracking-wide">
+            Danger Zone
+          </h3>
+          
+          <button
+            onClick={handleDeleteNode}
+            className="
+              w-full px-4 py-2 bg-red-500 border border-red-600 text-white rounded-md
+              hover:bg-red-600 transition-colors text-sm font-medium
+              focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+            "
+          >
+            🗑️ Delete Node
+          </button>
         </div>
       </div>
     </div>
