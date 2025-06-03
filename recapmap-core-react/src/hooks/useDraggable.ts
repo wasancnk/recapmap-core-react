@@ -24,11 +24,16 @@ export const useDraggable = ({
   const [position, setPosition] = useState<Position>(initialPosition)
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState<Position>({ x: 0, y: 0 })
-  const dragRef = useRef<HTMLDivElement>(null)
-  // Update position when initialPosition changes
+  const dragRef = useRef<HTMLDivElement>(null)  // Update position when initialPosition changes (with deep comparison)
   useEffect(() => {
-    setPosition(initialPosition)
-  }, [initialPosition])
+    setPosition(prevPosition => {
+      // Only update if position actually changed
+      if (prevPosition.x !== initialPosition.x || prevPosition.y !== initialPosition.y) {
+        return initialPosition;
+      }
+      return prevPosition;
+    })
+  }, [initialPosition.x, initialPosition.y]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (disabled) return

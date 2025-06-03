@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
+import { useDraggable } from '../hooks/useDraggable';
 import type { NodeType } from '../types';
 
 interface NodeButtonProps {
@@ -43,6 +44,14 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 export const Toolbar: React.FC = () => {
   const { nodes, connections } = useNodeStore();
   const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid } = useUIStore();
+
+  // Stable initial position to prevent re-render loops
+  const initialPosition = React.useMemo(() => ({ x: 16, y: 16 }), []);
+
+  // Initialize draggable functionality
+  const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
+    initialPosition,
+  });
 
   const nodeTypes: Array<{
     type: NodeType;
@@ -114,10 +123,29 @@ export const Toolbar: React.FC = () => {
   const handleExport = () => {
     openPanel('export');
   };
-
   return (
-    <div className="absolute top-4 left-4 z-panel-base">
+    <div 
+      ref={dragRef}
+      className="fixed z-panel-base"
+      style={{ 
+        left: draggablePosition.x, 
+        top: draggablePosition.y 
+      }}
+    >
       <div className="bg-surface-primary border border-surface-border rounded-lg shadow-lg p-4">
+        {/* Drag Handle */}
+        <div 
+          className="flex justify-center py-2 cursor-grab active:cursor-grabbing select-none"
+          {...dragHandleProps}
+        >
+          <div className="flex space-x-1">
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+          </div>
+        </div>
+        
         <h3 className="text-text-primary font-semibold mb-3 text-sm">Add Nodes</h3>
         
         {/* Node Type Buttons Grid */}
