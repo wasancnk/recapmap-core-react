@@ -143,8 +143,7 @@ const NewCustomNode = ({
     e.stopPropagation();
     e.preventDefault();
     deleteNode(id);
-  };
-  const handleMouseEnter = (e: React.MouseEvent) => {
+  };  const handleMouseEnter = (e: React.MouseEvent) => {
     setIsHovered(true);
     
     // Clear any existing timeout
@@ -152,14 +151,20 @@ const NewCustomNode = ({
       clearTimeout(tooltipTimeoutRef.current);
     }
     
+    // Capture the element reference immediately
+    const element = e.currentTarget as HTMLElement;
+    
     // Show tooltip after a short delay
     tooltipTimeoutRef.current = setTimeout(() => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setTooltipPosition({
-        x: rect.left + rect.width / 2,
-        y: rect.top
-      });
-      setShowTooltip(true);
+      // Check if element still exists and is connected to DOM
+      if (element && element.isConnected) {
+        const rect = element.getBoundingClientRect();
+        setTooltipPosition({
+          x: rect.left + rect.width / 2,
+          y: rect.top
+        });
+        setShowTooltip(true);
+      }
     }, 500); // 500ms delay before showing tooltip
   };
 
