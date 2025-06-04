@@ -12,8 +12,8 @@ import { usePanelStore } from '../../../stores/panelStore';
 const mockUsePanelStore = vi.mocked(usePanelStore);
 
 describe('NodePanel', () => {
-  const mockClosePanel = jest.fn();
-  const mockPromoteNodeGroup = jest.fn();
+  const mockClosePanel = vi.fn();
+  const mockPromoteNodeGroup = vi.fn();
   const basePanelState: PanelState = {
     nodeId: 'node-1',
     panelType: 'summary',

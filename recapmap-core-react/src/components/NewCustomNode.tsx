@@ -3,7 +3,6 @@ import { Handle, Position } from '@xyflow/react';
 import { useUIStore } from '../stores/uiStore';
 import { useNodeStore } from '../stores/nodeStore';
 import { usePanelStore } from '../stores/panelStore';
-import NodeTooltip from './NodeTooltip';
 import type { NodeType } from '../types';
 
 // Professional card-style node component
@@ -20,9 +19,6 @@ const NewCustomNode = ({
   const { openPanel: openNodePanel } = usePanelStore();
   const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
-  const [showTooltip, setShowTooltip] = React.useState(false);
-  const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 });
-  const tooltipTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Node type configurations with icons and colors
   const nodeTypeConfig = {
@@ -145,72 +141,24 @@ const NewCustomNode = ({
     e.stopPropagation();
     e.preventDefault();
     deleteNode(id);
-  };  const handleMouseEnter = (e: React.MouseEvent) => {
+  };  const handleMouseEnter = () => {
     setIsHovered(true);
-    
-    // Clear any existing timeout
-    if (tooltipTimeoutRef.current) {
-      clearTimeout(tooltipTimeoutRef.current);
-    }
-    
-    // Capture the element reference immediately
-    const element = e.currentTarget as HTMLElement;
-    
-    // Show tooltip after a short delay
-    tooltipTimeoutRef.current = setTimeout(() => {
-      // Check if element still exists and is connected to DOM
-      if (element && element.isConnected) {
-        const rect = element.getBoundingClientRect();
-        setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top
-        });
-        setShowTooltip(true);
-      }
-    }, 500); // 500ms delay before showing tooltip
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
     setConnectingFromHandle(null);
-    setShowTooltip(false);
-    
-    // Clear timeout if mouse leaves before tooltip shows
-    if (tooltipTimeoutRef.current) {
-      clearTimeout(tooltipTimeoutRef.current);
-      tooltipTimeoutRef.current = null;
-    }
   };
-
-  // Cleanup timeout on unmount
-  React.useEffect(() => {
-    return () => {
-      if (tooltipTimeoutRef.current) {
-        clearTimeout(tooltipTimeoutRef.current);
-      }
-    };
-  }, []);
-
   // Show connectors when hovering or when connecting
-  const showConnectors = isHovered || connectingFromHandle || selected;
-  return (
-    <>
-      {/* Tooltip */}
-      <NodeTooltip
-        isVisible={showTooltip}
-        position={tooltipPosition}
-        data={data}
-        nodeId={id}
-      />
-      
-      <div 
-        className={`
-          rounded-lg border-2 
-          transition-all duration-200 hover:bg-opacity-90 cursor-pointer
-          relative flex flex-col
-          node-uniform-size node-grid-aligned
-          ${selectedStyle}
-        `}
+  const showConnectors = isHovered || connectingFromHandle || selected;  return (
+    <div 
+      className={`
+        rounded-lg border-2 
+        transition-all duration-200 hover:bg-opacity-90 cursor-pointer
+        relative flex flex-col
+        node-uniform-size node-grid-aligned
+        ${selectedStyle}
+      `}
         style={{
           backgroundColor: config.bgColor,
           borderColor: config.borderColor,
@@ -472,7 +420,6 @@ const NewCustomNode = ({
           </div>        )}
       </div>
     </div>
-    </>
   );
 };
 
