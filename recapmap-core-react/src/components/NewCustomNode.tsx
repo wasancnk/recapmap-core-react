@@ -2,6 +2,7 @@ import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { useUIStore } from '../stores/uiStore';
 import { useNodeStore } from '../stores/nodeStore';
+import { usePanelStore } from '../stores/panelStore';
 import NodeTooltip from './NodeTooltip';
 import type { NodeType } from '../types';
 
@@ -16,6 +17,7 @@ const NewCustomNode = ({
   selected: boolean 
 }) => {  const { openPanel } = useUIStore();
   const { deleteNode } = useNodeStore();
+  const { openPanel: openNodePanel } = usePanelStore();
   const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
   const [showTooltip, setShowTooltip] = React.useState(false);
@@ -406,9 +408,34 @@ const NewCustomNode = ({
           className="text-xs opacity-60 hover:opacity-100 transition-opacity duration-200 hover:text-red-400"
           title="Delete Node"
         >
-          ✕
-        </button>
+          ✕        </button>
       </div>
+
+      {/* Panel Toggle Buttons - Show on hover */}
+      {isHovered && (
+        <div className="flex gap-1 mb-2 opacity-90">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openNodePanel(id, 'summary');
+            }}
+            className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded hover:bg-blue-500/30 transition-colors"
+            title="Show Summary Panel"
+          >
+            📋
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openNodePanel(id, 'editor');
+            }}
+            className="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded hover:bg-green-500/30 transition-colors"
+            title="Show Editor Panel"
+          >
+            ✏️
+          </button>
+        </div>
+      )}
 
       {/* Node Title - Center */}
       <div className="flex-1 flex flex-col justify-center">

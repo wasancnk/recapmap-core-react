@@ -16,6 +16,7 @@ import '@xyflow/react/dist/style.css';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
+import { PanelManager } from './panels/PanelManager';
 import NewCustomNode from './NewCustomNode';
 import type { NodeType } from '../types';
 
@@ -326,9 +327,7 @@ export const Canvas: React.FC = () => {  const {
           pannable
           zoomable
         />
-      </ReactFlow>
-
-      {/* Connection Property Panel */}
+      </ReactFlow>      {/* Connection Property Panel */}
       {selectedConnectionId && (
         <ConnectionPropertyPanel
           connectionId={selectedConnectionId}
@@ -336,6 +335,9 @@ export const Canvas: React.FC = () => {  const {
           onClose={handleConnectionPanelClose}
         />
       )}
+
+      {/* Node Panel Manager */}
+      <PanelManager />
     </div>
   );
 };
