@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-// If the real PanelManager does not exist, mock it for tests:
-vi.mock('../../../components/panels/PanelManager', () => ({
-  PanelManager: () => <div data-testid="panel-manager-container"></div>
-}));
 import { PanelManager } from '../../../components/panels/PanelManager';
 import type { PanelState } from '../../../stores/panelStore';
 
@@ -12,8 +8,15 @@ vi.mock('../../../stores/panelStore', () => ({
   usePanelStore: vi.fn()
 }));
 
+// Mock the node store
+vi.mock('../../../stores/nodeStore', () => ({
+  useNodeStore: vi.fn()
+}));
+
 import { usePanelStore } from '../../../stores/panelStore';
+import { useNodeStore } from '../../../stores/nodeStore';
 const mockUsePanelStore = vi.mocked(usePanelStore);
+const mockUseNodeStore = vi.mocked(useNodeStore);
 
 describe('PanelManager', () => {
   const mockPanels: PanelState[] = [
@@ -45,10 +48,51 @@ describe('PanelManager', () => {
       openedAt: Date.now() + 2000
     }
   ];
-
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUsePanelStore.mockReturnValue({
+    
+    // Mock node store with test nodes
+    mockUseNodeStore.mockReturnValue({
+      getNode: vi.fn((id: string) => {
+        const nodePositions = {
+          'node-1': { x: 100, y: 200 },
+          'node-2': { x: 200, y: 300 }
+        };
+        return nodePositions[id as keyof typeof nodePositions] ? {
+          id,
+          position: nodePositions[id as keyof typeof nodePositions],
+          type: 'usecase',
+          title: `Test Node ${id}`,
+          metadata: {},
+          connections: { inputs: [], outputs: [] },
+          isSelected: false,
+          isValid: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } : undefined;
+      }),
+      nodes: [],
+      connections: [],
+      selectedNodeIds: [],
+      addNode: vi.fn(),
+      updateNode: vi.fn(),
+      deleteNode: vi.fn(),
+      duplicateNode: vi.fn(),
+      selectNode: vi.fn(),
+      selectNodes: vi.fn(),
+      clearSelection: vi.fn(),
+      selectAll: vi.fn(),
+      addConnection: vi.fn(),
+      updateConnection: vi.fn(),
+      swapConnection: vi.fn(),
+      deleteConnection: vi.fn(),
+      deleteNodeConnections: vi.fn(),
+      getNodesByType: vi.fn(),
+      getSelectedNodes: vi.fn(),
+      getNodeConnections: vi.fn(),
+      validateConnections: vi.fn()
+    });
+      mockUsePanelStore.mockReturnValue({
       panels: new Map([
         ['node-1-summary', mockPanels[0]],
         ['node-1-editor', mockPanels[1]],
@@ -58,8 +102,15 @@ describe('PanelManager', () => {
       openPanel: vi.fn(),
       closePanel: vi.fn(),
       promoteNodeGroup: vi.fn(),
-      getNodePanels: vi.fn(),
-      calculatePanelPosition: vi.fn(),
+      getNodePanels: vi.fn(),      calculatePanelPosition: vi.fn((_nodeId: string, panelType: string, nodePosition: { x: number; y: number }) => {
+        // Simulate the real calculation logic
+        const panelIndex = panelType === 'summary' ? 0 : 1;
+        const horizontalOffset = 220 + (panelIndex * (320 + 20)); // PANEL_WIDTH + PANEL_SPACING
+        return {
+          x: nodePosition.x + horizontalOffset,
+          y: nodePosition.y
+        };
+      }),
       removeNodePanels: vi.fn(),
       getActiveNodeGroup: vi.fn(),
       getNodeZIndex: vi.fn(),
@@ -156,6 +207,34 @@ describe('PanelManager', () => {
       const container = screen.getByTestId('panel-manager-container');
       expect(container).toBeInTheDocument();
       expect(container.children).toHaveLength(0);
+    });
+  });
+
+  describe('Panel Positioning', () => {
+    it('calculates panel positions based on node positions', () => {
+      render(<PanelManager />);
+
+      // Get the panel elements
+      const summaryPanel = screen.getByTestId('node-panel-node-1-summary');
+      const editorPanel = screen.getByTestId('node-panel-node-1-editor');
+
+      // Check that panels are positioned relative to their nodes
+      // Node 1 is at (100, 200), so summary panel should be at (320, 200) and editor at (660, 200)
+      expect(summaryPanel).toHaveStyle('left: 320px'); // 100 + 220
+      expect(summaryPanel).toHaveStyle('top: 200px');
+      
+      expect(editorPanel).toHaveStyle('left: 660px'); // 100 + 220 + 320 + 20
+      expect(editorPanel).toHaveStyle('top: 200px');
+    });
+
+    it('positions panels for different nodes correctly', () => {
+      render(<PanelManager />);
+
+      const node2Panel = screen.getByTestId('node-panel-node-2-summary');
+      
+      // Node 2 is at (200, 300), so its summary panel should be at (420, 300)
+      expect(node2Panel).toHaveStyle('left: 420px'); // 200 + 220
+      expect(node2Panel).toHaveStyle('top: 300px');
     });
   });
 });

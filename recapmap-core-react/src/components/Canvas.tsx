@@ -16,8 +16,7 @@ import '@xyflow/react/dist/style.css';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
-import { PanelManager } from './panels/PanelManager';
-import NewCustomNode from './NewCustomNode';
+import WrappedCustomNode from './WrappedCustomNode';
 import type { NodeType } from '../types';
 
 // Test nodes for connection testing
@@ -37,7 +36,7 @@ const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: num
 
 // Node types for React Flow
 const nodeTypes = {
-  customNode: NewCustomNode,
+  customNode: WrappedCustomNode,
 };
 
 
@@ -325,9 +324,10 @@ export const Canvas: React.FC = () => {  const {
           }}
           nodeStrokeWidth={2}
           pannable
-          zoomable
-        />
-      </ReactFlow>      {/* Connection Property Panel */}
+          zoomable        />
+        
+        {/* Panels are now handled within each WrappedCustomNode */}
+      </ReactFlow>{/* Connection Property Panel */}
       {selectedConnectionId && (
         <ConnectionPropertyPanel
           connectionId={selectedConnectionId}
@@ -335,9 +335,6 @@ export const Canvas: React.FC = () => {  const {
           onClose={handleConnectionPanelClose}
         />
       )}
-
-      {/* Node Panel Manager */}
-      <PanelManager />
     </div>
   );
 };

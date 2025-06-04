@@ -1,6 +1,5 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { useUIStore } from '../stores/uiStore';
 import { useNodeStore } from '../stores/nodeStore';
 import { usePanelStore } from '../stores/panelStore';
 import type { NodeType } from '../types';
@@ -14,7 +13,7 @@ const NewCustomNode = ({
   id: string;
   data: { label: string; description?: string; nodeType: NodeType }; 
   selected: boolean 
-}) => {  const { openPanel } = useUIStore();
+}) => {
   const { deleteNode } = useNodeStore();
   const { openPanel: openNodePanel } = usePanelStore();
   const [isHovered, setIsHovered] = React.useState(false);
@@ -82,59 +81,10 @@ const NewCustomNode = ({
 
   const config = nodeTypeConfig[data.nodeType] || nodeTypeConfig['usecase'];
   const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';
-
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Calculate adaptive position for the property panel
-    const calculateAdaptivePosition = (mouseX: number, mouseY: number) => {
-      const viewport = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-      
-      // Panel dimensions with some safety margin
-      const panelWidth = 400;
-      const panelHeight = 620;
-      const margin = 20;
-      
-      // Available space calculations
-      const availableRight = viewport.width - mouseX - margin;
-      const availableLeft = mouseX - margin;
-      const availableBelow = viewport.height - mouseY - margin;
-      const availableAbove = mouseY - margin;
-
-      // Determine best horizontal position
-      let x: number;
-      const minHorizontalSpace = Math.min(panelWidth, 320);
-      
-      if (availableRight >= minHorizontalSpace) {
-        x = Math.min(mouseX + 20, viewport.width - panelWidth - margin);
-      } else if (availableLeft >= minHorizontalSpace) {
-        x = Math.max(mouseX - panelWidth - 20, margin);
-      } else {
-        x = availableRight >= availableLeft ? viewport.width - panelWidth - margin : margin;
-      }
-
-      // Determine best vertical position
-      let y: number;
-      const minVerticalSpace = Math.min(panelHeight, 400);
-      
-      if (availableBelow >= minVerticalSpace) {
-        y = Math.min(mouseY + 20, viewport.height - panelHeight - margin);
-      } else if (availableAbove >= minVerticalSpace) {
-        y = Math.max(mouseY - panelHeight - 20, margin);
-      } else {
-        y = availableBelow >= availableAbove ? viewport.height - panelHeight - margin : margin;
-      }
-      
-      // Final bounds check
-      x = Math.max(margin, Math.min(x, viewport.width - panelWidth - margin));
-      y = Math.max(margin, Math.min(y, viewport.height - panelHeight - margin));
-      
-      return { x, y };
-    };    
-    const position = calculateAdaptivePosition(e.clientX, e.clientY);
-    openPanel('node-properties', { nodeId: id }, position);
+    // Use the new panel system that transforms with nodes
+    openNodePanel(id, 'editor');
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {

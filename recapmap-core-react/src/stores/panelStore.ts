@@ -205,27 +205,22 @@ export const usePanelStore = create<PanelStoreState>()(
         const state = get();
         const nodeGroup = state.nodeGroups.get(nodeId);
         return nodeGroup?.zIndex ?? state.BASE_INACTIVE_Z_INDEX;
-      },
-      
-      calculatePanelPosition: (nodeId: string, panelType: PanelType, nodePosition: { x: number; y: number }) => {
+      },      calculatePanelPosition: (nodeId: string, panelType: PanelType, nodePosition: { x: number; y: number }) => {
         const state = get();
         const nodePanels = state.getNodePanels(nodeId);
-        const panelIndex = nodePanels.findIndex(panel => panel.panelType === panelType);
-        
-        if (panelIndex === -1) {
+        const panelIndex = nodePanels.findIndex(panel => panel.panelType === panelType);        if (panelIndex === -1) {
           // Panel not found, return default position
           return {
-            x: nodePosition.x + 220, // Node width (200) + spacing (20)
+            x: nodePosition.x + 190, // Matched with WrappedCustomNode spacing
             y: nodePosition.y
           };
         }
-        
-        // Calculate horizontal offset based on stack order
-        const horizontalOffset = 220 + (panelIndex * (state.PANEL_WIDTH + state.PANEL_SPACING));
+          // Calculate horizontal offset for side-by-side panel layout
+        const horizontalOffset = 190 + (panelIndex * (state.PANEL_WIDTH + 10)); // Matched with WrappedCustomNode spacing
         
         return {
           x: nodePosition.x + horizontalOffset,
-          y: nodePosition.y
+          y: nodePosition.y // Keep panels aligned with node top
         };
       },
       
