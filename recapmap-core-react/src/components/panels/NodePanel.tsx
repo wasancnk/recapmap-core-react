@@ -36,16 +36,15 @@ export const NodePanel: React.FC<NodePanelProps> = ({
   const handleFocus = () => {
     promoteNodeGroup(nodeId);
   };
-
   return (
     <div
       data-testid={`node-panel-${nodeId}-${panelState.panelType}`}
       className="
         w-80 h-96 
         absolute 
-        bg-white/90 
+        bg-gray-900/95 
         backdrop-blur-md 
-        border border-gray-200/50 
+        border border-gray-700/50 
         rounded-lg 
         shadow-lg hover:shadow-xl 
         transition-shadow duration-200
@@ -60,15 +59,14 @@ export const NodePanel: React.FC<NodePanelProps> = ({
       onMouseEnter={handleMouseEnter}
       onFocus={handleFocus}
       tabIndex={0}
-    >
-      {/* Panel Header */}
+    >      {/* Panel Header */}
       <div className="
         flex items-center justify-between 
         px-4 py-3 
-        border-b border-gray-200/30
-        bg-gray-50/30
+        border-b border-gray-700/30
+        bg-gray-800/30
         rounded-t-lg
-      ">        <h3 className="text-sm font-semibold text-gray-800">
+      ">        <h3 className="text-sm font-semibold text-gray-100">
           {PANEL_TITLES[panelState.panelType]}
         </h3>
         <button
@@ -80,9 +78,9 @@ export const NodePanel: React.FC<NodePanelProps> = ({
           className="
             p-1 
             rounded-md 
-            hover:bg-gray-200/50 
+            hover:bg-gray-700/50 
             transition-colors duration-150
-            text-gray-500 hover:text-gray-700
+            text-gray-400 hover:text-gray-200
           "        >
           ×
         </button>

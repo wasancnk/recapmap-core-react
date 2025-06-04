@@ -232,7 +232,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto scrollbar-dark p-4 space-y-4">
         
         {/* Connection Details */}
         <div className="space-y-3">

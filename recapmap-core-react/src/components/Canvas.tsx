@@ -15,6 +15,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
+import { useSmartScroll } from '../hooks/useSmartScroll';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
 import WrappedCustomNode from './WrappedCustomNode';
 import type { NodeType } from '../types';
@@ -40,7 +41,8 @@ const nodeTypes = {
 };
 
 
-export const Canvas: React.FC = () => {  const { 
+export const Canvas: React.FC = () => {
+  const { 
     nodes: storeNodes, 
     connections: storeConnections, 
     selectedNodeIds,
@@ -58,6 +60,12 @@ export const Canvas: React.FC = () => {  const {
     toggleSnapToGrid,
     toggleGrid,
   } = useUIStore();
+  // Enable smart scroll redirection for panels
+  useSmartScroll({
+    enabled: true,
+    panelSelector: '.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable, .overflow-y-auto',
+    debug: process.env.NODE_ENV === 'development' // Enable debug in development
+  });
 
   // Keyboard shortcuts for grid controls
   React.useEffect(() => {

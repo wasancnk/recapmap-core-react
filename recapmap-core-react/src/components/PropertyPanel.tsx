@@ -157,7 +157,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto scrollbar-dark p-4 space-y-6">
         {/* Basic Properties Section */}
         <div className="space-y-4">
           <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide">

@@ -23,15 +23,14 @@ const WrappedCustomNode: React.FC<NodeProps> = ({
       case 'summary':
         return <SummaryPanel nodeId={id} />;
       case 'editor':
-        return <EditorPanel nodeId={id} />;
-      case 'ai-chat':
-        return <div className="p-4 text-gray-600">AI Chat - Coming Soon</div>;
+        return <EditorPanel nodeId={id} />;      case 'ai-chat':
+        return <div className="p-4 text-gray-300">AI Chat - Coming Soon</div>;
       case 'share':
-        return <div className="p-4 text-gray-600">Share - Coming Soon</div>;
+        return <div className="p-4 text-gray-300">Share - Coming Soon</div>;
       case 'tools':
-        return <div className="p-4 text-gray-600">Tools - Coming Soon</div>;
+        return <div className="p-4 text-gray-300">Tools - Coming Soon</div>;
       default:
-        return <div className="p-4 text-gray-600">Unknown Panel Type</div>;
+        return <div className="p-4 text-gray-300">Unknown Panel Type</div>;
     }
   };
 
