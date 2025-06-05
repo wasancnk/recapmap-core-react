@@ -154,6 +154,37 @@ const SmartScrollDemo: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Edge Detection Test Panel - New Section */}
+      {isVisible && (
+        <div className="mt-4 panel-base w-full max-w-4xl">
+          <h3 className="font-bold text-lg mb-3">Edge Detection Test Panel</h3>
+          <div className="space-y-2">
+            <div className="bg-accent-primary/10 border border-accent-primary/20 rounded p-3 mb-4">
+              <h4 className="font-semibold text-accent-primary mb-2">🔄 Edge Detection Test</h4>
+              <p className="text-sm text-text-secondary mb-2">
+                This panel demonstrates the new "scroll edge + stop + restart" behavior:
+              </p>
+              <ul className="text-xs text-text-secondary space-y-1">
+                <li>• Scroll normally within panel bounds</li>
+                <li>• When you hit the edge, continued scrolling is absorbed</li>
+                <li>• After 300ms buffer, canvas operations are allowed</li>
+                <li>• Try scrolling to top/bottom edge and continue scrolling</li>
+              </ul>
+            </div>
+            {panelContent.map((line, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded text-sm ${
+                  index % 2 === 0 ? 'bg-surface-elevated' : 'bg-surface-primary'
+                }`}
+              >
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

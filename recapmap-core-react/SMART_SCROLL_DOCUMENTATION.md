@@ -7,11 +7,24 @@ The Smart Scroll feature intelligently intercepts mouse wheel events when the cu
 ## Key Features
 
 - **Automatic Panel Detection**: Detects scrollable panels using CSS selectors
+- **Edge Detection & Buffer System**: Implements "scroll edge + stop + restart" behavior
 - **Scroll Direction Intelligence**: Prevents interference when panels reach scroll limits
 - **Performance Optimized**: Uses debounced mouse tracking and capture-phase event handling
 - **Non-Intrusive**: Maintains normal canvas panning when mouse is over canvas areas
-- **Configurable**: Customizable panel selectors and scroll sensitivity
+- **Configurable**: Customizable panel selectors, edge buffer timing, and debounce settings
 - **Debug Support**: Optional debug logging for development
+
+## Scroll Edge Behavior
+
+The smart scroll system implements sophisticated edge detection:
+
+1. **Normal Scrolling**: When a panel can scroll in the intended direction, scroll events are captured and applied to the panel
+2. **Edge Detection**: When scrolling reaches the panel's edge (top/bottom), the system enters "edge absorption" mode
+3. **Event Absorption**: Continued scroll attempts at the edge are absorbed (no effect) for a buffer period
+4. **Buffer Expiration**: After the buffer period expires, canvas operations (zoom/pan) are allowed
+5. **Buffer Reset**: If the user continues scrolling at the edge, the buffer timer resets
+
+This prevents accidental canvas operations when users reach the end of panel content but continue scrolling.
 
 ## Implementation
 
@@ -22,13 +35,15 @@ Located in `src/hooks/useSmartScroll.ts`, this custom React hook provides the ma
 ```typescript
 import { useSmartScroll } from '../hooks/useSmartScroll';
 
-// Basic usage
+// Basic usage with default 300ms edge buffer
 useSmartScroll();
 
 // With custom configuration
 useSmartScroll({
-  panelSelectors: '.my-panel, [data-panel="true"]',
-  scrollSensitivity: 1.5,
+  enabled: true,
+  panelSelector: '.my-panel, [data-panel="true"]',
+  debounceMs: 16,
+  edgeBufferMs: 500, // Wait 500ms after edge before allowing canvas operations
   debug: true
 });
 ```
@@ -37,8 +52,10 @@ useSmartScroll({
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `panelSelectors` | `string` | `'.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable, .overflow-y-auto'` | CSS selectors to identify scrollable panels |
-| `scrollSensitivity` | `number` | `1` | Multiplier for scroll speed |
+| `enabled` | `boolean` | `true` | Whether smart scroll is enabled |
+| `panelSelector` | `string` | `'.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable'` | CSS selectors to identify scrollable panels |
+| `debounceMs` | `number` | `16` | Debounce time for mouse position updates (~60fps) |
+| `edgeBufferMs` | `number` | `300` | Buffer time after scroll edge before allowing canvas operations |
 | `debug` | `boolean` | `false` | Enable debug logging |
 
 ### Default Panel Selectors

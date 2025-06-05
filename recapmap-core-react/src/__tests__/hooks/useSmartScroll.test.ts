@@ -53,7 +53,7 @@ describe('useSmartScroll', () => {
   it('should use custom panel selectors', () => {
     const customSelectors = '.custom-panel, [data-custom="true"]';
     
-    renderHook(() => useSmartScroll({ panelSelectors: customSelectors }));
+    renderHook(() => useSmartScroll({ panelSelector: customSelectors }));
     
     // The hook should be initialized (event listeners added)
     expect(mockAddEventListener).toHaveBeenCalledTimes(2);
@@ -376,7 +376,7 @@ describe('useSmartScroll', () => {
       stopPropagation: vi.fn(),
     };
 
-    renderHook(() => useSmartScroll({ scrollSensitivity: 2 }));
+    renderHook(() => useSmartScroll({ debounceMs: 32 }));
 
     const wheelHandler = mockAddEventListener.mock.calls.find(
       call => call[0] === 'wheel'
@@ -449,6 +449,255 @@ describe('useSmartScroll', () => {
 
       // Reset mocks for next test case
       vi.clearAllMocks();
+    });
+  });
+  describe('Edge detection and buffer functionality', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should initialize with edgeBufferMs option', () => {
+      const { result } = renderHook(() => useSmartScroll({ 
+        edgeBufferMs: 500,
+        debug: true 
+      }));
+      
+      expect(result.current).toBeUndefined();
+      expect(mockAddEventListener).toHaveBeenCalledWith('wheel', expect.any(Function), { 
+        passive: false, 
+        capture: true 
+      });
+    });
+
+    it('should absorb scroll events when at panel edge', () => {
+      const mockPanel = {
+        matches: vi.fn().mockReturnValue(true),
+        scrollTop: 0, // At top edge
+        scrollHeight: 200,
+        clientHeight: 100,
+        closest: vi.fn().mockReturnValue(null),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
+
+      mockElementFromPoint.mockReturnValue(mockPanel);
+      mockGetComputedStyle.mockReturnValue({
+        overflowY: 'auto',
+      });
+
+      renderHook(() => useSmartScroll({ 
+        edgeBufferMs: 300,
+        debug: true 
+      }));
+
+      const wheelHandler = mockAddEventListener.mock.calls.find(
+        call => call[0] === 'wheel'
+      )?.[1];
+
+      const mockEvent = {
+        clientX: 100,
+        clientY: 100,
+        deltaY: -10, // Scroll up at top edge
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      };
+
+      // First scroll at edge should be absorbed
+      act(() => {
+        wheelHandler(mockEvent);
+      });
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled();
+      expect(mockEvent.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should allow canvas operations after buffer expires', () => {
+      const mockPanel = {
+        matches: vi.fn().mockReturnValue(true),
+        scrollTop: 190, // At bottom edge (scrollHeight 200 - clientHeight 100 = 100, with tolerance)
+        scrollHeight: 200,
+        clientHeight: 100,
+        closest: vi.fn().mockReturnValue(null),
+        addEventListener: vi.fn(),  
+        removeEventListener: vi.fn(),
+      };
+
+      mockElementFromPoint.mockReturnValue(mockPanel);
+      mockGetComputedStyle.mockReturnValue({
+        overflowY: 'auto',
+      });
+
+      renderHook(() => useSmartScroll({ 
+        edgeBufferMs: 300,
+        debug: true 
+      }));
+
+      const wheelHandler = mockAddEventListener.mock.calls.find(
+        call => call[0] === 'wheel'
+      )?.[1];
+
+      const mockEvent = {
+        clientX: 100,
+        clientY: 100,
+        deltaY: 10, // Scroll down at bottom edge
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      };
+
+      // First scroll at edge - should be absorbed
+      act(() => {
+        wheelHandler(mockEvent);
+      });
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled();
+
+      // Reset event mock
+      mockEvent.preventDefault = vi.fn();
+      mockEvent.stopPropagation = vi.fn();      // Fast forward past buffer time
+      act(() => {
+        vi.advanceTimersByTime(301);
+      });
+
+      // Another scroll should now allow canvas operations
+      act(() => {
+        wheelHandler(mockEvent);
+      });
+
+      // Should not prevent default after buffer expires
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should reset buffer timer on continued scrolling at edge', () => {
+      const mockPanel = {
+        matches: vi.fn().mockReturnValue(true),
+        scrollTop: 0, // At top edge
+        scrollHeight: 200,
+        clientHeight: 100,
+        closest: vi.fn().mockReturnValue(null),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
+
+      mockElementFromPoint.mockReturnValue(mockPanel);
+      mockGetComputedStyle.mockReturnValue({
+        overflowY: 'auto',
+      });
+
+      renderHook(() => useSmartScroll({ 
+        edgeBufferMs: 300,
+        debug: true 
+      }));
+
+      const wheelHandler = mockAddEventListener.mock.calls.find(
+        call => call[0] === 'wheel'
+      )?.[1];
+
+      const mockEvent = {
+        clientX: 100,
+        clientY: 100,
+        deltaY: -10, // Scroll up at top edge
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      };
+
+      // First scroll at edge
+      act(() => {
+        wheelHandler(mockEvent);
+      });      // Fast forward partway through buffer
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+
+      // Reset event mock
+      mockEvent.preventDefault = vi.fn();
+      mockEvent.stopPropagation = vi.fn();
+
+      // Another scroll at edge should restart the buffer timer
+      act(() => {
+        wheelHandler(mockEvent);
+      });
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled();      // Fast forward the remaining original time (should still be blocked)
+      act(() => {
+        vi.advanceTimersByTime(151);
+      });
+
+      // Reset event mock
+      mockEvent.preventDefault = vi.fn();
+      mockEvent.stopPropagation = vi.fn();
+
+      // Should still be blocking since timer was reset
+      act(() => {
+        wheelHandler(mockEvent);
+      });
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled();
+    });
+
+    it('should reset edge state when mouse leaves panel area', () => {
+      const mockPanel = {
+        matches: vi.fn().mockReturnValue(true),
+        scrollTop: 0,
+        scrollHeight: 200,
+        clientHeight: 100,
+        closest: vi.fn().mockReturnValue(null),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
+
+      // Initially return panel element
+      mockElementFromPoint.mockReturnValue(mockPanel);
+      mockGetComputedStyle.mockReturnValue({
+        overflowY: 'auto',
+      });
+
+      renderHook(() => useSmartScroll({ 
+        edgeBufferMs: 300,
+        debug: true 
+      }));
+
+      const mouseMoveHandler = mockAddEventListener.mock.calls.find(
+        call => call[0] === 'mousemove'
+      )?.[1];
+
+      // Simulate mouse leaving panel area
+      mockElementFromPoint.mockReturnValue(document.body);
+
+      const mockMouseEvent = {
+        clientX: 500,
+        clientY: 500,
+      };
+
+      act(() => {
+        mouseMoveHandler(mockMouseEvent);
+      });      // Fast forward past debounce time
+      act(() => {
+        vi.advanceTimersByTime(20);
+      });
+
+      // Edge state should be reset - verify by testing wheel event behavior
+      const wheelHandler = mockAddEventListener.mock.calls.find(
+        call => call[0] === 'wheel'
+      )?.[1];
+
+      const mockWheelEvent = {
+        clientX: 500,
+        clientY: 500,
+        deltaY: 10,
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      };
+
+      act(() => {
+        wheelHandler(mockWheelEvent);
+      });
+
+      // Should not prevent default since we're over canvas now
+      expect(mockWheelEvent.preventDefault).not.toHaveBeenCalled();
     });
   });
 });

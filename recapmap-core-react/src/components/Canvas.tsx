@@ -60,11 +60,11 @@ export const Canvas: React.FC = () => {
     ui,
     toggleSnapToGrid,
     toggleGrid,
-  } = useUIStore();
-  // Enable smart scroll redirection for panels
+  } = useUIStore();  // Enable smart scroll redirection for panels with edge detection
   useSmartScroll({
     enabled: true,
     panelSelector: '.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable, .overflow-y-auto',
+    edgeBufferMs: 300, // Wait 300ms after hitting scroll edge before allowing canvas operations
     debug: process.env.NODE_ENV === 'development' // Enable debug in development
   });
 
