@@ -13,9 +13,8 @@ const NewCustomNode = ({
   id: string;
   data: { label: string; description?: string; nodeType: NodeType }; 
   selected: boolean 
-}) => {
-  const { deleteNode } = useNodeStore();
-  const { openPanel: openNodePanel } = usePanelStore();
+}) => {  const { deleteNode } = useNodeStore();
+  const { openPanel: openNodePanel, closePanel: closeNodePanel, isPanelOpen } = usePanelStore();
   const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
 
@@ -80,11 +79,14 @@ const NewCustomNode = ({
   };
 
   const config = nodeTypeConfig[data.nodeType] || nodeTypeConfig['usecase'];
-  const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';
-  const handleDoubleClick = (e: React.MouseEvent) => {
+  const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';  const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Use the new panel system that transforms with nodes
-    openNodePanel(id, 'editor');
+    // Toggle editor panel on double-click
+    if (isPanelOpen(id, 'editor')) {
+      closeNodePanel(id, 'editor');
+    } else {
+      openNodePanel(id, 'editor');
+    }
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -94,13 +96,32 @@ const NewCustomNode = ({
   };  const handleMouseEnter = () => {
     setIsHovered(true);
   };
-
   const handleMouseLeave = () => {
     setIsHovered(false);
     setConnectingFromHandle(null);
   };
+
+  // Toggle functions for panels
+  const toggleSummaryPanel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isPanelOpen(id, 'summary')) {
+      closeNodePanel(id, 'summary');
+    } else {
+      openNodePanel(id, 'summary');
+    }
+  };
+
+  const toggleEditorPanel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isPanelOpen(id, 'editor')) {
+      closeNodePanel(id, 'editor');
+    } else {
+      openNodePanel(id, 'editor');
+    }
+  };
+
   // Show connectors when hovering or when connecting
-  const showConnectors = isHovered || connectingFromHandle || selected;  return (
+  const showConnectors = isHovered || connectingFromHandle || selected;return (
     <div 
       className={`
         rounded-lg border-2 
@@ -307,28 +328,28 @@ const NewCustomNode = ({
           title="Delete Node"
         >
           ✕        </button>
-      </div>
-
-      {/* Panel Toggle Buttons - Show on hover */}
+      </div>      {/* Panel Toggle Buttons - Show on hover */}
       {isHovered && (
         <div className="flex gap-1 mb-2 opacity-90">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              openNodePanel(id, 'summary');
-            }}
-            className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded hover:bg-blue-500/30 transition-colors"
-            title="Show Summary Panel"
+            onClick={toggleSummaryPanel}
+            className={`text-xs px-2 py-1 rounded transition-colors ${
+              isPanelOpen(id, 'summary')
+                ? 'bg-blue-500/40 text-blue-200 hover:bg-blue-500/50'
+                : 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
+            }`}
+            title={isPanelOpen(id, 'summary') ? 'Close Summary Panel' : 'Open Summary Panel'}
           >
             📋
           </button>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              openNodePanel(id, 'editor');
-            }}
-            className="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded hover:bg-green-500/30 transition-colors"
-            title="Show Editor Panel"
+            onClick={toggleEditorPanel}
+            className={`text-xs px-2 py-1 rounded transition-colors ${
+              isPanelOpen(id, 'editor')
+                ? 'bg-green-500/40 text-green-200 hover:bg-green-500/50'
+                : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
+            }`}
+            title={isPanelOpen(id, 'editor') ? 'Close Editor Panel' : 'Open Editor Panel'}
           >
             ✏️
           </button>

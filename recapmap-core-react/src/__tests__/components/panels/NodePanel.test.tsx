@@ -24,12 +24,12 @@ describe('NodePanel', () => {
     openedAt: Date.now()
   };
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockUsePanelStore.mockReturnValue({
+    vi.clearAllMocks();    mockUsePanelStore.mockReturnValue({
       panels: new Map(),
       nodeGroups: new Map(),
       openPanel: vi.fn(),
       closePanel: mockClosePanel,
+      isPanelOpen: vi.fn().mockReturnValue(false),
       promoteNodeGroup: mockPromoteNodeGroup,
       getNodePanels: vi.fn(),
       calculatePanelPosition: vi.fn(),

@@ -33,10 +33,10 @@ interface PanelStoreState {
   readonly PANEL_SPACING: number;
   readonly BASE_INACTIVE_Z_INDEX: number;
   readonly BASE_ACTIVE_Z_INDEX: number;
-  
-  // Actions
+    // Actions
   openPanel: (nodeId: string, panelType: PanelType) => void;
   closePanel: (nodeId: string, panelType: PanelType) => void;
+  isPanelOpen: (nodeId: string, panelType: PanelType) => boolean;
   promoteNodeGroup: (nodeId: string) => void;
   getNodePanels: (nodeId: string) => PanelState[];
   getActiveNodeGroup: () => string | null;
@@ -200,12 +200,16 @@ export const usePanelStore = create<PanelStoreState>()(
       getActiveNodeGroup: () => {
         return get().activeNodeGroup;
       },
-      
-      getNodeZIndex: (nodeId: string) => {
+        getNodeZIndex: (nodeId: string) => {
         const state = get();
         const nodeGroup = state.nodeGroups.get(nodeId);
         return nodeGroup?.zIndex ?? state.BASE_INACTIVE_Z_INDEX;
-      },      calculatePanelPosition: (nodeId: string, panelType: PanelType, nodePosition: { x: number; y: number }) => {
+      },
+      
+      isPanelOpen: (nodeId: string, panelType: PanelType) => {
+        const key = createPanelKey(nodeId, panelType);
+        return get().panels.has(key);
+      },calculatePanelPosition: (nodeId: string, panelType: PanelType, nodePosition: { x: number; y: number }) => {
         const state = get();
         const nodePanels = state.getNodePanels(nodeId);
         const panelIndex = nodePanels.findIndex(panel => panel.panelType === panelType);        if (panelIndex === -1) {

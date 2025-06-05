@@ -161,9 +161,40 @@ describe('PanelStore', () => {
       store.promoteNodeGroup('node-1');
       
       store.closePanel('node-1', 'summary');
-      
-      // Active group should be cleared when no panels remain
+        // Active group should be cleared when no panels remain
       expect(store.getActiveNodeGroup()).toBeNull();
+    });
+  });
+
+  describe('Panel State Checking', () => {
+    it('should correctly report if a panel is open', () => {
+      const store = usePanelStore.getState();
+      
+      // Initially, no panels are open
+      expect(store.isPanelOpen('node-1', 'summary')).toBe(false);
+      expect(store.isPanelOpen('node-1', 'editor')).toBe(false);
+      
+      // Open a panel
+      store.openPanel('node-1', 'summary');
+      
+      // Check the opened panel returns true, others return false
+      expect(store.isPanelOpen('node-1', 'summary')).toBe(true);
+      expect(store.isPanelOpen('node-1', 'editor')).toBe(false);
+      expect(store.isPanelOpen('node-2', 'summary')).toBe(false);
+      
+      // Open another panel for the same node
+      store.openPanel('node-1', 'editor');
+      
+      // Both panels should be open
+      expect(store.isPanelOpen('node-1', 'summary')).toBe(true);
+      expect(store.isPanelOpen('node-1', 'editor')).toBe(true);
+      
+      // Close one panel
+      store.closePanel('node-1', 'summary');
+      
+      // Only the editor panel should be open
+      expect(store.isPanelOpen('node-1', 'summary')).toBe(false);
+      expect(store.isPanelOpen('node-1', 'editor')).toBe(true);
     });
   });
 });

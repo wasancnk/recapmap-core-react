@@ -91,8 +91,7 @@ describe('PanelManager', () => {
       getSelectedNodes: vi.fn(),
       getNodeConnections: vi.fn(),
       validateConnections: vi.fn()
-    });
-      mockUsePanelStore.mockReturnValue({
+    });      mockUsePanelStore.mockReturnValue({
       panels: new Map([
         ['node-1-summary', mockPanels[0]],
         ['node-1-editor', mockPanels[1]],
@@ -101,8 +100,9 @@ describe('PanelManager', () => {
       nodeGroups: new Map(),
       openPanel: vi.fn(),
       closePanel: vi.fn(),
+      isPanelOpen: vi.fn().mockReturnValue(false),
       promoteNodeGroup: vi.fn(),
-      getNodePanels: vi.fn(),      calculatePanelPosition: vi.fn((_nodeId: string, panelType: string, nodePosition: { x: number; y: number }) => {
+      getNodePanels: vi.fn(),calculatePanelPosition: vi.fn((_nodeId: string, panelType: string, nodePosition: { x: number; y: number }) => {
         // Simulate the real calculation logic
         const panelIndex = panelType === 'summary' ? 0 : 1;
         const horizontalOffset = 220 + (panelIndex * (320 + 20)); // PANEL_WIDTH + PANEL_SPACING
@@ -141,12 +141,12 @@ describe('PanelManager', () => {
     });
 
     it('does not render panels that are not visible', () => {
-      const hiddenPanel = { ...mockPanels[0], isVisible: false };
-      mockUsePanelStore.mockReturnValue({
+      const hiddenPanel = { ...mockPanels[0], isVisible: false };      mockUsePanelStore.mockReturnValue({
         panels: new Map([['node-1-summary', hiddenPanel]]),
         nodeGroups: new Map(),
         openPanel: vi.fn(),
         closePanel: vi.fn(),
+        isPanelOpen: vi.fn().mockReturnValue(false),
         promoteNodeGroup: vi.fn(),
         getNodePanels: vi.fn(),
         calculatePanelPosition: vi.fn(),
@@ -183,12 +183,12 @@ describe('PanelManager', () => {
   });
 
   describe('Empty State', () => {
-    it('renders empty container when no panels exist', () => {
-      mockUsePanelStore.mockReturnValue({
+    it('renders empty container when no panels exist', () => {      mockUsePanelStore.mockReturnValue({
         panels: new Map(),
         nodeGroups: new Map(),
         openPanel: vi.fn(),
         closePanel: vi.fn(),
+        isPanelOpen: vi.fn().mockReturnValue(false),
         promoteNodeGroup: vi.fn(),
         getNodePanels: vi.fn(),
         calculatePanelPosition: vi.fn(),
