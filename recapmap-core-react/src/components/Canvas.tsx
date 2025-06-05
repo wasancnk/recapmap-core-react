@@ -18,6 +18,7 @@ import { useUIStore } from '../stores/uiStore';
 import { useSmartScroll } from '../hooks/useSmartScroll';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
 import WrappedCustomNode from './WrappedCustomNode';
+import SmartScrollDemo from './SmartScrollDemo';
 import type { NodeType } from '../types';
 
 // Test nodes for connection testing
@@ -343,6 +344,9 @@ export const Canvas: React.FC = () => {
           onClose={handleConnectionPanelClose}
         />
       )}
+
+      {/* Smart Scroll Demo Component */}
+      <SmartScrollDemo />
     </div>
   );
 };

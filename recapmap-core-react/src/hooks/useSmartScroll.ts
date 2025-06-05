@@ -38,10 +38,23 @@ export const useSmartScroll = (options: SmartScrollOptions = {}) => {
     debounceMs = 16, // ~60fps
     debug = false
   } = options;
-
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const lastScrollTargetRef = useRef<ScrollTarget | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  /**
+   * Check if an element is scrollable
+   */
+  const isScrollable = useCallback((element: HTMLElement): boolean => {
+    const style = window.getComputedStyle(element);
+    const overflowY = style.overflowY;
+    const hasVerticalScrollbar = element.scrollHeight > element.clientHeight;
+    
+    return (
+      (overflowY === 'scroll' || overflowY === 'auto' || overflowY === 'overlay') &&
+      hasVerticalScrollbar
+    );
+  }, []);
 
   /**
    * Find scrollable panel element at given coordinates
@@ -89,24 +102,7 @@ export const useSmartScroll = (options: SmartScrollOptions = {}) => {
         }
       }
       current = current.parentElement as HTMLElement;
-    }
-
-    return null;
-  }, [panelSelector, debug]);
-
-  /**
-   * Check if an element is scrollable
-   */
-  const isScrollable = useCallback((element: HTMLElement): boolean => {
-    const style = window.getComputedStyle(element);
-    const overflowY = style.overflowY;
-    const hasVerticalScrollbar = element.scrollHeight > element.clientHeight;
-    
-    return (
-      (overflowY === 'scroll' || overflowY === 'auto' || overflowY === 'overlay') &&
-      hasVerticalScrollbar
-    );
-  }, []);
+    }    return null;  }, [panelSelector, debug, isScrollable]);
 
   /**
    * Update mouse position with debouncing
