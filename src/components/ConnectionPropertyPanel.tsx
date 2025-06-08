@@ -221,14 +221,13 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
           <div className="flex items-center space-x-2">
             <span className="text-lg">🔗</span>
             <h3 className="text-lg font-bold text-text-primary">Connection Properties</h3>
-          </div>
-          <button
-            onClick={handleCancel}
+          </div>          <button
+            onClick={onClose}
             className="text-text-secondary hover:text-text-primary transition-colors"
             onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking close button
           >
             ✕
-          </button>        </div>
+          </button></div>
       </div>
 
       {/* Scrollable Content */}
@@ -279,30 +278,28 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
         <div className="space-y-3">
           <h4 className="font-semibold text-text-primary">Direction & Style</h4>
             <div className="space-y-2">
-            <label htmlFor="directionType" className="text-sm font-medium text-text-primary">Direction Type</label>
-            <select
+            <label htmlFor="directionType" className="text-sm font-medium text-text-primary">Direction Type</label>            <select
               id="directionType"
               value={formData.directionType}
               onChange={(e) => handleInputChange('directionType', e.target.value)}
               className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
             >
-              <option value="oneway">One-way →</option>
-              <option value="twoway">Two-way ↔</option>
-              <option value="undirected">Undirected —</option>
+              <option value="oneway" selected={formData.directionType === 'oneway'}>One-way →</option>
+              <option value="twoway" selected={formData.directionType === 'twoway'}>Two-way ↔</option>
+              <option value="undirected" selected={formData.directionType === 'undirected'}>Undirected —</option>
             </select>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="lineStyle" className="text-sm font-medium text-text-primary">Line Style</label>
-            <select
+            <label htmlFor="lineStyle" className="text-sm font-medium text-text-primary">Line Style</label>            <select
               id="lineStyle"
               value={formData.style}
               onChange={(e) => handleInputChange('style', e.target.value)}
               className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
             >
-              <option value="solid">Solid</option>
-              <option value="dashed">Dashed</option>
-              <option value="dotted">Dotted</option>
+              <option value="solid" selected={formData.style === 'solid'}>Solid</option>
+              <option value="dashed" selected={formData.style === 'dashed'}>Dashed</option>
+              <option value="dotted" selected={formData.style === 'dotted'}>Dotted</option>
             </select>
           </div>
 
@@ -325,32 +322,30 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
           </div>
         </div>        {/* Relationship Type */}
         <div className="space-y-2">
-          <label htmlFor="relationshipType" className="text-sm font-medium text-text-primary">Relationship Type</label>
-          <select
+          <label htmlFor="relationshipType" className="text-sm font-medium text-text-primary">Relationship Type</label>          <select
             id="relationshipType"
             value={formData.type}
             onChange={(e) => handleInputChange('type', e.target.value)}
             className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
           >
-            <option value="data">Data Flow</option>
-            <option value="control">Process Flow</option>
-            <option value="dependency">Dependency</option>
+            <option value="data" selected={formData.type === 'data'}>Data Flow</option>
+            <option value="control" selected={formData.type === 'control'}>Process Flow</option>
+            <option value="dependency" selected={formData.type === 'dependency'}>Dependency</option>
           </select>
         </div>
 
         {/* Priority */}
         <div className="space-y-2">
-          <label htmlFor="priority" className="text-sm font-medium text-text-primary">Priority</label>
-          <select
+          <label htmlFor="priority" className="text-sm font-medium text-text-primary">Priority</label>          <select
             id="priority"
             value={formData.priority}
             onChange={(e) => handleInputChange('priority', e.target.value)}
             className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
           >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
+            <option value="low" selected={formData.priority === 'low'}>Low</option>
+            <option value="medium" selected={formData.priority === 'medium'}>Medium</option>
+            <option value="high" selected={formData.priority === 'high'}>High</option>
+            <option value="critical" selected={formData.priority === 'critical'}>Critical</option>
           </select>
         </div>
 
@@ -362,8 +357,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             className="flex-1 px-4 py-2 bg-accent-primary hover:bg-accent-secondary disabled:bg-accent-muted disabled:cursor-not-allowed text-white rounded-md transition-colors"
           >
             Save
-          </button>
-          <button
+          </button>          <button
             onClick={handleCancel}
             className="px-4 py-2 bg-surface-secondary hover:bg-surface-tertiary text-text-primary border border-surface-border rounded-md transition-colors"
           >
