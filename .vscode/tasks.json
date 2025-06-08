@@ -2,11 +2,13 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"command": "npm test",
-			"group": "test",
+			"command": "npm run build",
+			"group": "build",
 			"isBackground": false,
-			"label": "run-tests",
-			"problemMatcher": [],
+			"label": "build-project",
+			"problemMatcher": [
+				"$tsc"
+			],
 			"type": "shell"
 		}
 	]
