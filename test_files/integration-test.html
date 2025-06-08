@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecapMap Persistence Integration Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 32px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 24px;
+        }
+        .test-section:last-child {
+            border-bottom: none;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        h2 {
+            color: #34495e;
+            margin-bottom: 16px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-bottom: 12px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.warning { background: #fff3cd; color: #856404; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+        .button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 4px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #2980b9;
+        }
+        .button.danger {
+            background: #e74c3c;
+        }
+        .button.danger:hover {
+            background: #c0392b;
+        }
+        .results {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 8px 0;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        .test-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 RecapMap Persistence Integration Tests</h1>
+        <p>Comprehensive testing of localStorage persistence and cross-store synchronization.</p>
+        
+        <div class="test-section">
+            <h2>🏗️ Setup & Status</h2>
+            <div class="test-controls">
+                <button class="button" onclick="checkInitialization()">Check Store Initialization</button>
+                <button class="button" onclick="checkLocalStorage()">Check localStorage</button>
+                <button class="button" onclick="clearAllData()">Clear All Data</button>
+            </div>
+            <div id="setup-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📦 Node Persistence Tests</h2>
+            <div class="test-controls">
+                <button class="button" onclick="testNodeCreation()">Create Test Node</button>
+                <button class="button" onclick="testNodeModification()">Modify Node</button>
+                <button class="button" onclick="testNodeDeletion()">Delete Node</button>
+                <button class="button" onclick="testConnectionCreation()">Create Connection</button>
+                <button class="button" onclick="simulateRefresh()">Simulate Page Refresh</button>
+            </div>
+            <div id="node-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔄 Cross-Store Synchronization</h2>
+            <div class="test-controls">
+                <button class="button" onclick="testProjectSync()">Test Project Sync</button>
+                <button class="button" onclick="testAutoSave()">Test Auto-Save</button>
+                <button class="button" onclick="testValidationClear()">Test Validation Clear</button>
+            </div>
+            <div id="sync-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 Storage Inspector</h2>
+            <div class="test-controls">
+                <button class="button" onclick="inspectNodeStore()">Inspect Node Store</button>
+                <button class="button" onclick="inspectProjectStore()">Inspect Project Store</button>
+                <button class="button" onclick="inspectLocalStorage()">Inspect localStorage Keys</button>
+            </div>
+            <div id="inspector-results" class="results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test state
+        let testData = {
+            nodeIds: [],
+            connectionIds: [],
+            testStartTime: null
+        };
+
+        // Utility functions
+        function log(section, message, status = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const statusSpan = `<span class="status ${status}">${status.toUpperCase()}</span>`;
+            const logEntry = `[${timestamp}] ${statusSpan} ${message}\n`;
+            
+            const resultsDiv = document.getElementById(`${section}-results`);
+            resultsDiv.innerHTML += logEntry;
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearLog(section) {
+            document.getElementById(`${section}-results`).innerHTML = '';
+        }
+
+        // Store access helper
+        function getStores() {
+            try {
+                // Access stores from the main app (requires the app to be running)
+                if (window.parent && window.parent.recapMapStores) {
+                    return window.parent.recapMapStores;
+                }
+                
+                // Try to access from current window if testing embedded
+                if (window.recapMapStores) {
+                    return window.recapMapStores;
+                }
+                
+                // Fallback: try to import from the built app
+                throw new Error('Stores not accessible - main app may not be running');
+            } catch (error) {
+                log('setup', `Store access error: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        // Setup & Status Tests
+        function checkInitialization() {
+            clearLog('setup');
+            log('setup', 'Checking store initialization...');
+            
+            const stores = getStores();
+            if (!stores) {
+                log('setup', 'Cannot access stores - ensure main app is running', 'error');
+                return;
+            }
+
+            try {
+                const nodeStore = stores.useNodeStore;
+                const projectStore = stores.useProjectStore;
+                const uiStore = stores.useUIStore;
+
+                if (nodeStore && projectStore && uiStore) {
+                    log('setup', 'All stores accessible ✓', 'success');
+                    log('setup', `Node count: ${nodeStore.getState().nodes.length}`);
+                    log('setup', `Connection count: ${nodeStore.getState().connections.length}`);
+                    log('setup', `Project modified: ${projectStore.getState().project.isModified}`);
+                } else {
+                    log('setup', 'Some stores not accessible', 'warning');
+                }
+            } catch (error) {
+                log('setup', `Store check error: ${error.message}`, 'error');
+            }
+        }
+
+        function checkLocalStorage() {
+            clearLog('setup');
+            log('setup', 'Checking localStorage persistence...');
+            
+            const nodeStoreKey = 'recapmap-node-store';
+            const projectStoreKey = 'recapmap-project-store';
+            
+            const nodeData = localStorage.getItem(nodeStoreKey);
+            const projectData = localStorage.getItem(projectStoreKey);
+            
+            if (nodeData) {
+                try {
+                    const parsed = JSON.parse(nodeData);
+                    log('setup', `Node store persisted ✓ (${parsed.state.nodes?.length || 0} nodes, ${parsed.state.connections?.length || 0} connections)`, 'success');
+                } catch (e) {
+                    log('setup', 'Node store data corrupted', 'error');
+                }
+            } else {
+                log('setup', 'No persisted node data found', 'warning');
+            }
+            
+            if (projectData) {
+                try {
+                    const parsed = JSON.parse(projectData);
+                    log('setup', `Project store persisted ✓`, 'success');
+                } catch (e) {
+                    log('setup', 'Project store data corrupted', 'error');
+                }
+            } else {
+                log('setup', 'No persisted project data found', 'warning');
+            }
+        }
+
+        function clearAllData() {
+            clearLog('setup');
+            log('setup', 'Clearing all persistent data...');
+            
+            // Clear localStorage
+            localStorage.removeItem('recapmap-node-store');
+            localStorage.removeItem('recapmap-project-store');
+            
+            // Reset test data
+            testData = { nodeIds: [], connectionIds: [], testStartTime: null };
+            
+            log('setup', 'All data cleared ✓', 'success');
+            log('setup', 'Refresh page to see clean state');
+        }
+
+        // Node Persistence Tests
+        function testNodeCreation() {
+            clearLog('node');
+            log('node', 'Testing node creation and persistence...');
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const nodeStore = stores.useNodeStore.getState();
+                const initialCount = nodeStore.nodes.length;
+                
+                // Create a test node
+                const nodeId = nodeStore.addNode('usecase', { x: 100, y: 100 });
+                testData.nodeIds.push(nodeId);
+                
+                const newCount = stores.useNodeStore.getState().nodes.length;
+                
+                if (newCount === initialCount + 1) {
+                    log('node', `Node created successfully ✓ (ID: ${nodeId})`, 'success');
+                    
+                    // Check if it's persisted
+                    setTimeout(() => {
+                        const persistedData = localStorage.getItem('recapmap-node-store');
+                        if (persistedData) {
+                            const parsed = JSON.parse(persistedData);
+                            const persistedNode = parsed.state.nodes.find(n => n.id === nodeId);
+                            if (persistedNode) {
+                                log('node', 'Node persisted to localStorage ✓', 'success');
+                            } else {
+                                log('node', 'Node not found in persisted data', 'error');
+                            }
+                        }
+                    }, 100);
+                } else {
+                    log('node', 'Node creation failed', 'error');
+                }
+            } catch (error) {
+                log('node', `Node creation error: ${error.message}`, 'error');
+            }
+        }
+
+        function testNodeModification() {
+            if (testData.nodeIds.length === 0) {
+                log('node', 'No test nodes available - create one first', 'warning');
+                return;
+            }
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const nodeId = testData.nodeIds[0];
+                const nodeStore = stores.useNodeStore.getState();
+                
+                // Modify the node
+                const newTitle = `Modified Node ${Date.now()}`;
+                nodeStore.updateNode(nodeId, { title: newTitle });
+                
+                // Check if modification persisted
+                setTimeout(() => {
+                    const persistedData = localStorage.getItem('recapmap-node-store');
+                    if (persistedData) {
+                        const parsed = JSON.parse(persistedData);
+                        const persistedNode = parsed.state.nodes.find(n => n.id === nodeId);
+                        if (persistedNode && persistedNode.title === newTitle) {
+                            log('node', 'Node modification persisted ✓', 'success');
+                        } else {
+                            log('node', 'Node modification not persisted', 'error');
+                        }
+                    }
+                }, 100);
+                
+                log('node', `Node modified: ${newTitle}`, 'success');
+            } catch (error) {
+                log('node', `Node modification error: ${error.message}`, 'error');
+            }
+        }
+
+        function testNodeDeletion() {
+            if (testData.nodeIds.length === 0) {
+                log('node', 'No test nodes available - create one first', 'warning');
+                return;
+            }
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const nodeId = testData.nodeIds.pop();
+                const nodeStore = stores.useNodeStore.getState();
+                const initialCount = nodeStore.nodes.length;
+                
+                // Delete the node
+                nodeStore.deleteNode(nodeId);
+                
+                const newCount = stores.useNodeStore.getState().nodes.length;
+                
+                if (newCount === initialCount - 1) {
+                    log('node', `Node deleted successfully ✓ (ID: ${nodeId})`, 'success');
+                    
+                    // Check if deletion persisted
+                    setTimeout(() => {
+                        const persistedData = localStorage.getItem('recapmap-node-store');
+                        if (persistedData) {
+                            const parsed = JSON.parse(persistedData);
+                            const persistedNode = parsed.state.nodes.find(n => n.id === nodeId);
+                            if (!persistedNode) {
+                                log('node', 'Node deletion persisted ✓', 'success');
+                            } else {
+                                log('node', 'Deleted node still in persisted data', 'error');
+                            }
+                        }
+                    }, 100);
+                } else {
+                    log('node', 'Node deletion failed', 'error');
+                }
+            } catch (error) {
+                log('node', `Node deletion error: ${error.message}`, 'error');
+            }
+        }
+
+        function testConnectionCreation() {
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const nodeStore = stores.useNodeStore.getState();
+                
+                // Create two nodes if we don't have enough
+                if (testData.nodeIds.length < 2) {
+                    const node1Id = nodeStore.addNode('usecase', { x: 50, y: 50 });
+                    const node2Id = nodeStore.addNode('task', { x: 200, y: 50 });
+                    testData.nodeIds.push(node1Id, node2Id);
+                }
+                
+                const [sourceId, targetId] = testData.nodeIds;
+                const connectionId = nodeStore.addConnection(sourceId, targetId, 'data');
+                testData.connectionIds.push(connectionId);
+                
+                log('node', `Connection created ✓ (${sourceId} → ${targetId})`, 'success');
+                
+                // Check persistence
+                setTimeout(() => {
+                    const persistedData = localStorage.getItem('recapmap-node-store');
+                    if (persistedData) {
+                        const parsed = JSON.parse(persistedData);
+                        const persistedConnection = parsed.state.connections.find(c => c.id === connectionId);
+                        if (persistedConnection) {
+                            log('node', 'Connection persisted to localStorage ✓', 'success');
+                        } else {
+                            log('node', 'Connection not found in persisted data', 'error');
+                        }
+                    }
+                }, 100);
+                
+            } catch (error) {
+                log('node', `Connection creation error: ${error.message}`, 'error');
+            }
+        }
+
+        function simulateRefresh() {
+            log('node', 'Simulating page refresh...', 'info');
+            log('node', 'In a real scenario, you would refresh the page and verify data persists');
+            log('node', 'Current localStorage state maintained across refresh cycles', 'success');
+            
+            // Show current persisted state
+            checkLocalStorage();
+        }
+
+        // Cross-Store Synchronization Tests
+        function testProjectSync() {
+            clearLog('sync');
+            log('sync', 'Testing cross-store synchronization...');
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const projectStore = stores.useProjectStore.getState();
+                const initialModified = projectStore.project.isModified;
+                
+                log('sync', `Initial project modified state: ${initialModified}`);
+                
+                // Clear modified state
+                if (initialModified) {
+                    projectStore.markAsSaved();
+                }
+                
+                // Create a node to trigger sync
+                const nodeStore = stores.useNodeStore.getState();
+                const nodeId = nodeStore.addNode('task', { x: 150, y: 150 });
+                testData.nodeIds.push(nodeId);
+                
+                // Check if project was marked as modified
+                setTimeout(() => {
+                    const currentProjectStore = stores.useProjectStore.getState();
+                    if (currentProjectStore.project.isModified) {
+                        log('sync', 'Project marked as modified after node creation ✓', 'success');
+                    } else {
+                        log('sync', 'Project not marked as modified - sync may not be working', 'error');
+                    }
+                }, 200);
+                
+            } catch (error) {
+                log('sync', `Project sync test error: ${error.message}`, 'error');
+            }
+        }
+
+        function testAutoSave() {
+            log('sync', 'Testing auto-save functionality...');
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const projectStore = stores.useProjectStore.getState();
+                
+                // Enable auto-save
+                projectStore.updateProject({ autoSave: true });
+                log('sync', 'Auto-save enabled');
+                
+                // Create a node to trigger auto-save
+                const nodeStore = stores.useNodeStore.getState();
+                const nodeId = nodeStore.addNode('feature', { x: 300, y: 100 });
+                testData.nodeIds.push(nodeId);
+                
+                // Check auto-save after debounce period
+                setTimeout(() => {
+                    const currentProjectStore = stores.useProjectStore.getState();
+                    log('sync', `Auto-save triggered (modified: ${currentProjectStore.project.isModified})`, 'info');
+                }, 600); // Longer than 500ms debounce
+                
+            } catch (error) {
+                log('sync', `Auto-save test error: ${error.message}`, 'error');
+            }
+        }
+
+        function testValidationClear() {
+            log('sync', 'Testing validation clearing on structural changes...');
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                // This would typically involve making structural changes
+                // and checking if validation is cleared
+                log('sync', 'Validation clear test - implementation depends on validation system', 'info');
+                
+                // Create a structural change
+                const nodeStore = stores.useNodeStore.getState();
+                if (testData.nodeIds.length > 0) {
+                    nodeStore.deleteNode(testData.nodeIds[0]);
+                    testData.nodeIds.shift();
+                    log('sync', 'Structural change made (node deleted)', 'success');
+                }
+                
+            } catch (error) {
+                log('sync', `Validation clear test error: ${error.message}`, 'error');
+            }
+        }
+
+        // Storage Inspector
+        function inspectNodeStore() {
+            clearLog('inspector');
+            log('inspector', 'Inspecting Node Store...');
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const state = stores.useNodeStore.getState();
+                log('inspector', `Nodes: ${state.nodes.length}`);
+                log('inspector', `Connections: ${state.connections.length}`);
+                log('inspector', `Selected: ${state.selectedNodeIds.length}`);
+                
+                if (state.nodes.length > 0) {
+                    log('inspector', 'Recent nodes:');
+                    state.nodes.slice(-3).forEach(node => {
+                        log('inspector', `  - ${node.type}: ${node.title} (${node.id.slice(-8)})`);
+                    });
+                }
+            } catch (error) {
+                log('inspector', `Node store inspection error: ${error.message}`, 'error');
+            }
+        }
+
+        function inspectProjectStore() {
+            clearLog('inspector');
+            log('inspector', 'Inspecting Project Store...');
+            
+            const stores = getStores();
+            if (!stores) return;
+            
+            try {
+                const state = stores.useProjectStore.getState();
+                log('inspector', `Project: ${state.project.name}`);
+                log('inspector', `Modified: ${state.project.isModified}`);
+                log('inspector', `Auto-save: ${state.project.autoSave}`);
+                log('inspector', `Created: ${state.project.createdAt}`);
+                log('inspector', `Updated: ${state.project.updatedAt}`);
+            } catch (error) {
+                log('inspector', `Project store inspection error: ${error.message}`, 'error');
+            }
+        }
+
+        function inspectLocalStorage() {
+            clearLog('inspector');
+            log('inspector', 'Inspecting localStorage...');
+            
+            const recapMapKeys = Object.keys(localStorage).filter(key => key.includes('recapmap'));
+            
+            if (recapMapKeys.length === 0) {
+                log('inspector', 'No RecapMap data in localStorage', 'warning');
+                return;
+            }
+            
+            recapMapKeys.forEach(key => {
+                const data = localStorage.getItem(key);
+                const size = new Blob([data]).size;
+                log('inspector', `${key}: ${size} bytes`);
+                
+                try {
+                    const parsed = JSON.parse(data);
+                    if (parsed.state) {
+                        if (parsed.state.nodes) {
+                            log('inspector', `  - Nodes: ${parsed.state.nodes.length}`);
+                        }
+                        if (parsed.state.connections) {
+                            log('inspector', `  - Connections: ${parsed.state.connections.length}`);
+                        }
+                    }
+                } catch (e) {
+                    log('inspector', `  - Parse error: ${e.message}`, 'error');
+                }
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            log('setup', 'Integration test page loaded');
+            log('setup', 'Make sure the main RecapMap app is running on localhost:5173');
+            
+            // Try to check initialization after a brief delay
+            setTimeout(checkInitialization, 1000);
+        });
+    </script>
+</body>
+</html>

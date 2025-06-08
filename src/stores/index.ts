@@ -8,10 +8,19 @@ export { useNodeStore } from './nodeStore'
 export { useUIStore } from './uiStore'
 export { useProjectStore } from './projectStore'
 
+// Export sync utilities
+export { 
+  setupStoreSynchronization, 
+  cleanupStoreSynchronization, 
+  getSynchronizationStatus,
+  triggerSync 
+} from './syncManager'
+
 // Import stores for internal use
 import { useNodeStore } from './nodeStore'
 import { useUIStore } from './uiStore'
 import { useProjectStore } from './projectStore'
+import { setupStoreSynchronization } from './syncManager'
 
 // Export types for convenience
 export type {
@@ -41,4 +50,22 @@ export const useStores = () => {
     ui: uiStore,
     project: projectStore,
   }
+}
+
+// Initialize store synchronization
+// This should be called once during app startup
+let syncInitialized = false
+
+export const initializeStores = () => {
+  if (!syncInitialized) {
+    setupStoreSynchronization()
+    syncInitialized = true
+    console.log('🔄 Store synchronization initialized')
+  }
+}
+
+// Auto-initialize if in browser environment
+if (typeof window !== 'undefined') {
+  // Initialize on next tick to ensure all stores are ready
+  setTimeout(initializeStores, 0)
 }

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecapMap Persistence Test Runner</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-weight: 500;
+        }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.warning { background: #fff3cd; color: #856404; }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 8px 4px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .test-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 16px 0;
+            min-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 RecapMap Persistence Test Runner</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Make sure the RecapMap app is running on <strong>localhost:5173</strong></li>
+                <li>This test will run in a popup window connected to the main app</li>
+                <li>The test will verify localStorage persistence and cross-store synchronization</li>
+                <li>Check the console output below for detailed results</li>
+            </ol>
+        </div>
+
+        <div id="status" class="status info">
+            Ready to run tests. Click "Run Tests" to begin.
+        </div>
+
+        <div>
+            <button id="runTestsBtn" class="button" onclick="runTests()">Run All Tests</button>
+            <button id="openAppBtn" class="button" onclick="openMainApp()">Open Main App</button>
+            <button id="clearOutputBtn" class="button" onclick="clearOutput()">Clear Output</button>
+        </div>
+
+        <div id="testOutput" class="test-output">
+Test output will appear here...
+        </div>
+    </div>
+
+    <script>
+        let testWindow = null;
+        let testInterval = null;
+
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        function appendOutput(message) {
+            const outputEl = document.getElementById('testOutput');
+            outputEl.textContent += message + '\n';
+            outputEl.scrollTop = outputEl.scrollHeight;
+        }
+
+        function clearOutput() {
+            document.getElementById('testOutput').textContent = 'Test output cleared...\n';
+        }
+
+        function openMainApp() {
+            const appWindow = window.open('http://localhost:5173', 'recapmap-app');
+            if (appWindow) {
+                updateStatus('Main app opened in new window', 'success');
+            } else {
+                updateStatus('Failed to open main app - check popup blocker', 'error');
+            }
+        }
+
+        async function runTests() {
+            const runBtn = document.getElementById('runTestsBtn');
+            runBtn.disabled = true;
+            runBtn.textContent = 'Running Tests...';
+            
+            clearOutput();
+            updateStatus('Starting tests...', 'info');
+
+            try {
+                // Open the main app in a new window
+                testWindow = window.open('http://localhost:5173', 'recapmap-test', 'width=1200,height=800');
+                
+                if (!testWindow) {
+                    throw new Error('Failed to open test window - check popup blocker');
+                }
+
+                appendOutput('📱 Test window opened...');
+                appendOutput('⏳ Waiting for app to load...');
+
+                // Wait for the app to load and stores to be available
+                let attempts = 0;
+                const maxAttempts = 30; // 15 seconds
+                
+                const waitForApp = () => {
+                    return new Promise((resolve, reject) => {
+                        const checkStores = () => {
+                            attempts++;
+                            
+                            if (attempts > maxAttempts) {
+                                reject(new Error('Timeout waiting for app to load'));
+                                return;
+                            }
+
+                            try {
+                                if (testWindow.recapMapStores) {
+                                    appendOutput('✅ App loaded, stores available');
+                                    resolve();
+                                } else {
+                                    appendOutput(`⏳ Waiting for stores... (attempt ${attempts}/${maxAttempts})`);
+                                    setTimeout(checkStores, 500);
+                                }
+                            } catch (error) {
+                                appendOutput(`⏳ App still loading... (attempt ${attempts}/${maxAttempts})`);
+                                setTimeout(checkStores, 500);
+                            }
+                        };
+                        checkStores();
+                    });
+                };
+
+                await waitForApp();
+
+                // Load and run the test script
+                appendOutput('🔧 Loading test script...');
+                
+                const testScript = await fetch('./console-persistence-test.js').then(r => r.text());
+                
+                // Inject the test script into the test window
+                const script = testWindow.document.createElement('script');
+                script.textContent = testScript;
+                testWindow.document.head.appendChild(script);
+
+                appendOutput('🧪 Running persistence tests...');
+                updateStatus('Running tests in popup window...', 'info');
+
+                // Capture console output from test window
+                const originalConsoleLog = testWindow.console.log;
+                testWindow.console.log = function(...args) {
+                    originalConsoleLog.apply(testWindow.console, args);
+                    // Forward formatted output to our test output
+                    const message = args.join(' ').replace(/%c/g, '');
+                    appendOutput(message);
+                };
+
+                // Run the tests
+                if (testWindow.recapMapPersistenceTest) {
+                    await testWindow.recapMapPersistenceTest.runAllTests();
+                    updateStatus('Tests completed! Check output for results.', 'success');
+                } else {
+                    throw new Error('Test functions not available');
+                }
+
+            } catch (error) {
+                appendOutput(`❌ Error: ${error.message}`);
+                updateStatus(`Test failed: ${error.message}`, 'error');
+            } finally {
+                runBtn.disabled = false;
+                runBtn.textContent = 'Run All Tests';
+                
+                // Keep test window open for manual inspection
+                if (testWindow && !testWindow.closed) {
+                    appendOutput('🔍 Test window kept open for manual inspection');
+                }
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (testWindow && !testWindow.closed) {
+                testWindow.close();
+            }
+        });
+
+        // Initial status
+        updateStatus('Test runner ready. Make sure the main app is running first.', 'info');
+    </script>
+</body>
+</html>

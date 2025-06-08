@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
@@ -97,7 +97,67 @@ export const Toolbar: React.FC = () => {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [editName, setEditName] = useState(project.name);
   const [editDescription, setEditDescription] = useState(project.description || '');
+  const [isSaving, setIsSaving] = useState(false);
   
+  // Sync state when project changes
+  useEffect(() => {
+    setEditName(project.name);
+    setEditDescription(project.description || '');
+  }, [project.name, project.description]);
+  // Event handlers for project name
+  const handleNameChange = (value: string) => {
+    setEditName(value);
+  };
+
+  const handleNameSave = () => {
+    setIsSaving(true);
+    updateProject({ name: editName });
+    setIsEditingName(false);
+    setTimeout(() => setIsSaving(false), 500); // Show "Saved" briefly
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleNameSave();
+    } else if (e.key === 'Escape') {
+      setEditName(project.name);
+      setIsEditingName(false);
+    }
+  };
+  // Event handlers for project description
+  const handleDescriptionChange = (value: string) => {
+    setEditDescription(value);
+  };
+
+  const handleDescriptionSave = () => {
+    setIsSaving(true);
+    updateProject({ description: editDescription });
+    setIsEditingDescription(false);
+    setTimeout(() => setIsSaving(false), 500); // Show "Saved" briefly
+  };
+
+  const handleDescriptionKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setEditDescription(project.description || '');
+      setIsEditingDescription(false);
+    }
+  };
+  // Calculate project status
+  const getLastUpdated = () => {
+    if (project.updatedAt) {
+      const now = new Date();
+      const modified = new Date(project.updatedAt);
+      const diffMs = now.getTime() - modified.getTime();
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffMinutes = Math.floor(diffMs / (1000 * 60));
+      
+      if (diffHours > 0) return `${diffHours}h ago`;
+      if (diffMinutes > 0) return `${diffMinutes}m ago`;
+      return 'Just now';
+    }
+    return 'Never';
+  };
+
   // Stable initial position to prevent re-render loops
   const initialPosition = useMemo(() => ({ x: 16, y: 16 }), []);
 
@@ -208,6 +268,74 @@ export const Toolbar: React.FC = () => {
           </div>
         </div>
         
+        {/* Project Information Section */}
+        <div className="mb-4 space-y-2">
+          {/* Project Name */}
+          {isEditingName ? (
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => handleNameChange(e.target.value)}
+              onBlur={handleNameSave}
+              onKeyDown={handleNameKeyDown}
+              autoFocus
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              placeholder="Enter project name"
+            />
+          ) : (
+            <div
+              onClick={() => setIsEditingName(true)}
+              className="text-base font-semibold text-text-primary cursor-pointer hover:bg-surface-secondary/50 rounded px-2 py-1 transition-colors"
+              title="Click to edit project name"
+            >
+              {project.name || 'Untitled Project'}
+            </div>
+          )}
+
+          {/* Project Description */}
+          {isEditingDescription ? (
+            <textarea
+              value={editDescription}
+              onChange={(e) => handleDescriptionChange(e.target.value)}
+              onBlur={handleDescriptionSave}
+              onKeyDown={handleDescriptionKeyDown}
+              autoFocus
+              rows={2}
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+              placeholder="Add description..."
+            />
+          ) : (
+            <div
+              onClick={() => setIsEditingDescription(true)}
+              className="text-sm text-text-secondary opacity-80 cursor-pointer hover:bg-surface-secondary/50 rounded px-2 py-1 transition-colors min-h-[1.5rem]"
+              title="Click to edit project description"
+            >
+              {project.description || 'Add description...'}
+            </div>
+          )}
+
+          {/* Status Line */}
+          <div className="text-xs text-text-muted flex items-center justify-between">
+            <span className="flex items-center gap-1">
+              {isSaving ? (
+                <>
+                  <span className="inline-block w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                  Saved
+                </>
+              )}
+            </span>
+            <span>{getLastUpdated()}</span>
+            <span>
+              {nodes.length} node{nodes.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+        </div>
+
         <h3 className="text-text-primary font-semibold mb-3 text-sm">Add Nodes</h3>
         
         {/* Node Type Buttons Grid */}

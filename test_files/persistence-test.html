@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeStore Persistence Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: #f9fafb;
+        }
+        .test-section h3 {
+            color: #374151;
+            margin-top: 0;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        button {
+            padding: 8px 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        button.danger {
+            background: #dc2626;
+        }
+        button.danger:hover {
+            background: #b91c1c;
+        }
+        .status {
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .data-display {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .instructions {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .instructions h4 {
+            margin-top: 0;
+            color: #92400e;
+        }
+        .storage-info {
+            background: #e0e7ff;
+            border: 1px solid #6366f1;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 NodeStore Persistence Test</h1>
+        
+        <div class="instructions">
+            <h4>📋 Test Instructions</h4>
+            <ol>
+                <li><strong>Create Test Data:</strong> Add nodes and connections using the buttons below</li>
+                <li><strong>Verify Storage:</strong> Check that data appears in localStorage</li>
+                <li><strong>Refresh Test:</strong> Reload this page to verify persistence</li>
+                <li><strong>Cross-tab Test:</strong> Open this page in another tab to test synchronization</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🏗️ Data Creation</h3>
+            <div class="button-group">
+                <button onclick="createTestNode('usecase')">Add Use Case</button>
+                <button onclick="createTestNode('screen')">Add Screen</button>
+                <button onclick="createTestNode('user')">Add User</button>
+                <button onclick="createTestNode('process')">Add Process</button>
+            </div>
+            <div class="button-group">
+                <button onclick="createTestConnection()">Add Connection</button>
+                <button onclick="createCompleteTestScenario()">Create Complete Scenario</button>
+            </div>
+            <div id="creation-status" class="status info" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔄 Persistence Operations</h3>
+            <div class="button-group">
+                <button onclick="refreshData()">Refresh Data</button>
+                <button onclick="showLocalStorageData()">Show localStorage</button>
+                <button onclick="clearPersistentData()" class="danger">Clear All Data</button>
+            </div>
+            <div id="persistence-status" class="status info" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Current Store State</h3>
+            <div class="button-group">
+                <button onclick="displayCurrentData()">Display Current Data</button>
+                <button onclick="validateConnections()">Validate Connections</button>
+            </div>
+            <div id="current-data-display" class="data-display" style="display: none;"></div>
+            <div id="validation-status" class="status info" style="display: none;"></div>
+        </div>
+
+        <div class="storage-info">
+            <h4>💾 Storage Information</h4>
+            <div id="storage-info">
+                <p><strong>localStorage Key:</strong> <code>recapmap-node-store</code></p>
+                <p><strong>Persisted Data:</strong> nodes, connections</p>
+                <p><strong>Excluded:</strong> selectedNodeIds (transient UI state)</p>
+                <p><strong>Version:</strong> 1</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🚀 Test Scenarios</h3>
+            <div class="button-group">
+                <button onclick="runPersistenceTest()">Run Full Persistence Test</button>
+                <button onclick="runCrossTabTest()">Test Cross-Tab Sync</button>
+            </div>
+            <div id="test-results" class="status info" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the nodeStore (this would normally come from your build system)
+        // For testing, we'll simulate the store behavior
+        
+        // Mock implementation for testing
+        let mockStore = {
+            nodes: [],
+            connections: [],
+            selectedNodeIds: []
+        };
+
+        // Helper functions
+        function generateId() {
+            return 'test-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function showStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${type}`;
+            element.style.display = 'block';
+        }
+
+        function createTestNode(type) {
+            const id = generateId();
+            const node = {
+                id,
+                type,
+                title: `Test ${type.charAt(0).toUpperCase() + type.slice(1)} ${mockStore.nodes.length + 1}`,
+                description: `Test ${type} node for persistence testing`,
+                position: { 
+                    x: Math.random() * 400 + 100, 
+                    y: Math.random() * 300 + 100 
+                },
+                connections: { inputs: [], outputs: [] },
+                isSelected: false,
+                isValid: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                // Add type-specific properties
+                ...(type === 'usecase' ? { 
+                    priority: 'medium', 
+                    complexity: 'moderate',
+                    featureName: `test_${type}_${mockStore.nodes.length + 1}`
+                } : {})
+            };
+            
+            mockStore.nodes.push(node);
+            saveToLocalStorage();
+            showStatus('creation-status', `Created ${type} node: ${node.title}`, 'success');
+            return id;
+        }
+
+        function createTestConnection() {
+            if (mockStore.nodes.length < 2) {
+                showStatus('creation-status', 'Need at least 2 nodes to create a connection', 'error');
+                return;
+            }
+
+            const sourceNode = mockStore.nodes[Math.floor(Math.random() * mockStore.nodes.length)];
+            const targetNode = mockStore.nodes[Math.floor(Math.random() * mockStore.nodes.length)];
+            
+            if (sourceNode.id === targetNode.id) {
+                showStatus('creation-status', 'Cannot connect node to itself', 'error');
+                return;
+            }
+
+            const connectionId = generateId();
+            const connection = {
+                id: connectionId,
+                sourceNodeId: sourceNode.id,
+                targetNodeId: targetNode.id,
+                sourceHandle: 'right-source',
+                targetHandle: 'left-target',
+                type: 'data',
+                animated: false,
+                metadata: {
+                    directionType: 'oneway',
+                    lineStyle: 'solid',
+                    color: '#3B82F6',
+                    thickness: 2,
+                    priority: 'medium'
+                }
+            };
+
+            mockStore.connections.push(connection);
+            
+            // Update node connections
+            sourceNode.connections.outputs.push(targetNode.id);
+            targetNode.connections.inputs.push(sourceNode.id);
+            
+            saveToLocalStorage();
+            showStatus('creation-status', 
+                `Created connection: ${sourceNode.title} → ${targetNode.title}`, 'success');
+        }
+
+        function createCompleteTestScenario() {
+            // Create a complete mind map with all node types and connections
+            const usecaseId = createTestNode('usecase');
+            const screenId = createTestNode('screen');
+            const userId = createTestNode('user');
+            const processId = createTestNode('process');
+            
+            // Create meaningful connections
+            setTimeout(() => {
+                createTestConnection();
+                createTestConnection();
+                createTestConnection();
+                showStatus('creation-status', 'Created complete test scenario with 4 nodes and 3 connections', 'success');
+            }, 100);
+        }
+
+        function saveToLocalStorage() {
+            const dataToSave = {
+                state: {
+                    nodes: mockStore.nodes,
+                    connections: mockStore.connections
+                    // selectedNodeIds excluded (transient)
+                },
+                version: 1
+            };
+            localStorage.setItem('recapmap-node-store', JSON.stringify(dataToSave));
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem('recapmap-node-store');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed.state) {
+                        mockStore.nodes = parsed.state.nodes || [];
+                        mockStore.connections = parsed.state.connections || [];
+                        mockStore.selectedNodeIds = []; // Always reset transient state
+                        return true;
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+                return false;
+            }
+        }
+
+        function refreshData() {
+            const loaded = loadFromLocalStorage();
+            if (loaded) {
+                showStatus('persistence-status', 
+                    `Loaded ${mockStore.nodes.length} nodes and ${mockStore.connections.length} connections from localStorage`, 'success');
+            } else {
+                showStatus('persistence-status', 'No persisted data found in localStorage', 'info');
+            }
+        }
+
+        function showLocalStorageData() {
+            const stored = localStorage.getItem('recapmap-node-store');
+            const display = document.getElementById('current-data-display');
+            
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    display.textContent = JSON.stringify(parsed, null, 2);
+                    display.style.display = 'block';
+                    showStatus('persistence-status', 'localStorage data displayed below', 'success');
+                } catch (error) {
+                    display.textContent = 'Error parsing localStorage data: ' + error.message;
+                    display.style.display = 'block';
+                    showStatus('persistence-status', 'Error parsing localStorage data', 'error');
+                }
+            } else {
+                display.textContent = 'No data found in localStorage';
+                display.style.display = 'block';
+                showStatus('persistence-status', 'No localStorage data found', 'info');
+            }
+        }
+
+        function clearPersistentData() {
+            if (confirm('Are you sure you want to clear all persistent data?')) {
+                localStorage.removeItem('recapmap-node-store');
+                mockStore = { nodes: [], connections: [], selectedNodeIds: [] };
+                showStatus('persistence-status', 'All persistent data cleared', 'success');
+                document.getElementById('current-data-display').style.display = 'none';
+            }
+        }
+
+        function displayCurrentData() {
+            const display = document.getElementById('current-data-display');
+            const currentState = {
+                nodes: mockStore.nodes,
+                connections: mockStore.connections,
+                selectedNodeIds: mockStore.selectedNodeIds,
+                summary: {
+                    nodeCount: mockStore.nodes.length,
+                    connectionCount: mockStore.connections.length,
+                    selectedCount: mockStore.selectedNodeIds.length,
+                    nodeTypes: mockStore.nodes.reduce((acc, node) => {
+                        acc[node.type] = (acc[node.type] || 0) + 1;
+                        return acc;
+                    }, {})
+                }
+            };
+            
+            display.textContent = JSON.stringify(currentState, null, 2);
+            display.style.display = 'block';
+            showStatus('validation-status', 
+                `Displaying ${mockStore.nodes.length} nodes and ${mockStore.connections.length} connections`, 'info');
+        }
+
+        function validateConnections() {
+            const errors = [];
+            
+            mockStore.connections.forEach(conn => {
+                const sourceExists = mockStore.nodes.some(node => node.id === conn.sourceNodeId);
+                const targetExists = mockStore.nodes.some(node => node.id === conn.targetNodeId);
+                
+                if (!sourceExists) {
+                    errors.push(`Connection ${conn.id} has invalid source node ${conn.sourceNodeId}`);
+                }
+                if (!targetExists) {
+                    errors.push(`Connection ${conn.id} has invalid target node ${conn.targetNodeId}`);
+                }
+            });
+
+            if (errors.length === 0) {
+                showStatus('validation-status', 
+                    `✅ All ${mockStore.connections.length} connections are valid`, 'success');
+            } else {
+                showStatus('validation-status', 
+                    `❌ Found ${errors.length} connection errors: ${errors.join(', ')}`, 'error');
+            }
+        }
+
+        function runPersistenceTest() {
+            showStatus('test-results', 'Running persistence test...', 'info');
+            
+            // Clear existing data
+            localStorage.removeItem('recapmap-node-store');
+            mockStore = { nodes: [], connections: [], selectedNodeIds: [] };
+            
+            // Create test data
+            const nodeId1 = createTestNode('usecase');
+            const nodeId2 = createTestNode('screen');
+            createTestConnection();
+            
+            // Verify save
+            const stored = localStorage.getItem('recapmap-node-store');
+            if (!stored) {
+                showStatus('test-results', '❌ Persistence test failed - data not saved', 'error');
+                return;
+            }
+            
+            // Clear memory and reload
+            mockStore = { nodes: [], connections: [], selectedNodeIds: [] };
+            const loaded = loadFromLocalStorage();
+            
+            if (loaded && mockStore.nodes.length === 2 && mockStore.connections.length === 1) {
+                showStatus('test-results', 
+                    '✅ Persistence test passed - data saved and restored correctly', 'success');
+            } else {
+                showStatus('test-results', 
+                    `❌ Persistence test failed - expected 2 nodes and 1 connection, got ${mockStore.nodes.length} nodes and ${mockStore.connections.length} connections`, 'error');
+            }
+        }
+
+        function runCrossTabTest() {
+            showStatus('test-results', 
+                '🔄 Cross-tab test: Open this page in another tab and create nodes there, then click "Refresh Data" here to test synchronization', 'info');
+        }
+
+        // Global functions for button clicks
+        window.createTestNode = createTestNode;
+        window.createTestConnection = createTestConnection;
+        window.createCompleteTestScenario = createCompleteTestScenario;
+        window.refreshData = refreshData;
+        window.showLocalStorageData = showLocalStorageData;
+        window.clearPersistentData = clearPersistentData;
+        window.displayCurrentData = displayCurrentData;
+        window.validateConnections = validateConnections;
+        window.runPersistenceTest = runPersistenceTest;
+        window.runCrossTabTest = runCrossTabTest;
+
+        // Load any existing data on page load
+        loadFromLocalStorage();
+        
+        console.log('NodeStore Persistence Test initialized');
+        console.log('Current store state:', mockStore);
+    </script>
+</body>
+</html>

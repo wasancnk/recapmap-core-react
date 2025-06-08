@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeStore Persistence Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #00ff88;
+        }
+        .result {
+            background: #333;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .pass { color: #00ff88; }
+        .fail { color: #ff4444; }
+        .info { color: #44aaff; }
+        button {
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #00cc66;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 NodeStore localStorage Persistence Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Current localStorage Status</h2>
+        <div id="storage-status" class="result"></div>
+        <button onclick="checkStorageStatus()">Check Storage</button>
+        <button onclick="clearStorage()">Clear Storage</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔬 Phase 1 Test: Basic Persistence</h2>
+        <div class="result">
+            <div id="test-results"></div>
+        </div>
+        <button onclick="runBasicTest()">Run Basic Test</button>
+        <button onclick="runRefreshTest()">Test Page Refresh</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📈 Test Results Summary</h2>
+        <div id="summary" class="result"></div>
+    </div>
+
+    <script>
+        // Test results tracking
+        let testResults = [];
+
+        function log(message, type = 'info') {
+            const testResultsDiv = document.getElementById('test-results');
+            const span = document.createElement('div');
+            span.className = type;
+            span.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            testResultsDiv.appendChild(span);
+            testResults.push({ message, type, timestamp: Date.now() });
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            const passed = testResults.filter(r => r.type === 'pass').length;
+            const failed = testResults.filter(r => r.type === 'fail').length;
+            const total = testResults.length;
+            
+            summary.innerHTML = `
+                <div class="info">Total Tests: ${total}</div>
+                <div class="pass">Passed: ${passed}</div>
+                <div class="fail">Failed: ${failed}</div>
+            `;
+        }
+
+        function checkStorageStatus() {
+            const storageDiv = document.getElementById('storage-status');
+            const nodeStoreData = localStorage.getItem('recapmap-node-store');
+            const projectStoreData = localStorage.getItem('recapmap-project-store');
+            
+            storageDiv.innerHTML = `
+                <div class="info">Node Store Data: ${nodeStoreData ? 'EXISTS' : 'NOT FOUND'}</div>
+                <div class="info">Project Store Data: ${projectStoreData ? 'EXISTS' : 'NOT FOUND'}</div>
+                ${nodeStoreData ? `<div class="info">Node Store Size: ${nodeStoreData.length} characters</div>` : ''}
+                ${projectStoreData ? `<div class="info">Project Store Size: ${projectStoreData.length} characters</div>` : ''}
+            `;
+            
+            if (nodeStoreData) {
+                try {
+                    const parsed = JSON.parse(nodeStoreData);
+                    storageDiv.innerHTML += `
+                        <div class="info">Node Store Structure: ${Object.keys(parsed).join(', ')}</div>
+                        <div class="info">State Keys: ${parsed.state ? Object.keys(parsed.state).join(', ') : 'No state'}</div>
+                        <div class="info">Nodes Count: ${parsed.state?.nodes?.length || 0}</div>
+                        <div class="info">Connections Count: ${parsed.state?.connections?.length || 0}</div>
+                    `;
+                } catch (e) {
+                    storageDiv.innerHTML += `<div class="fail">Error parsing node store data: ${e.message}</div>`;
+                }
+            }
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('recapmap-node-store');
+            localStorage.removeItem('recapmap-project-store');
+            log('Storage cleared', 'info');
+            checkStorageStatus();
+        }
+
+        function runBasicTest() {
+            log('🚀 Starting Basic Persistence Test...', 'info');
+            
+            // Clear previous test results for fresh start
+            testResults = [];
+            
+            try {
+                // Test 1: Check if data persists in localStorage
+                const initialData = localStorage.getItem('recapmap-node-store');
+                if (initialData) {
+                    log('✅ localStorage data found on page load', 'pass');
+                    
+                    try {
+                        const parsed = JSON.parse(initialData);
+                        if (parsed.state && parsed.state.nodes && parsed.state.connections) {
+                            log('✅ Data structure is correct (nodes & connections present)', 'pass');
+                        } else {
+                            log('❌ Data structure missing nodes or connections', 'fail');
+                        }
+                    } catch (e) {
+                        log('❌ Failed to parse localStorage data: ' + e.message, 'fail');
+                    }
+                } else {
+                    log('ℹ️ No localStorage data found (expected for first run)', 'info');
+                }
+                
+                // Test 2: Verify persist configuration excludes transient state
+                if (initialData) {
+                    const parsed = JSON.parse(initialData);
+                    if (parsed.state && !parsed.state.hasOwnProperty('selectedNodeIds')) {
+                        log('✅ selectedNodeIds correctly excluded from persistence', 'pass');
+                    } else if (parsed.state && parsed.state.selectedNodeIds) {
+                        log('❌ selectedNodeIds should not be persisted (transient UI state)', 'fail');
+                    }
+                }
+                
+                // Test 3: Check version tracking
+                if (initialData) {
+                    const parsed = JSON.parse(initialData);
+                    if (parsed.version === 1) {
+                        log('✅ Version tracking working correctly (v1)', 'pass');
+                    } else {
+                        log('❌ Version tracking not working or incorrect version', 'fail');
+                    }
+                }
+                
+                log('🎯 Basic test completed', 'info');
+                
+            } catch (error) {
+                log('❌ Basic test failed with error: ' + error.message, 'fail');
+            }
+        }
+
+        function runRefreshTest() {
+            log('🔄 Simulating page refresh test...', 'info');
+            log('ℹ️ Manually refresh the page to test persistence across sessions', 'info');
+            log('ℹ️ Data should be restored after refresh if persistence is working', 'info');
+        }
+
+        // Auto-run initial checks when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🏁 NodeStore Persistence Test Suite Started', 'info');
+            checkStorageStatus();
+            runBasicTest();
+        });
+
+        // Check every 2 seconds for storage changes (simulates real app usage)
+        setInterval(checkStorageStatus, 2000);
+    </script>
+</body>
+</html>
