@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
+import { useProjectStore } from '../stores/projectStore';
+import { usePanelStore } from '../stores/panelStore';
 import { useDraggable } from '../hooks/useDraggable';
 import type { NodeType } from '../types';
 
@@ -85,8 +87,17 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 };
 
 export const Toolbar: React.FC = () => {
-  const { nodes, connections } = useNodeStore();
+  const { nodes, connections, deleteNode, clearSelection } = useNodeStore();
   const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid } = useUIStore();
+  const { project, updateProject } = useProjectStore();
+  const { reset: resetPanels } = usePanelStore();
+  
+  // State for inline editing
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [editName, setEditName] = useState(project.name);
+  const [editDescription, setEditDescription] = useState(project.description || '');
+  
   // Stable initial position to prevent re-render loops
   const initialPosition = useMemo(() => ({ x: 16, y: 16 }), []);
 
@@ -148,15 +159,24 @@ export const Toolbar: React.FC = () => {
       className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
       icon: '🏗️'
     },
-  ];
-  const handleClearAll = () => {
+  ];  const handleClearAll = () => {
     if (nodes.length > 0 || connections.length > 0) {
       if (window.confirm('Are you sure you want to clear all nodes and connections?')) {
-        // For now, we'll implement this when we add the clearAll method to the store
+        // Clear selection first
+        clearSelection();
+        
+        // Delete all nodes (this will also delete all connections automatically)
+        const nodeIds = [...nodes.map(node => node.id)]; // Create a copy to avoid mutation during iteration
+        nodeIds.forEach(nodeId => deleteNode(nodeId));
+        
+        // Reset all panels (this will close all node panels)
+        resetPanels();
+        
+        // Show success notification
         addNotification({ 
-          type: 'info', 
-          title: 'Info',
-          message: 'Clear all functionality coming soon!' 
+          type: 'success', 
+          title: 'Success',
+          message: `Cleared ${nodeIds.length} nodes and all connections!` 
         });
       }
     }

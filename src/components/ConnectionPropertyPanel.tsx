@@ -191,181 +191,159 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       if (!confirmDiscard) return;
     }
     onClose();
-  };  return (
-    <div 
+  };  return (    <div 
       ref={dragRef}
-      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-80 flex flex-col"
+      className="fixed bg-gray-900/95 backdrop-blur-md border border-gray-700/50 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 z-50 w-64 flex flex-col"
       style={{ 
         left: draggablePosition.x, 
         top: draggablePosition.y,
-        height: '600px',
-        maxHeight: '600px'
+        height: '420px',
+        maxHeight: '420px'
       }}
-    >      {/* Fixed Header - Draggable */}
+    >{/* Fixed Header - Draggable */}
       <div 
         className="flex flex-col select-none flex-shrink-0"
         {...dragHandleProps}
-      >
-        {/* Drag indicator dots - centered at top */}
+      >        {/* Drag indicator dots - centered at top */}
         <div className="flex justify-center py-2">
           <div className="flex space-x-1">
-            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
-            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
-            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
-            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
           </div>
         </div>
-        
-        {/* Title and close button */}
-        <div className="flex items-center justify-between px-4 pb-4 border-b border-surface-border">
+          {/* Title and close button */}        <div className="flex items-center justify-between px-4 pb-3 border-b border-gray-700/30 bg-gray-800/30 rounded-t-lg">
           <div className="flex items-center space-x-2">
-            <span className="text-lg">🔗</span>
-            <h3 className="text-lg font-bold text-text-primary">Connection Properties</h3>
+            <span className="text-sm">🔗</span>
+            <h3 className="text-sm font-semibold text-gray-100">Connection Properties</h3>
           </div>          <button
             onClick={onClose}
-            className="text-text-secondary hover:text-text-primary transition-colors"
+            className="p-1 rounded-md hover:bg-gray-700/50 transition-colors duration-150 text-gray-400 hover:text-gray-200"
             onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking close button
           >
             ✕
           </button></div>
-      </div>
-
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto scrollbar-dark p-4 space-y-4">
-        
-        {/* Connection Details */}
-        <div className="space-y-3">
-          <h4 className="font-semibold text-text-primary">Connection Details</h4>
+      </div>      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto scrollbar-dark p-3 space-y-3">          {/* Connection Details */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-gray-200 uppercase tracking-wide">Connection Details</h4>
           
           <div className="text-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-text-secondary">From:</span>
-              <span className="text-text-primary font-medium">
+              <span className="text-gray-300">From:</span>
+              <span className="text-gray-100 font-medium">
                 {sourceNode?.title || 'Unknown Node'}
               </span>
             </div>
             
             <div className="flex items-center justify-between">
-              <span className="text-text-secondary">To:</span>
-              <span className="text-text-primary font-medium">
+              <span className="text-gray-300">To:</span>
+              <span className="text-gray-100 font-medium">
                 {targetNode?.title || 'Unknown Node'}
               </span>
             </div>
-          </div>
-
-          {/* Swap Direction Button */}
+          </div>          {/* Swap Direction Button */}
           <button
             onClick={handleSwapDirection}
-            className="w-full px-3 py-2 bg-accent-primary hover:bg-accent-secondary text-white rounded-md transition-colors flex items-center justify-center space-x-2"
+            className="w-full px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center justify-center space-x-1 text-sm"
           >
             <span>⇄</span>
             <span>Swap Direction</span>
           </button>
         </div>        {/* Label */}
-        <div className="space-y-2">
-          <label htmlFor="connectionLabel" className="text-sm font-medium text-text-primary">Label</label>
+        <div className="space-y-1">
+          <label htmlFor="connectionLabel" className="text-xs font-medium text-gray-300">Label</label>
           <input
             id="connectionLabel"
             type="text"
             value={formData.label}
             onChange={(e) => handleInputChange('label', e.target.value)}
             placeholder="Connection label (optional)"
-            className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary"
+            className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
           />
-        </div>
-
-        {/* Direction & Style */}
-        <div className="space-y-3">
-          <h4 className="font-semibold text-text-primary">Direction & Style</h4>
-            <div className="space-y-2">
-            <label htmlFor="directionType" className="text-sm font-medium text-text-primary">Direction Type</label>            <select
+        </div>        {/* Direction & Style */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-gray-200 uppercase tracking-wide">Direction & Style</h4>            <div className="space-y-1">
+            <label htmlFor="directionType" className="text-xs font-medium text-gray-300">Direction Type</label>            <select
               id="directionType"
               value={formData.directionType}
               onChange={(e) => handleInputChange('directionType', e.target.value)}
-              className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+              className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
             >
               <option value="oneway" selected={formData.directionType === 'oneway'}>One-way →</option>
               <option value="twoway" selected={formData.directionType === 'twoway'}>Two-way ↔</option>
               <option value="undirected" selected={formData.directionType === 'undirected'}>Undirected —</option>
             </select>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="lineStyle" className="text-sm font-medium text-text-primary">Line Style</label>            <select
+          </div>          <div className="space-y-1">
+            <label htmlFor="lineStyle" className="text-xs font-medium text-gray-300">Line Style</label>            <select
               id="lineStyle"
               value={formData.style}
               onChange={(e) => handleInputChange('style', e.target.value)}
-              className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+              className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
             >
               <option value="solid" selected={formData.style === 'solid'}>Solid</option>
               <option value="dashed" selected={formData.style === 'dashed'}>Dashed</option>
               <option value="dotted" selected={formData.style === 'dotted'}>Dotted</option>
             </select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Color</label>
-            <div className="flex space-x-2">
-              <input
+          </div>          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-300">Color</label>
+            <div className="flex space-x-2">              <input
                 type="color"
                 value={formData.color}
                 onChange={(e) => handleInputChange('color', e.target.value)}
-                className="w-12 h-10 border border-surface-border rounded-md cursor-pointer"
+                className="w-10 h-8 border border-gray-600 rounded-md cursor-pointer"
               />
               <input
                 type="text"
                 value={formData.color}
                 onChange={(e) => handleInputChange('color', e.target.value)}
-                className="flex-1 px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                className="flex-1 px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
               />
             </div>
           </div>
         </div>        {/* Relationship Type */}
-        <div className="space-y-2">
-          <label htmlFor="relationshipType" className="text-sm font-medium text-text-primary">Relationship Type</label>          <select
+        <div className="space-y-1">
+          <label htmlFor="relationshipType" className="text-xs font-medium text-gray-300">Relationship Type</label>          <select
             id="relationshipType"
             value={formData.type}
             onChange={(e) => handleInputChange('type', e.target.value)}
-            className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+            className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
           >
             <option value="data" selected={formData.type === 'data'}>Data Flow</option>
             <option value="control" selected={formData.type === 'control'}>Process Flow</option>
             <option value="dependency" selected={formData.type === 'dependency'}>Dependency</option>
           </select>
-        </div>
-
-        {/* Priority */}
-        <div className="space-y-2">
-          <label htmlFor="priority" className="text-sm font-medium text-text-primary">Priority</label>          <select
+        </div>        {/* Priority */}
+        <div className="space-y-1">
+          <label htmlFor="priority" className="text-xs font-medium text-gray-300">Priority</label>          <select
             id="priority"
             value={formData.priority}
             onChange={(e) => handleInputChange('priority', e.target.value)}
-            className="w-full px-3 py-2 bg-surface-secondary border border-surface-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+            className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
           >
             <option value="low" selected={formData.priority === 'low'}>Low</option>
             <option value="medium" selected={formData.priority === 'medium'}>Medium</option>
             <option value="high" selected={formData.priority === 'high'}>High</option>
             <option value="critical" selected={formData.priority === 'critical'}>Critical</option>
           </select>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex space-x-2 pt-4 border-t border-surface-border">
+        </div>        {/* Action Buttons */}
+        <div className="flex space-x-2 pt-3 border-t border-gray-700/50">
           <button
             onClick={handleSave}
             disabled={!isModified}
-            className="flex-1 px-4 py-2 bg-accent-primary hover:bg-accent-secondary disabled:bg-accent-muted disabled:cursor-not-allowed text-white rounded-md transition-colors"
+            className="flex-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-md transition-colors text-sm"
           >
             Save
           </button>          <button
             onClick={handleCancel}
-            className="px-4 py-2 bg-surface-secondary hover:bg-surface-tertiary text-text-primary border border-surface-border rounded-md transition-colors"
+            className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600 rounded-md transition-colors text-sm"
           >
             Cancel
           </button>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
+            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors text-sm"
           >
             Delete
           </button>

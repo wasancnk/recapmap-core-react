@@ -2,14 +2,12 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"command": "npm run build",
+			"label": "dev-server",
+			"type": "shell",
+			"command": "npm run dev",
 			"group": "build",
-			"isBackground": false,
-			"label": "build-project",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"type": "shell"
+			"isBackground": true,
+			"problemMatcher": []
 		}
 	]
 }
