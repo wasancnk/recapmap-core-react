@@ -12,7 +12,6 @@ import {
   useEdgesState,
   BackgroundVariant,
   useReactFlow,
-  ReactFlowProvider,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useNodeStore } from '../stores/nodeStore';
@@ -391,11 +390,7 @@ const CanvasInner: React.FC = () => {
   );
 };
 
-// Main Canvas component wrapped with ReactFlowProvider
+// Main Canvas component (now uses ReactFlowProvider from parent)
 export const Canvas: React.FC = () => {
-  return (
-    <ReactFlowProvider>
-      <CanvasInner />
-    </ReactFlowProvider>
-  );
+  return <CanvasInner />;
 };

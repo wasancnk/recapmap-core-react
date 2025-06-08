@@ -1,4 +1,5 @@
-import React from 'react';
+import { useMemo } from 'react';
+import { useReactFlow } from '@xyflow/react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { useDraggable } from '../hooks/useDraggable';
@@ -13,16 +14,20 @@ interface NodeButtonProps {
 
 const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, icon }) => {
   const { addNode } = useNodeStore();
+  const reactFlowInstance = useReactFlow();
 
   const handleAddNode = () => {
-    // Add node at center of current viewport with some randomness
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
+    // Get the center of the current viewport
+    const viewportCenter = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    };
 
-    addNode(nodeType, { 
-      x: centerX + (Math.random() - 0.5) * 200, 
-      y: centerY + (Math.random() - 0.5) * 200 
-    });
+    // Convert screen coordinates to flow coordinates
+    const flowPosition = reactFlowInstance.screenToFlowPosition(viewportCenter);
+
+    // Add node at center of current viewport
+    addNode(nodeType, flowPosition);
   };
 
   // Handle drag start for drag-and-drop node creation
@@ -82,9 +87,8 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 export const Toolbar: React.FC = () => {
   const { nodes, connections } = useNodeStore();
   const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid } = useUIStore();
-
   // Stable initial position to prevent re-render loops
-  const initialPosition = React.useMemo(() => ({ x: 16, y: 16 }), []);
+  const initialPosition = useMemo(() => ({ x: 16, y: 16 }), []);
 
   // Initialize draggable functionality
   const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
