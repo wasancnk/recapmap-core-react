@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { devtools, persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
 import type { Panel, PanelType, CanvasState, UIState, Tool, Notification } from '../types'
 
@@ -76,13 +76,14 @@ const defaultUIState: UIState = {
 // Create the UI store
 export const useUIStore = create<UIStore>()(
   devtools(
-    (set, get) => ({
-      // Initial state
-      canvas: defaultCanvasState,
-      panels: [],
-      activePanelId: null,
-      maxZIndex: 100,
-      ui: defaultUIState,
+    persist(
+      (set, get) => ({
+        // Initial state
+        canvas: defaultCanvasState,
+        panels: [],
+        activePanelId: null,
+        maxZIndex: 100,
+        ui: defaultUIState,
 
       // Canvas Actions
       setZoom: (zoom: number) => {
@@ -319,9 +320,7 @@ export const useUIStore = create<UIStore>()(
 
       getOpenPanels: () => {
         return get().panels.filter((panel) => panel.isOpen)
-      },
-
-      isGridVisible: () => {
+      },      isGridVisible: () => {
         return get().ui.isGridVisible
       },
 
@@ -329,6 +328,23 @@ export const useUIStore = create<UIStore>()(
         return get().ui.selectedTool
       },
     }),
+    {
+      name: 'recapmap-ui-store',
+      partialize: (state) => ({
+        canvas: state.canvas,
+        ui: {
+          selectedTool: state.ui.selectedTool,
+          isGridVisible: state.ui.isGridVisible,
+          isMiniMapVisible: state.ui.isMiniMapVisible,
+          snapToGrid: state.ui.snapToGrid,
+          gridSize: state.ui.gridSize,
+          theme: state.ui.theme,
+          sidebarCollapsed: state.ui.sidebarCollapsed,
+          // Exclude transient state like notifications
+        }
+      }),
+    }
+    ),
     {
       name: 'recapmap-ui-store',
     }

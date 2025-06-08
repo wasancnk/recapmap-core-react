@@ -56,12 +56,13 @@ const CanvasInner: React.FC = () => {
     selectNodes,
     addNode,
   } = useNodeStore();
-
   const {
     canvas,
     ui,
     toggleSnapToGrid,
     toggleGrid,
+    setZoom,
+    setCenter,
   } = useUIStore();
   // ReactFlow instance for coordinate transformation
   const reactFlowInstance = useReactFlow();
@@ -311,8 +312,7 @@ const CanvasInner: React.FC = () => {
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-  }, []);
-  // Handle drop to create new node at drop position
+  }, []);  // Handle drop to create new node at drop position
   const onDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     
@@ -347,7 +347,13 @@ const CanvasInner: React.FC = () => {
       console.log('🎯 Dropping node:', nodeType, 'at centered position:', finalPosition);
       addNode(nodeType as NodeType, finalPosition);
     }
-  }, [reactFlowInstance, ui.snapToGrid, ui.gridSize, addNode]);return (
+  }, [reactFlowInstance, ui.snapToGrid, ui.gridSize, addNode]);
+
+  // Handle viewport changes to persist zoom and pan state
+  const onViewportChange = useCallback((viewport: { x: number; y: number; zoom: number }) => {
+    setZoom(viewport.zoom);
+    setCenter({ x: viewport.x, y: viewport.y });
+  }, [setZoom, setCenter]);return (
     <div className="w-full h-full bg-background-tertiary relative">      {/* Snap-to-Grid Status Indicator */}
       {ui.snapToGrid && (
         <div className="absolute top-4 right-4 z-50 bg-accent-primary/90 text-white px-3 py-1 rounded text-xs font-medium shadow-lg flex items-center gap-2">
@@ -361,9 +367,9 @@ const CanvasInner: React.FC = () => {
         onEdgesChange={handleEdgesChange}
         onConnect={onConnect}
         onPaneClick={onPaneClick}
-        onEdgeClick={onEdgeClick}
-        onDragOver={onDragOver}
+        onEdgeClick={onEdgeClick}        onDragOver={onDragOver}
         onDrop={onDrop}
+        onViewportChange={onViewportChange}
         nodeTypes={nodeTypes}
         connectionMode={ConnectionMode.Loose}        defaultViewport={{
           x: canvas.center.x,

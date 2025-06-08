@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewport Persistence Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007acc;
+        }
+        .test-button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background: #005a9e;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+        .status.success { background: #2d5a2d; color: #90ee90; }
+        .status.warning { background: #5a5a2d; color: #ffff90; }
+        .status.error { background: #5a2d2d; color: #ff9090; }
+        .code {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .instructions {
+            background: #2d3748;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .app-link {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .app-link:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Viewport Persistence Test</h1>
+            <p>Testing localStorage persistence for RecapMap viewport and UI state</p>
+        </div>
+
+        <div class="section">
+            <h2>📋 Current Persistence Status</h2>
+            <div id="persistenceStatus">Loading...</div>
+            <button class="test-button" onclick="checkPersistence()">🔄 Refresh Status</button>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Test the Application</h2>
+            <div class="instructions">
+                <p><strong>Testing Steps:</strong></p>
+                <ol>
+                    <li>Click the link below to open RecapMap</li>
+                    <li>Pan the canvas by dragging</li>
+                    <li>Zoom in/out using mouse wheel or controls</li>
+                    <li>Toggle grid visibility (Ctrl+Shift+G)</li>
+                    <li>Change other UI settings</li>
+                    <li>Refresh the browser page</li>
+                    <li>Verify viewport and settings are restored</li>
+                </ol>
+            </div>
+            <a href="http://localhost:5173" class="app-link" target="_blank">
+                🗺️ Open RecapMap Application
+            </a>
+        </div>
+
+        <div class="section">
+            <h2>🔍 localStorage Inspector</h2>
+            <button class="test-button" onclick="showLocalStorage()">📊 Show All Data</button>
+            <button class="test-button" onclick="clearRecapMapData()">🗑️ Clear RecapMap Data</button>
+            <div id="localStorageData" class="code"></div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Persistence Configuration</h2>
+            <div class="code" id="configInfo"></div>
+            <button class="test-button" onclick="showConfig()">📝 Show Configuration</button>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Simulate Data</h2>
+            <button class="test-button" onclick="simulateViewportChange()">📐 Simulate Viewport Change</button>
+            <button class="test-button" onclick="simulateUIChange()">🎛️ Simulate UI Change</button>
+            <div id="simulationResults" class="code"></div>
+        </div>
+    </div>
+
+    <script>
+        function createStatus(type, message) {
+            return `<div class="status ${type}">${message}</div>`;
+        }
+
+        function checkPersistence() {
+            const statusDiv = document.getElementById('persistenceStatus');
+            let html = '';
+
+            // Check UI Store
+            const uiStore = localStorage.getItem('recapmap-ui-store');
+            if (uiStore) {
+                try {
+                    const parsed = JSON.parse(uiStore);
+                    html += createStatus('success', '✅ UI Store: Found and valid');
+                    html += `<div class="code">Canvas: zoom=${parsed.state?.canvas?.zoom}, center=(${parsed.state?.canvas?.center?.x}, ${parsed.state?.canvas?.center?.y})</div>`;
+                } catch (e) {
+                    html += createStatus('error', '❌ UI Store: Found but invalid JSON');
+                }
+            } else {
+                html += createStatus('warning', '⚠️ UI Store: Not found');
+            }
+
+            // Check Node Store
+            const nodeStore = localStorage.getItem('recapmap-node-store');
+            if (nodeStore) {
+                try {
+                    const parsed = JSON.parse(nodeStore);
+                    html += createStatus('success', '✅ Node Store: Found and valid');
+                    html += `<div class="code">Nodes: ${parsed.state?.nodes?.length || 0}, Connections: ${parsed.state?.connections?.length || 0}</div>`;
+                } catch (e) {
+                    html += createStatus('error', '❌ Node Store: Found but invalid JSON');
+                }
+            } else {
+                html += createStatus('warning', '⚠️ Node Store: Not found');
+            }
+
+            statusDiv.innerHTML = html;
+        }
+
+        function showLocalStorage() {
+            const dataDiv = document.getElementById('localStorageData');
+            let output = 'RecapMap localStorage Data:\n\n';
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('recapmap')) {
+                    const value = localStorage.getItem(key);
+                    output += `${key}:\n`;
+                    try {
+                        const parsed = JSON.parse(value);
+                        output += JSON.stringify(parsed, null, 2) + '\n\n';
+                    } catch (e) {
+                        output += value + '\n\n';
+                    }
+                }
+            }
+
+            if (output === 'RecapMap localStorage Data:\n\n') {
+                output = 'No RecapMap data found in localStorage';
+            }
+
+            dataDiv.textContent = output;
+        }
+
+        function clearRecapMapData() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('recapmap')) {
+                    keys.push(key);
+                }
+            }
+
+            keys.forEach(key => localStorage.removeItem(key));
+            
+            document.getElementById('localStorageData').textContent = `Cleared ${keys.length} RecapMap keys: ${keys.join(', ')}`;
+            checkPersistence();
+        }
+
+        function showConfig() {
+            const configDiv = document.getElementById('configInfo');
+            const config = {
+                'UI Store Persistence': {
+                    key: 'recapmap-ui-store',
+                    persisted_fields: [
+                        'canvas (zoom, center, bounds)',
+                        'ui (theme, grid settings, minimap, etc.)'
+                    ],
+                    excluded_fields: [
+                        'panels (transient UI state)',
+                        'activePanelId',
+                        'maxZIndex'
+                    ]
+                },
+                'Node Store Persistence': {
+                    key: 'recapmap-node-store',
+                    persisted_fields: [
+                        'nodes',
+                        'connections',
+                        'projectInfo'
+                    ],
+                    excluded_fields: [
+                        'selectedNodeIds (transient selection state)'
+                    ]
+                }
+            };
+            
+            configDiv.textContent = JSON.stringify(config, null, 2);
+        }
+
+        function simulateViewportChange() {
+            const simulationDiv = document.getElementById('simulationResults');
+            
+            // Create mock UI store data
+            const mockUIStore = {
+                state: {
+                    canvas: {
+                        zoom: 1.5,
+                        center: { x: -200, y: 150 },
+                        bounds: { left: -2000, top: -1500, right: 2000, bottom: 1500 }
+                    },
+                    ui: {
+                        selectedTool: 'select',
+                        isGridVisible: true,
+                        isMiniMapVisible: false,
+                        snapToGrid: false,
+                        gridSize: 25,
+                        theme: 'dark',
+                        sidebarCollapsed: true,
+                        notifications: []
+                    }
+                },
+                version: 0
+            };
+
+            localStorage.setItem('recapmap-ui-store', JSON.stringify(mockUIStore));
+            
+            simulationDiv.textContent = 'Simulated viewport change:\n' + 
+                `- Zoom: ${mockUIStore.state.canvas.zoom}\n` +
+                `- Center: (${mockUIStore.state.canvas.center.x}, ${mockUIStore.state.canvas.center.y})\n` +
+                `- Grid visible: ${mockUIStore.state.ui.isGridVisible}\n` +
+                `- MiniMap visible: ${mockUIStore.state.ui.isMiniMapVisible}`;
+            
+            checkPersistence();
+        }
+
+        function simulateUIChange() {
+            const current = localStorage.getItem('recapmap-ui-store');
+            let data;
+            
+            if (current) {
+                try {
+                    data = JSON.parse(current);
+                } catch (e) {
+                    data = { state: { canvas: {}, ui: {} }, version: 0 };
+                }
+            } else {
+                data = { state: { canvas: {}, ui: {} }, version: 0 };
+            }
+
+            // Toggle some UI settings
+            data.state.ui = {
+                ...data.state.ui,
+                theme: data.state.ui.theme === 'dark' ? 'light' : 'dark',
+                isGridVisible: !data.state.ui.isGridVisible,
+                gridSize: data.state.ui.gridSize === 20 ? 30 : 20
+            };
+
+            localStorage.setItem('recapmap-ui-store', JSON.stringify(data));
+            
+            document.getElementById('simulationResults').textContent = 
+                'Simulated UI changes:\n' +
+                `- Theme: ${data.state.ui.theme}\n` +
+                `- Grid visible: ${data.state.ui.isGridVisible}\n` +
+                `- Grid size: ${data.state.ui.gridSize}`;
+            
+            checkPersistence();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkPersistence();
+            showConfig();
+        });
+    </script>
+</body>
+</html>

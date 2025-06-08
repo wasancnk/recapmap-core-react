@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewport Persistence Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .storage-display {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .status {
+            padding: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #065f46;
+            color: #10b981;
+        }
+        .status.error {
+            background: #7f1d1d;
+            color: #f87171;
+        }
+        .status.info {
+            background: #1e3a8a;
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 RecapMap Viewport Persistence Test</h1>
+        
+        <div class="test-section">
+            <h2>📦 localStorage Status</h2>
+            <div id="storageStatus" class="status info">Checking localStorage...</div>
+            <div id="storageContent" class="storage-display"></div>
+            <button onclick="refreshStorage()">🔄 Refresh Storage</button>
+            <button onclick="clearStorage()">🗑️ Clear Storage</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Test Instructions</h2>
+            <ol>
+                <li><strong>Open RecapMap:</strong> Make sure the dev server is running on <a href="http://localhost:5173" target="_blank">localhost:5173</a></li>
+                <li><strong>Interact with Canvas:</strong> Pan around by dragging empty space</li>
+                <li><strong>Change Zoom:</strong> Use mouse wheel to zoom in/out</li>
+                <li><strong>Toggle Settings:</strong> Try toggling grid visibility, snap-to-grid, etc.</li>
+                <li><strong>Refresh Page:</strong> Reload the browser page</li>
+                <li><strong>Verify Persistence:</strong> Check if your viewport position and zoom level were restored</li>
+                <li><strong>Check This Page:</strong> Click "Refresh Storage" to see the stored values</li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Expected Persistence</h2>
+            <p>The following should be persisted in localStorage:</p>
+            <ul>
+                <li><strong>Canvas Viewport:</strong> zoom level, center position (x, y)</li>
+                <li><strong>UI Settings:</strong> grid visibility, snap-to-grid, theme, etc.</li>
+                <li><strong>Node Data:</strong> all nodes and their positions</li>
+                <li><strong>Connection Data:</strong> all connections between nodes</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔍 Real-time Monitoring</h2>
+            <div id="monitoring" class="status info">Monitoring localStorage changes...</div>
+            <button onclick="toggleMonitoring()" id="monitorBtn">⏸️ Pause Monitoring</button>
+        </div>
+    </div>
+
+    <script>
+        let monitoringInterval;
+        let isMonitoring = true;
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshStorage();
+            startMonitoring();
+        });
+        
+        function refreshStorage() {
+            const statusEl = document.getElementById('storageStatus');
+            const contentEl = document.getElementById('storageContent');
+            
+            try {
+                let content = '';
+                let hasData = false;
+                
+                // Check UI Store
+                const uiStore = localStorage.getItem('recapmap-ui-store');
+                if (uiStore) {
+                    const uiData = JSON.parse(uiStore);
+                    content += '🎨 UI Store:\n';
+                    content += JSON.stringify(uiData, null, 2) + '\n\n';
+                    hasData = true;
+                }
+                
+                // Check Node Store
+                const nodeStore = localStorage.getItem('recapmap-node-store');
+                if (nodeStore) {
+                    const nodeData = JSON.parse(nodeStore);
+                    content += '🔗 Node Store:\n';
+                    content += JSON.stringify(nodeData, null, 2) + '\n\n';
+                    hasData = true;
+                }
+                
+                if (hasData) {
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✅ Persistence data found in localStorage';
+                    contentEl.textContent = content;
+                } else {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '❌ No RecapMap data found in localStorage';
+                    contentEl.textContent = 'No data stored yet. Try using the RecapMap application first.';
+                }
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ Error reading localStorage: ' + error.message;
+                contentEl.textContent = error.stack;
+            }
+        }
+        
+        function clearStorage() {
+            if (confirm('Are you sure you want to clear all RecapMap data from localStorage?')) {
+                localStorage.removeItem('recapmap-ui-store');
+                localStorage.removeItem('recapmap-node-store');
+                localStorage.removeItem('recapmap-test-nodes-created');
+                refreshStorage();
+                alert('Storage cleared! Refresh the RecapMap app to see the reset state.');
+            }
+        }
+        
+        function startMonitoring() {
+            monitoringInterval = setInterval(() => {
+                if (isMonitoring) {
+                    const monitorEl = document.getElementById('monitoring');
+                    const now = new Date().toLocaleTimeString();
+                    monitorEl.textContent = `🔄 Last checked: ${now} - Monitoring localStorage changes...`;
+                }
+            }, 2000);
+        }
+        
+        function toggleMonitoring() {
+            const btn = document.getElementById('monitorBtn');
+            const monitorEl = document.getElementById('monitoring');
+            
+            isMonitoring = !isMonitoring;
+            
+            if (isMonitoring) {
+                btn.textContent = '⏸️ Pause Monitoring';
+                monitorEl.className = 'status info';
+            } else {
+                btn.textContent = '▶️ Resume Monitoring';
+                monitorEl.className = 'status';
+                monitorEl.textContent = '⏸️ Monitoring paused';
+            }
+        }
+        
+        // Listen for storage events from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key && e.key.startsWith('recapmap-')) {
+                const monitorEl = document.getElementById('monitoring');
+                monitorEl.textContent = `🔄 Storage updated: ${e.key} changed`;
+                monitorEl.className = 'status success';
+                
+                setTimeout(() => {
+                    refreshStorage();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
