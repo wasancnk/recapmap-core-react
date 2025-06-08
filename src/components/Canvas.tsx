@@ -317,7 +317,7 @@ const CanvasInner: React.FC = () => {
           <span>⚡</span>
           <span>Snap Active</span>
           <span className="opacity-70 text-xs">(Ctrl+G)</span>
-        </div>      )}<ReactFlow
+        </div>      )}      <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={handleNodesChange}
@@ -337,14 +337,14 @@ const CanvasInner: React.FC = () => {
         minZoom={0.1}
         maxZoom={2}
         fitView
-        attributionPosition="bottom-left"
+        proOptions={{ hideAttribution: true }}
         className="canvas-flow"
         nodesDraggable={true}
         nodesConnectable={true}
         elementsSelectable={true}
         snapToGrid={ui.snapToGrid}
         snapGrid={[ui.gridSize, ui.gridSize]}
-      >        <Background 
+      ><Background 
           variant={BackgroundVariant.Dots} 
           gap={ui.gridSize} 
           size={1}

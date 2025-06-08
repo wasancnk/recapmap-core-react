@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { useNodeStore } from '../stores/nodeStore';
 import { usePanelStore } from '../stores/panelStore';
@@ -172,8 +172,7 @@ const NewCustomNode = ({
         title={`${data.label}${data.description ? ` - ${data.description}` : ''}`}
         data-node-type={data.nodeType}
       >
-      {/* Connection Handles - All positions */}
-      {/* TOP Handles */}
+      {/* Connection Handles - All positions */}      {/* TOP Handles */}
       <Handle
         type="source"
         position={Position.Top}
@@ -181,11 +180,11 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          top: -4,
+          top: -6,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 8,
-          height: 8,
+          width: 11,
+          height: 11,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
           border: '1px solid white',
           borderRadius: '50%',
@@ -202,20 +201,18 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          top: -8,
+          top: -9,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 16,
-          height: 16,
+          width: 17,
+          height: 17,
           backgroundColor: 'transparent',
           border: 'none',
           opacity: 0,
           pointerEvents: 'none',
           zIndex: 5
         }}
-      />
-
-      {/* RIGHT Handles */}
+      />      {/* RIGHT Handles */}
       <Handle
         type="source"
         position={Position.Right}
@@ -223,11 +220,11 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          right: -4,
+          right: -6,
           top: '50%',
           transform: 'translateY(-50%)',
-          width: 8,
-          height: 8,
+          width: 11,
+          height: 11,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
           border: '1px solid white',
           borderRadius: '50%',
@@ -244,20 +241,18 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          right: -8,
+          right: -9,
           top: '50%',
           transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
+          width: 17,
+          height: 17,
           backgroundColor: 'transparent',
           border: 'none',
           opacity: 0,
           pointerEvents: 'none',
           zIndex: 5
         }}
-      />
-
-      {/* BOTTOM Handles */}
+      />      {/* BOTTOM Handles */}
       <Handle
         type="source"
         position={Position.Bottom}
@@ -265,11 +260,11 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          bottom: -4,
+          bottom: -6,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 8,
-          height: 8,
+          width: 11,
+          height: 11,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
           border: '1px solid white',
           borderRadius: '50%',
@@ -286,20 +281,18 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          bottom: -8,
+          bottom: -9,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 16,
-          height: 16,
+          width: 17,
+          height: 17,
           backgroundColor: 'transparent',
           border: 'none',
           opacity: 0,
           pointerEvents: 'none',
           zIndex: 5
         }}
-      />
-
-      {/* LEFT Handles */}
+      />      {/* LEFT Handles */}
       <Handle
         type="source"
         position={Position.Left}
@@ -307,11 +300,11 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          left: -4,
+          left: -6,
           top: '50%',
           transform: 'translateY(-50%)',
-          width: 8,
-          height: 8,
+          width: 11,
+          height: 11,
           backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
           border: '1px solid white',
           borderRadius: '50%',
@@ -328,11 +321,11 @@ const NewCustomNode = ({
         isConnectable={true}
         style={{
           position: 'absolute',
-          left: -8,
+          left: -9,
           top: '50%',
           transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
+          width: 17,
+          height: 17,
           backgroundColor: 'transparent',
           border: 'none',
           opacity: 0,
