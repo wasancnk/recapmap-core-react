@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
+import { useDraggable } from '../hooks/useDraggable';
 import type { NodeType } from '../types';
 
 interface NodeButtonProps {
@@ -42,7 +43,15 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 
 export const Toolbar: React.FC = () => {
   const { nodes, connections } = useNodeStore();
-  const { addNotification, openPanel } = useUIStore();
+  const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid } = useUIStore();
+
+  // Stable initial position to prevent re-render loops
+  const initialPosition = React.useMemo(() => ({ x: 16, y: 16 }), []);
+
+  // Initialize draggable functionality
+  const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
+    initialPosition,
+  });
 
   const nodeTypes: Array<{
     type: NodeType;
@@ -91,12 +100,11 @@ export const Toolbar: React.FC = () => {
       label: 'Error',
       className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
       icon: '⚠️'
-    },
-    {
+    },    {
       type: 'base',
       label: 'Base',
       className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
-      icon: '🔧'
+      icon: '🏗️'
     },
   ];
   const handleClearAll = () => {
@@ -115,10 +123,29 @@ export const Toolbar: React.FC = () => {
   const handleExport = () => {
     openPanel('export');
   };
-
   return (
-    <div className="absolute top-4 left-4 z-panel-base">
+    <div 
+      ref={dragRef}
+      className="fixed z-panel-base"
+      style={{ 
+        left: draggablePosition.x, 
+        top: draggablePosition.y 
+      }}
+    >
       <div className="bg-surface-primary border border-surface-border rounded-lg shadow-lg p-4">
+        {/* Drag Handle */}
+        <div 
+          className="flex justify-center py-2 cursor-grab active:cursor-grabbing select-none"
+          {...dragHandleProps}
+        >
+          <div className="flex space-x-1">
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+          </div>
+        </div>
+        
         <h3 className="text-text-primary font-semibold mb-3 text-sm">Add Nodes</h3>
         
         {/* Node Type Buttons Grid */}
@@ -132,6 +159,42 @@ export const Toolbar: React.FC = () => {
               icon={nodeType.icon}
             />
           ))}
+        </div>
+
+        {/* Grid Controls */}
+        <div className="border-t border-surface-border pt-3 mb-4">
+          <h4 className="text-text-primary font-semibold mb-2 text-xs">Grid Options</h4>
+          
+          <div className="space-y-2">            <button
+              onClick={toggleGrid}
+              className={`
+                w-full px-3 py-2 rounded text-sm font-medium transition-colors
+                ${ui.isGridVisible 
+                  ? 'bg-accent-primary text-white border border-accent-primary hover:bg-accent-primary/90' 
+                  : 'bg-surface-secondary text-text-secondary border border-surface-border hover:bg-surface-tertiary'
+                }
+              `}
+              title="Toggle grid visibility (Ctrl+Shift+G)"
+            >
+              <span className="mr-2">{ui.isGridVisible ? '✓' : '○'}</span>
+              Show Grid
+            </button>
+            
+            <button
+              onClick={toggleSnapToGrid}
+              className={`
+                w-full px-3 py-2 rounded text-sm font-medium transition-colors
+                ${ui.snapToGrid 
+                  ? 'bg-accent-primary text-white border border-accent-primary hover:bg-accent-primary/90' 
+                  : 'bg-surface-secondary text-text-secondary border border-surface-border hover:bg-surface-tertiary'
+                }
+              `}
+              title="Toggle snap to grid (Ctrl+G)"
+            >
+              <span className="mr-2">{ui.snapToGrid ? '⚡' : '○'}</span>
+              Snap to Grid
+            </button>
+          </div>
         </div>        {/* Canvas Actions */}
         <div className="border-t border-surface-border pt-3">
           <div className="flex items-center justify-between mb-2">

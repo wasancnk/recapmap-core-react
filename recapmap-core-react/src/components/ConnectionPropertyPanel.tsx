@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { logger } from '../utils/logger';
+import { useDraggable } from '../hooks/useDraggable';
 
 interface ConnectionPropertyPanelProps {
   connectionId: string;
@@ -18,7 +19,13 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
   const { addNotification } = useUIStore();
   
   const connection = connections.find(c => c.id === connectionId);
-    // Local state for form
+
+  // Initialize draggable functionality
+  const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
+    initialPosition: position,
+  });
+
+  // Local state for form
   const [formData, setFormData] = useState({
     label: connection?.label || '',
     type: connection?.type || 'data',
@@ -184,34 +191,48 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
       if (!confirmDiscard) return;
     }
     onClose();
-  };
-
-  return (
+  };  return (
     <div 
-      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-80"
+      ref={dragRef}
+      className="fixed bg-surface-primary border border-surface-border rounded-lg shadow-lg z-50 w-80 flex flex-col"
       style={{ 
-        left: position.x, 
-        top: position.y,
-        maxHeight: '600px',
-        overflowY: 'auto'
+        left: draggablePosition.x, 
+        top: draggablePosition.y,
+        height: '600px',
+        maxHeight: '600px'
       }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-surface-border">
-        <div className="flex items-center space-x-2">
-          <span className="text-lg">🔗</span>
-          <h3 className="text-lg font-bold text-text-primary">Connection Properties</h3>
+    >      {/* Fixed Header - Draggable */}
+      <div 
+        className="flex flex-col select-none flex-shrink-0"
+        {...dragHandleProps}
+      >
+        {/* Drag indicator dots - centered at top */}
+        <div className="flex justify-center py-2">
+          <div className="flex space-x-1">
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+            <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+          </div>
         </div>
-        <button
-          onClick={handleCancel}
-          className="text-text-secondary hover:text-text-primary transition-colors"
-        >
-          ✕
-        </button>
+        
+        {/* Title and close button */}
+        <div className="flex items-center justify-between px-4 pb-4 border-b border-surface-border">
+          <div className="flex items-center space-x-2">
+            <span className="text-lg">🔗</span>
+            <h3 className="text-lg font-bold text-text-primary">Connection Properties</h3>
+          </div>
+          <button
+            onClick={handleCancel}
+            className="text-text-secondary hover:text-text-primary transition-colors"
+            onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking close button
+          >
+            ✕
+          </button>        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-4">
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto scrollbar-dark p-4 space-y-4">
         
         {/* Connection Details */}
         <div className="space-y-3">

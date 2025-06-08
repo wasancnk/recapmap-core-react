@@ -18,11 +18,11 @@ export const PropertyPanelManager: React.FC = () => {
   }
 
   const nodeId = propertyPanel.data?.nodeId as string || null
-
   return (
     <PropertyPanel
       nodeId={nodeId}
       isOpen={propertyPanel.isOpen}
+      position={propertyPanel.position}
       onClose={() => closePanel(propertyPanel.id)}
     />
   )

@@ -162,6 +162,29 @@ export default {
         'node': '8px',
         'panel': '12px',
         'button': '6px'
+      },
+        // Custom Scrollbar Utilities
+      utilities: {
+        '.scrollbar-none': {
+          'scrollbar-width': 'none',
+          '-ms-overflow-style': 'none',
+        },
+        '.scrollbar-none::-webkit-scrollbar': {
+          'display': 'none',
+        },
+        '.scrollbar-thin': {
+          'scrollbar-width': 'thin',
+          'scrollbar-color': 'rgba(75, 85, 99, 0.6) transparent',
+        },
+        '.scrollbar-dark': {
+          'scrollbar-width': 'auto',
+          'scrollbar-color': 'rgba(59, 130, 246, 0.5) rgba(31, 41, 55, 0.2)',
+        },
+        '.scrollbar-stable': {
+          'scrollbar-width': 'thin',
+          'scrollbar-color': 'rgba(59, 130, 246, 0.7) rgba(31, 41, 55, 0.3)',
+          'overflow': 'scroll',
+        },
       }
     },
   },

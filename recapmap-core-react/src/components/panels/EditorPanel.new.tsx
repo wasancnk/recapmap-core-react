@@ -1,0 +1,196 @@
+import React, { useState, useEffect } from 'react';
+import { useNodeStore } from '../../stores/nodeStore';
+
+interface EditorPanelProps {
+  nodeId: string;
+}
+
+export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
+  const { getNode, updateNode, deleteNode } = useNodeStore();
+  const node = getNode(nodeId);
+  
+  // Local state for editing
+  const [localData, setLocalData] = useState({
+    title: '',
+    description: ''
+  });
+  const [isDirty, setIsDirty] = useState(false);
+
+  // Initialize local state when node changes
+  useEffect(() => {
+    if (node) {
+      setLocalData({
+        title: node.title,
+        description: node.description || ''
+      });
+      setIsDirty(false);
+    }
+  }, [node]);
+
+  // Handle case where node is not found
+  if (!node) {
+    return (
+      <div className="p-4 h-full flex items-center justify-center">
+        <div className="text-center text-gray-500">
+          <span className="text-2xl mb-2 block">❌</span>
+          <p className="text-sm">Node not found</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleTitleChange = (value: string) => {
+    setLocalData(prev => ({ ...prev, title: value }));
+    setIsDirty(true);
+  };
+
+  const handleDescriptionChange = (value: string) => {
+    setLocalData(prev => ({ ...prev, description: value }));
+    setIsDirty(true);
+  };
+
+  const handleSave = () => {
+    updateNode(nodeId, {
+      title: localData.title,
+      description: localData.description
+    });
+    setIsDirty(false);
+  };
+
+  const handleReset = () => {
+    setLocalData({
+      title: node.title,
+      description: node.description || ''
+    });
+    setIsDirty(false);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete "${node.title}"?`)) {
+      deleteNode(nodeId);
+    }
+  };
+
+  // Get node type info
+  const nodeTypeConfig = {
+    'usecase': { icon: '🎯', label: 'Use Case' },
+    'screen': { icon: '📱', label: 'Screen' },
+    'user': { icon: '👤', label: 'User' },
+    'process': { icon: '⚙️', label: 'Process' },
+    'storage': { icon: '💾', label: 'Storage' },
+    'controller': { icon: '🎮', label: 'Controller' },
+    'error': { icon: '⚠️', label: 'Error' },
+    'base': { icon: '🔧', label: 'Base' }
+  };
+
+  const config = nodeTypeConfig[node.type] || nodeTypeConfig['base'];
+
+  return (
+    <div className="p-4 h-full overflow-y-auto">
+      {/* Header with Save Button */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">{config.icon}</span>
+          <span className="text-sm font-medium text-gray-700">Edit {config.label}</span>
+        </div>
+        {isDirty && (
+          <div className="flex gap-2">
+            <button 
+              onClick={handleReset}
+              className="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+            >
+              Reset
+            </button>
+            <button 
+              onClick={handleSave}
+              className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              Save
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Basic Properties */}
+      <div className="space-y-4">
+        {/* Title Field */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Title
+          </label>
+          <input
+            type="text"
+            value={localData.title}
+            onChange={(e) => handleTitleChange(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            placeholder="Enter node title"
+          />
+        </div>
+
+        {/* Description Field */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Description
+          </label>
+          <textarea
+            value={localData.description}
+            onChange={(e) => handleDescriptionChange(e.target.value)}
+            rows={4}
+            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+            placeholder="Enter node description"
+          />
+        </div>
+      </div>
+
+      {/* Node Information */}
+      <div className="mt-6 pt-4 border-t border-gray-200/50">
+        <h5 className="text-sm font-medium text-gray-700 mb-3">Node Information</h5>
+        <div className="space-y-2 text-sm text-gray-600">
+          <div className="flex justify-between">
+            <span>Type:</span>
+            <span className="font-medium">{config.label}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>ID:</span>
+            <span className="font-mono text-xs">{node.id}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Created:</span>
+            <span>{new Date(node.createdAt).toLocaleDateString()}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Status:</span>
+            <span className={`font-medium ${node.isValid ? 'text-green-600' : 'text-red-600'}`}>
+              {node.isValid ? 'Valid' : 'Invalid'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="mt-6 pt-4 border-t border-gray-200/50">
+        <h5 className="text-sm font-medium text-gray-700 mb-3">Actions</h5>
+        <div className="space-y-2">
+          <button 
+            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+            onClick={() => console.log('Duplicate node:', nodeId)}
+          >
+            Duplicate Node
+          </button>
+          <button 
+            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+            onClick={() => console.log('View properties:', nodeId)}
+          >
+            Advanced Properties
+          </button>
+          <button 
+            onClick={handleDelete}
+            className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
+          >
+            Delete Node
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

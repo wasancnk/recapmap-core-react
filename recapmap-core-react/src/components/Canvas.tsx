@@ -4,8 +4,6 @@ import {
   Background,
   Controls,
   MiniMap,
-  Handle,
-  Position,
   MarkerType,
   ConnectionMode,
   type Connection,
@@ -17,7 +15,10 @@ import {
 import '@xyflow/react/dist/style.css';
 import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
+import { useSmartScroll } from '../hooks/useSmartScroll';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
+import WrappedCustomNode from './WrappedCustomNode';
+import SmartScrollDemo from './SmartScrollDemo';
 import type { NodeType } from '../types';
 
 // Test nodes for connection testing
@@ -35,238 +36,14 @@ const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: num
   localStorage.setItem('recapmap-test-nodes-created', 'true');
 };
 
-// Custom node component for our 8-node system
-const CustomNode = ({ 
-  id, 
-  data, 
-  selected 
-}: { 
-  id: string;
-  data: { label: string; description?: string; nodeType: NodeType }; 
-  selected: boolean 
-}) => {
-  const { openPanel } = useUIStore();
-  const [isHovered, setIsHovered] = React.useState(false);
-  const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
-
-  const nodeTypeStyles = {
-    'usecase': 'bg-blue-500 border-blue-600 text-white',
-    'screen': 'bg-green-500 border-green-600 text-white',
-    'user': 'bg-orange-500 border-orange-600 text-white',
-    'process': 'bg-purple-500 border-purple-600 text-white',
-    'storage': 'bg-yellow-500 border-yellow-600 text-black',
-    'controller': 'bg-red-500 border-red-600 text-white',
-    'error': 'bg-gray-500 border-gray-600 text-white',
-    'base': 'bg-cyan-500 border-cyan-600 text-white',
-  };
-
-  const baseStyle = nodeTypeStyles[data.nodeType] || nodeTypeStyles['usecase'];
-  const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    openPanel('node-properties', { nodeId: id });
-  };
-
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setConnectingFromHandle(null);
-  };
-
-  // Show connectors when hovering or when connecting
-  const showConnectors = isHovered || connectingFromHandle || selected;
-
-  return (
-    <div 
-      className={`
-        px-4 py-2 rounded-lg border-2 min-w-[120px] text-center 
-        transition-all duration-200 hover:shadow-md cursor-pointer
-        relative
-        ${baseStyle} ${selectedStyle}
-      `}
-      onDoubleClick={handleDoubleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      title="Double-click to edit properties"
-    >      {/* Connection Handles - Always present for React Flow */}
-      {/* TOP Handles */}
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="top-source"
-        isConnectable={true}        style={{
-          position: 'absolute',
-          top: -4,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 8,
-          height: 8,
-          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '1px solid white',
-          borderRadius: '50%',
-          cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0,
-          transition: 'all 0.2s ease',
-          zIndex: 10
-        }}
-      />
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="top-target"
-        isConnectable={true}
-        style={{
-          position: 'absolute',
-          top: -8,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 16,
-          height: 16,
-          backgroundColor: 'transparent',
-          border: 'none',
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: 5
-        }}
-      />
-
-      {/* RIGHT Handles */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right-source"
-        isConnectable={true}        style={{
-          position: 'absolute',
-          right: -4,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 8,
-          height: 8,
-          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '1px solid white',
-          borderRadius: '50%',
-          cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0,
-          transition: 'all 0.2s ease',
-          zIndex: 10
-        }}
-      />
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="right-target"
-        isConnectable={true}
-        style={{
-          position: 'absolute',
-          right: -8,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
-          backgroundColor: 'transparent',
-          border: 'none',
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: 5
-        }}
-      />
-
-      {/* BOTTOM Handles */}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="bottom-source"
-        isConnectable={true}        style={{
-          position: 'absolute',
-          bottom: -4,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 8,
-          height: 8,
-          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '1px solid white',
-          borderRadius: '50%',
-          cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0,
-          transition: 'all 0.2s ease',
-          zIndex: 10
-        }}
-      />
-      <Handle
-        type="target"
-        position={Position.Bottom}
-        id="bottom-target"
-        isConnectable={true}
-        style={{
-          position: 'absolute',
-          bottom: -8,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 16,
-          height: 16,
-          backgroundColor: 'transparent',
-          border: 'none',
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: 5
-        }}
-      />
-
-      {/* LEFT Handles */}
-      <Handle
-        type="source"
-        position={Position.Left}
-        id="left-source"
-        isConnectable={true}        style={{
-          position: 'absolute',
-          left: -4,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 8,
-          height: 8,
-          backgroundColor: showConnectors ? '#60A5FA' : '#9CA3AF',
-          border: '1px solid white',
-          borderRadius: '50%',
-          cursor: 'crosshair',
-          opacity: showConnectors ? 1 : 0,
-          transition: 'all 0.2s ease',
-          zIndex: 10
-        }}
-      />
-      <Handle
-        type="target"
-        position={Position.Left}
-        id="left-target"
-        isConnectable={true}
-        style={{
-          position: 'absolute',
-          left: -8,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
-          backgroundColor: 'transparent',
-          border: 'none',
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: 5
-        }}
-      />{/* Node Content */}
-      <div className="font-medium text-sm">{data.label}</div>
-      {data.description && (
-        <div className="text-xs opacity-80 mt-1">{data.description}</div>
-      )}
-    </div>
-  );
-};
-
 // Node types for React Flow
 const nodeTypes = {
-  customNode: CustomNode,
+  customNode: WrappedCustomNode,
 };
 
-export const Canvas: React.FC = () => {  const { 
+
+export const Canvas: React.FC = () => {
+  const { 
     nodes: storeNodes, 
     connections: storeConnections, 
     selectedNodeIds,
@@ -280,7 +57,35 @@ export const Canvas: React.FC = () => {  const {
 
   const {
     canvas,
-  } = useUIStore();
+    ui,
+    toggleSnapToGrid,
+    toggleGrid,
+  } = useUIStore();  // Enable smart scroll redirection for panels with edge detection
+  useSmartScroll({
+    enabled: true,
+    panelSelector: '.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable, .overflow-y-auto',
+    edgeBufferMs: 300, // Wait 300ms after hitting scroll edge before allowing canvas operations
+    debug: process.env.NODE_ENV === 'development' // Enable debug in development
+  });
+
+  // Keyboard shortcuts for grid controls
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl+G: Toggle snap to grid
+      if (event.ctrlKey && event.key === 'g') {
+        event.preventDefault();
+        toggleSnapToGrid();
+      }
+      // Ctrl+Shift+G: Toggle grid visibility
+      if (event.ctrlKey && event.shiftKey && event.key === 'G') {
+        event.preventDefault();
+        toggleGrid();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSnapToGrid, toggleGrid]);
 
   // Create test nodes on first load for easier testing
   React.useEffect(() => {
@@ -356,16 +161,20 @@ export const Canvas: React.FC = () => {  const {
         id: connection.id,
         source: connection.sourceNodeId,
         target: connection.targetNodeId,
-        sourceHandle: connection.sourceHandle || undefined,
-        targetHandle: connection.targetHandle || undefined,
+        sourceHandle: connection.sourceHandle || undefined,        targetHandle: connection.targetHandle || undefined,
         label: connection.label,
         type: 'default',
         style: getLineStyle(lineStyle, lineColor, priorityThickness),
         labelStyle: { 
-          fill: '#374151', 
+          fill: '#ffffff',  // White text
           fontSize: 12,
-          fontWeight: '500' 
-        },        ...getMarkers(directionType),
+          fontWeight: '500',
+          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)', // Subtle shadow for readability
+        },        labelBgStyle: {
+          fill: '#16213e', // Workspace background color (background-tertiary)
+          fillOpacity: 1,
+        },
+        ...getMarkers(directionType),
         // Add connection type and priority styling
         className: `connection-${connection.type} connection-priority-${priority}`,
       };
@@ -462,7 +271,14 @@ export const Canvas: React.FC = () => {  const {
   const handleConnectionPanelClose = useCallback(() => {
     setSelectedConnectionId(null);
   }, []);  return (
-    <div className="w-full h-full bg-background-tertiary">      <ReactFlow
+    <div className="w-full h-full bg-background-tertiary relative">      {/* Snap-to-Grid Status Indicator */}
+      {ui.snapToGrid && (
+        <div className="absolute top-4 right-4 z-50 bg-accent-primary/90 text-white px-3 py-1 rounded text-xs font-medium shadow-lg flex items-center gap-2">
+          <span>⚡</span>
+          <span>Snap Active</span>
+          <span className="opacity-70 text-xs">(Ctrl+G)</span>
+        </div>
+      )}<ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={handleNodesChange}
@@ -485,12 +301,16 @@ export const Canvas: React.FC = () => {  const {
         nodesDraggable={true}
         nodesConnectable={true}
         elementsSelectable={true}
-      >
-        <Background 
+        snapToGrid={ui.snapToGrid}
+        snapGrid={[ui.gridSize, ui.gridSize]}
+      >        <Background 
           variant={BackgroundVariant.Dots} 
-          gap={20} 
+          gap={ui.gridSize} 
           size={1}
           color="#374151"
+          style={{ 
+            opacity: ui.isGridVisible ? 1 : 0 
+          }}
         />
         <Controls 
           className="controls-panel"
@@ -513,11 +333,10 @@ export const Canvas: React.FC = () => {  const {
           }}
           nodeStrokeWidth={2}
           pannable
-          zoomable
-        />
-      </ReactFlow>
-
-      {/* Connection Property Panel */}
+          zoomable        />
+        
+        {/* Panels are now handled within each WrappedCustomNode */}
+      </ReactFlow>{/* Connection Property Panel */}
       {selectedConnectionId && (
         <ConnectionPropertyPanel
           connectionId={selectedConnectionId}
@@ -525,6 +344,9 @@ export const Canvas: React.FC = () => {  const {
           onClose={handleConnectionPanelClose}
         />
       )}
+
+      {/* Smart Scroll Demo Component */}
+      <SmartScrollDemo />
     </div>
   );
 };

@@ -187,7 +187,7 @@ export const ExportPanel: React.FC<ExportPanelProps> = ({ isOpen, onClose }) => 
 
         <div className="flex flex-1 overflow-hidden">
           {/* Options Panel */}
-          <div className="w-80 border-r border-surface-border p-4 overflow-y-auto">
+          <div className="w-80 border-r border-surface-border p-4 overflow-y-auto scrollbar-dark">
             <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide mb-4">
               Export Options
             </h3>
