@@ -14,9 +14,9 @@ const NewCustomNode = ({
   data: { label: string; description?: string; nodeType: NodeType }; 
   selected: boolean 
 }) => {  const { deleteNode } = useNodeStore();
-  const { openPanel: openNodePanel, closePanel: closeNodePanel, isPanelOpen } = usePanelStore();
-  const [isHovered, setIsHovered] = React.useState(false);
+  const panelStore = usePanelStore();  const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
+  const [isToggling, setIsToggling] = React.useState(false);
 
   // Node type configurations with icons and colors
   const nodeTypeConfig = {
@@ -82,10 +82,10 @@ const NewCustomNode = ({
   const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';  const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Toggle editor panel on double-click
-    if (isPanelOpen(id, 'editor')) {
-      closeNodePanel(id, 'editor');
+    if (panelStore.isPanelOpen(id, 'editor')) {
+      panelStore.closePanel(id, 'editor');
     } else {
-      openNodePanel(id, 'editor');
+      panelStore.openPanel(id, 'editor');
     }
   };
 
@@ -99,26 +99,54 @@ const NewCustomNode = ({
   const handleMouseLeave = () => {
     setIsHovered(false);
     setConnectingFromHandle(null);
-  };
-
-  // Toggle functions for panels
-  const toggleSummaryPanel = (e: React.MouseEvent) => {
+  };  // Toggle functions for panels
+  const toggleSummaryPanel = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isPanelOpen(id, 'summary')) {
-      closeNodePanel(id, 'summary');
-    } else {
-      openNodePanel(id, 'summary');
+    e.preventDefault();
+    
+    if (isToggling) {
+      console.log(`[${id}] Summary panel toggle ignored - already toggling`);
+      return;
     }
-  };
+    
+    setIsToggling(true);
+    
+    const isCurrentlyOpen = panelStore.isPanelOpen(id, 'summary');
+    console.log(`[${id}] Summary panel toggle - currently open: ${isCurrentlyOpen}`);
+    
+    if (isCurrentlyOpen) {
+      panelStore.closePanel(id, 'summary');
+    } else {
+      panelStore.openPanel(id, 'summary');
+    }
+    
+    // Reset toggle state after a short delay
+    setTimeout(() => setIsToggling(false), 100);
+  }, [id, panelStore, isToggling]);
 
-  const toggleEditorPanel = (e: React.MouseEvent) => {
+  const toggleEditorPanel = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isPanelOpen(id, 'editor')) {
-      closeNodePanel(id, 'editor');
-    } else {
-      openNodePanel(id, 'editor');
+    e.preventDefault();
+    
+    if (isToggling) {
+      console.log(`[${id}] Editor panel toggle ignored - already toggling`);
+      return;
     }
-  };
+    
+    setIsToggling(true);
+    
+    const isCurrentlyOpen = panelStore.isPanelOpen(id, 'editor');
+    console.log(`[${id}] Editor panel toggle - currently open: ${isCurrentlyOpen}`);
+    
+    if (isCurrentlyOpen) {
+      panelStore.closePanel(id, 'editor');
+    } else {
+      panelStore.openPanel(id, 'editor');
+    }
+    
+    // Reset toggle state after a short delay
+    setTimeout(() => setIsToggling(false), 100);
+  }, [id, panelStore, isToggling]);
 
   // Show connectors when hovering or when connecting
   const showConnectors = isHovered || connectingFromHandle || selected;return (
@@ -333,23 +361,41 @@ const NewCustomNode = ({
         <div className="flex gap-1 mb-2 opacity-90">
           <button
             onClick={toggleSummaryPanel}
+            disabled={isToggling}
             className={`text-xs px-2 py-1 rounded transition-colors ${
-              isPanelOpen(id, 'summary')
+              isToggling 
+                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                : panelStore.isPanelOpen(id, 'summary')
                 ? 'bg-blue-500/40 text-blue-200 hover:bg-blue-500/50'
                 : 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
             }`}
-            title={isPanelOpen(id, 'summary') ? 'Close Summary Panel' : 'Open Summary Panel'}
+            title={
+              isToggling 
+                ? 'Processing...'
+                : panelStore.isPanelOpen(id, 'summary') 
+                ? 'Close Summary Panel' 
+                : 'Open Summary Panel'
+            }
           >
             📋
           </button>
           <button
             onClick={toggleEditorPanel}
+            disabled={isToggling}
             className={`text-xs px-2 py-1 rounded transition-colors ${
-              isPanelOpen(id, 'editor')
+              isToggling 
+                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                : panelStore.isPanelOpen(id, 'editor')
                 ? 'bg-green-500/40 text-green-200 hover:bg-green-500/50'
                 : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
             }`}
-            title={isPanelOpen(id, 'editor') ? 'Close Editor Panel' : 'Open Editor Panel'}
+            title={
+              isToggling 
+                ? 'Processing...'
+                : panelStore.isPanelOpen(id, 'editor') 
+                ? 'Close Editor Panel' 
+                : 'Open Editor Panel'
+            }
           >
             ✏️
           </button>

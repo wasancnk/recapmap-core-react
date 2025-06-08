@@ -1,5 +1,5 @@
 import React from 'react';
-import { NodeProps } from '@xyflow/react';
+import type { NodeProps } from '@xyflow/react';
 import { usePanelStore } from '../../stores/panelStore';
 import { NodePanel } from '../panels/NodePanel';
 import { SummaryPanel } from '../panels/SummaryPanel';

@@ -41,13 +41,15 @@ describe('useSmartScroll', () => {
   afterEach(() => {
     process.env.NODE_ENV = originalNodeEnv;
   });
-
   it('should initialize with default options', () => {
     const { result } = renderHook(() => useSmartScroll());
     
-    expect(result.current).toBeUndefined();
-    expect(mockAddEventListener).toHaveBeenCalledWith('wheel', expect.any(Function), { capture: true });
-    expect(mockAddEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function));
+    expect(result.current).toEqual({
+      getCurrentScrollTarget: expect.any(Function),
+      isEnabled: true
+    });
+    expect(mockAddEventListener).toHaveBeenCalledWith('wheel', expect.any(Function), { capture: true, passive: false });
+    expect(mockAddEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function), { passive: true });
   });
 
   it('should use custom panel selectors', () => {
@@ -96,9 +98,7 @@ describe('useSmartScroll', () => {
     mockGetComputedStyle.mockReturnValue({
       overflowY: 'auto',
       overflowX: 'hidden',
-    });
-
-    const { result } = renderHook(() => useSmartScroll());
+    });    renderHook(() => useSmartScroll());
 
     // Simulate wheel event
     const wheelHandler = mockAddEventListener.mock.calls.find(
@@ -458,15 +458,16 @@ describe('useSmartScroll', () => {
 
     afterEach(() => {
       vi.useRealTimers();
-    });
-
-    it('should initialize with edgeBufferMs option', () => {
+    });    it('should initialize with edgeBufferMs option', () => {
       const { result } = renderHook(() => useSmartScroll({ 
         edgeBufferMs: 500,
         debug: true 
       }));
       
-      expect(result.current).toBeUndefined();
+      expect(result.current).toEqual({
+        getCurrentScrollTarget: expect.any(Function),
+        isEnabled: true
+      });
       expect(mockAddEventListener).toHaveBeenCalledWith('wheel', expect.any(Function), { 
         passive: false, 
         capture: true 
