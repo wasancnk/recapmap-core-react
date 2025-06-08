@@ -259,6 +259,7 @@ export type PanelType =
 export interface UIState {
   selectedTool: Tool
   isGridVisible: boolean
+  isMiniMapVisible: boolean
   snapToGrid: boolean
   gridSize: number
   theme: 'dark' | 'light'

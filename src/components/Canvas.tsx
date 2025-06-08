@@ -27,12 +27,14 @@ const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: num
     return; // Don't create test nodes if they already exist
   }
 
+  console.log('🎭 Creating test nodes...');
   // Create a few test nodes
-  addNode('usecase', { x: 100, y: 100 });
-  addNode('screen', { x: 300, y: 100 });
-  addNode('user', { x: 100, y: 250 });
-  addNode('process', { x: 300, y: 250 });
+  const node1Id = addNode('usecase', { x: 100, y: 100 });
+  const node2Id = addNode('screen', { x: 300, y: 100 });
+  const node3Id = addNode('user', { x: 100, y: 250 });
+  const node4Id = addNode('process', { x: 300, y: 250 });
 
+  console.log('✅ Test nodes created:', { node1Id, node2Id, node3Id, node4Id });
   localStorage.setItem('recapmap-test-nodes-created', 'true');
 };
 
@@ -61,9 +63,15 @@ const CanvasInner: React.FC = () => {
     toggleSnapToGrid,
     toggleGrid,
   } = useUIStore();
-
   // ReactFlow instance for coordinate transformation
-  const reactFlowInstance = useReactFlow();// Enable smart scroll redirection for panels with edge detection
+  const reactFlowInstance = useReactFlow();
+
+  // State to track if MiniMap should be shown (with small delay after nodes are available)
+  const [showMiniMap, setShowMiniMap] = useState(false);
+  // State to track ReactFlow initialization
+  const [isReactFlowReady, setIsReactFlowReady] = useState(false);
+
+  // Enable smart scroll redirection for panels with edge detection
   useSmartScroll({
     enabled: true,
     panelSelector: '.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable, .overflow-y-auto',
@@ -87,15 +95,14 @@ const CanvasInner: React.FC = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [toggleSnapToGrid, toggleGrid]);
-  // Create test nodes on first load for easier testing
+  }, [toggleSnapToGrid, toggleGrid]);  // Create test nodes on first load for easier testing
   useEffect(() => {
     createTestNodes(addNode);
   }, [addNode]);
 
   // Local state for connection property panel
   const [selectedConnectionId, setSelectedConnectionId] = useState<string | null>(null);
-  const [connectionPanelPosition, setConnectionPanelPosition] = useState({ x: 0, y: 0 });  // Convert store nodes to React Flow nodes
+  const [connectionPanelPosition, setConnectionPanelPosition] = useState({ x: 0, y: 0 });// Convert store nodes to React Flow nodes
   const reactFlowNodes = useMemo(() =>
     storeNodes.map(node => ({
       id: node.id,
@@ -179,11 +186,42 @@ const CanvasInner: React.FC = () => {
       };
     }),
     [storeConnections]
-  );
-
-  // Use React Flow hooks for local state management
+  );  // Use React Flow hooks for local state management
   const [nodes, setNodes, onNodesChange] = useNodesState(reactFlowNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(reactFlowEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(reactFlowEdges);  // Set ReactFlow as ready after component mounts and has nodes
+  useEffect(() => {
+    if (nodes.length > 0) {
+      const timer = setTimeout(() => {
+        console.log('🚀 ReactFlow ready with nodes:', nodes.length);
+        setIsReactFlowReady(true);
+        // Removed automatic fitView() to prevent unwanted zoom reset
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [nodes.length, reactFlowInstance]);// Effect to enable MiniMap after nodes are ready and ReactFlow is initialized
+  useEffect(() => {
+    console.log('🗺️ MiniMap effect - nodes:', nodes.length, 'isMiniMapVisible:', ui.isMiniMapVisible, 'isReady:', isReactFlowReady);
+    if (nodes.length > 0 && ui.isMiniMapVisible && isReactFlowReady) {
+      console.log('🗺️ Enabling MiniMap with delay...');
+      // Reduced delay since ReactFlow is properly initialized
+      const timer = setTimeout(() => {
+        console.log('🗺️ MiniMap enabled!');
+        setShowMiniMap(true);
+      }, 200);
+      return () => clearTimeout(timer);
+    } else if (nodes.length > 0 && ui.isMiniMapVisible && !isReactFlowReady) {
+      // Fallback: force enable after longer delay if ReactFlow readiness is stuck
+      const fallbackTimer = setTimeout(() => {
+        console.log('🗺️ MiniMap fallback activation...');
+        setShowMiniMap(true);
+      }, 1000);
+      return () => clearTimeout(fallbackTimer);
+    } else {
+      console.log('🗺️ Disabling MiniMap');
+      setShowMiniMap(false);
+    }
+  }, [nodes.length, ui.isMiniMapVisible, isReactFlowReady]);
+
   // Sync React Flow nodes with store when they change
   useEffect(() => {
     setNodes(reactFlowNodes);
@@ -191,7 +229,7 @@ const CanvasInner: React.FC = () => {
 
   useEffect(() => {
     setEdges(reactFlowEdges);
-  }, [reactFlowEdges, setEdges]);  // Handle node changes (position, selection, etc.)
+  }, [reactFlowEdges, setEdges]);// Handle node changes (position, selection, etc.)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleNodesChange = useCallback((changes: any[]) => {
     onNodesChange(changes);
@@ -327,15 +365,13 @@ const CanvasInner: React.FC = () => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         nodeTypes={nodeTypes}
-        connectionMode={ConnectionMode.Loose}
-        defaultViewport={{
+        connectionMode={ConnectionMode.Loose}        defaultViewport={{
           x: canvas.center.x,
           y: canvas.center.y,
           zoom: canvas.zoom,
         }}
         minZoom={0.1}
         maxZoom={2}
-        fitView
         proOptions={{ hideAttribution: true }}
         className="canvas-flow"
         nodesDraggable={true}
@@ -351,29 +387,28 @@ const CanvasInner: React.FC = () => {
           style={{ 
             opacity: ui.isGridVisible ? 1 : 0 
           }}
-        />
-        <Controls 
+        />        <Controls 
           className="controls-panel"
           showInteractive={false}
-        />
-        <MiniMap 
-          className="minimap-panel"
-          nodeColor={(node) => {
-            const nodeTypeColors = {
-              'usecase': '#3B82F6',
-              'screen': '#10B981',
-              'user': '#F97316',
-              'process': '#8B5CF6',
-              'storage': '#EAB308',
-              'controller': '#EF4444',
-              'error': '#6B7280',
-              'base': '#06B6D4',
-            };
-            return nodeTypeColors[node.data?.nodeType as NodeType] || '#3B82F6';
-          }}
-          nodeStrokeWidth={2}
-          pannable
-          zoomable        />
+          style={{ display: 'none' }}
+        />        {/* Integrated MiniMap positioned in status bar area */}
+        {showMiniMap && (
+          <MiniMap 
+            nodeColor="#3B82F6"
+            nodeStrokeColor="#1E40AF"
+            nodeStrokeWidth={1}
+            maskColor="rgba(255, 255, 255, 0.1)"
+            position="bottom-right"
+            className="minimap-integrated"
+            ariaLabel="Mini map"
+            pannable
+            zoomable
+            style={{
+              width: 120,
+              height: 80,
+            }}
+          />
+        )}
         
         {/* Panels are now handled within each WrappedCustomNode */}
       </ReactFlow>{/* Connection Property Panel */}

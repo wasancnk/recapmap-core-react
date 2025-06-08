@@ -32,12 +32,12 @@ interface UIStore {
   maximizePanel: (id: string) => void
   bringPanelToFront: (id: string) => void
   closeAllPanels: () => void
-  
-  // UI Actions
+    // UI Actions
   setTool: (tool: Tool) => void
   toggleGrid: () => void
   setGridSize: (size: number) => void
   toggleSnapToGrid: () => void
+  toggleMiniMap: () => void
   setTheme: (theme: 'dark' | 'light') => void
   toggleSidebar: () => void
   
@@ -65,6 +65,7 @@ const defaultCanvasState: CanvasState = {
 const defaultUIState: UIState = {
   selectedTool: 'select',
   isGridVisible: true,
+  isMiniMapVisible: true,
   snapToGrid: true,
   gridSize: 20,
   theme: 'dark',
@@ -237,12 +238,16 @@ export const useUIStore = create<UIStore>()(
         set((state) => ({
           ui: { ...state.ui, gridSize: Math.max(10, Math.min(100, size)) },
         }), false, 'setGridSize')
-      },
-
-      toggleSnapToGrid: () => {
+      },      toggleSnapToGrid: () => {
         set((state) => ({
           ui: { ...state.ui, snapToGrid: !state.ui.snapToGrid },
         }), false, 'toggleSnapToGrid')
+      },
+
+      toggleMiniMap: () => {
+        set((state) => ({
+          ui: { ...state.ui, isMiniMapVisible: !state.ui.isMiniMapVisible },
+        }), false, 'toggleMiniMap')
       },
 
       setTheme: (theme: 'dark' | 'light') => {

@@ -429,31 +429,58 @@
 
   .controls-panel .react-flow__controls-button:hover {
     @apply bg-surface-elevated text-accent-primary;
-  }
-
-  /* MiniMap Panel Styling */
+  }  /* MiniMap Panel Styling */
   .minimap-panel {
-    @apply bg-surface-primary border border-surface-border rounded-lg shadow-lg;
+    background-color: rgb(30 41 59);
+    border: 1px solid rgb(51 65 85);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
   .minimap-panel .react-flow__minimap-node {
-    @apply stroke-2;
+    stroke-width: 2px;
   }
 
   .minimap-panel .react-flow__minimap-mask {
     fill: rgb(17 24 39 / 0.2); /* gray-900 with 20% opacity */
+  }  /* Integrated MiniMap Styles */
+  .minimap-integrated {
+    position: absolute !important;
+    bottom: 40px !important;
+    right: 5px !important;
+    z-index: 105 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    background: rgba(30, 41, 59, 0.95) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .minimap-integrated .react-flow__minimap-mask {
+    fill: rgba(255, 255, 255, 0.1) !important;
+    stroke: rgba(255, 255, 255, 0.3) !important;
+    stroke-width: 1 !important;
+  }
+
+  .minimap-integrated .react-flow__minimap-node {
+    opacity: 0.8 !important;
+  }
+
+  /* Mini-bar (Status Bar) Styles */
+  .mini-bar {
+    position: absolute !important;
+    bottom: 0px !important;
+    right: 8px !important;
+    z-index: 100 !important;
+    margin: 12px !important;
   }
 
   /* Node Selection Glow Effect */
   .shadow-glow {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   }
-
   /* Connection Type Styles */
-  .connection-data {
-    /* Data flow connections - default blue */
-  }
-
   .connection-control {
     /* Process flow connections - orange */
     stroke: #F59E0B !important;

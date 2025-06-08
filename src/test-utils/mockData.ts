@@ -93,11 +93,15 @@ export const createMockUIStoreState = () => ({
     showGrid: true,
     showMiniMap: true,
   },
-  panels: [],
-  ui: {
+  panels: [],  ui: {
     selectedTool: 'select' as const,
+    isGridVisible: true,
+    isMiniMapVisible: true,
+    snapToGrid: true,
+    gridSize: 20,
     theme: 'dark' as const,
     sidebarCollapsed: false,
+    notifications: [],
   },
   notifications: [],
 })

@@ -17,10 +17,10 @@ describe('Snap-to-Grid Integration', () => {
       },
       panels: [],
       activePanelId: null,
-      maxZIndex: 100,
-      ui: {
+      maxZIndex: 100,      ui: {
         selectedTool: 'select',
         isGridVisible: true,
+        isMiniMapVisible: true,
         snapToGrid: true,
         gridSize: 20,
         theme: 'dark',
