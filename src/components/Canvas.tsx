@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import {
   ReactFlow,
   Background,
@@ -11,6 +11,8 @@ import {
   useNodesState,
   useEdgesState,
   BackgroundVariant,
+  useReactFlow,
+  ReactFlowProvider,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useNodeStore } from '../stores/nodeStore';
@@ -41,8 +43,8 @@ const nodeTypes = {
   customNode: WrappedCustomNode,
 };
 
-
-export const Canvas: React.FC = () => {
+// Inner Canvas component that uses ReactFlow hooks
+const CanvasInner: React.FC = () => {
   const { 
     nodes: storeNodes, 
     connections: storeConnections, 
@@ -60,16 +62,18 @@ export const Canvas: React.FC = () => {
     ui,
     toggleSnapToGrid,
     toggleGrid,
-  } = useUIStore();  // Enable smart scroll redirection for panels with edge detection
+  } = useUIStore();
+
+  // ReactFlow instance for coordinate transformation
+  const reactFlowInstance = useReactFlow();// Enable smart scroll redirection for panels with edge detection
   useSmartScroll({
     enabled: true,
     panelSelector: '.panel-base, [data-testid*="panel"], .scrollbar-dark, .scrollbar-stable, .overflow-y-auto',
     edgeBufferMs: 300, // Wait 300ms after hitting scroll edge before allowing canvas operations
     debug: process.env.NODE_ENV === 'development' // Enable debug in development
   });
-
   // Keyboard shortcuts for grid controls
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Ctrl+G: Toggle snap to grid
       if (event.ctrlKey && event.key === 'g') {
@@ -86,17 +90,15 @@ export const Canvas: React.FC = () => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [toggleSnapToGrid, toggleGrid]);
-
   // Create test nodes on first load for easier testing
-  React.useEffect(() => {
+  useEffect(() => {
     createTestNodes(addNode);
   }, [addNode]);
 
   // Local state for connection property panel
   const [selectedConnectionId, setSelectedConnectionId] = useState<string | null>(null);
-  const [connectionPanelPosition, setConnectionPanelPosition] = useState({ x: 0, y: 0 });
-  // Convert store nodes to React Flow nodes
-  const reactFlowNodes = React.useMemo(() => 
+  const [connectionPanelPosition, setConnectionPanelPosition] = useState({ x: 0, y: 0 });  // Convert store nodes to React Flow nodes
+  const reactFlowNodes = useMemo(() =>
     storeNodes.map(node => ({
       id: node.id,
       type: 'customNode',
@@ -109,9 +111,8 @@ export const Canvas: React.FC = () => {
       selected: selectedNodeIds.includes(node.id),
       connectable: true,
     })),
-    [storeNodes, selectedNodeIds]
-  );// Convert store connections to React Flow edges
-  const reactFlowEdges = React.useMemo(() =>
+    [storeNodes, selectedNodeIds]  );// Convert store connections to React Flow edges
+  const reactFlowEdges = useMemo(() =>
     storeConnections.map(connection => {
       // Determine arrow markers based on direction type
       const getMarkers = (directionType: string) => {
@@ -185,13 +186,12 @@ export const Canvas: React.FC = () => {
   // Use React Flow hooks for local state management
   const [nodes, setNodes, onNodesChange] = useNodesState(reactFlowNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(reactFlowEdges);
-
   // Sync React Flow nodes with store when they change
-  React.useEffect(() => {
+  useEffect(() => {
     setNodes(reactFlowNodes);
   }, [reactFlowNodes, setNodes]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setEdges(reactFlowEdges);
   }, [reactFlowEdges, setEdges]);  // Handle node changes (position, selection, etc.)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -267,18 +267,58 @@ export const Canvas: React.FC = () => {
     setConnectionPanelPosition({ x, y });
     setSelectedConnectionId(edge.id);
   }, []);
-
   const handleConnectionPanelClose = useCallback(() => {
     setSelectedConnectionId(null);
-  }, []);  return (
+  }, []);
+
+  // Handle drag over to allow drop
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+  // Handle drop to create new node at drop position
+  const onDrop = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    
+    // Get the node type from the drag data
+    const nodeType = event.dataTransfer.getData('application/reactflow');
+    
+    // Only process if we have a valid node type
+    if (nodeType && typeof nodeType === 'string') {
+      // Convert screen coordinates to flow coordinates
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      // Center the node on the mouse cursor by offsetting by half the node dimensions
+      // Node dimensions are 200px x 160px (defined in NewCustomNode.tsx)
+      const centeredPosition = {
+        x: position.x - 100, // Half of node width (200px / 2)
+        y: position.y - 80,  // Half of node height (160px / 2)
+      };
+
+      // Apply snap to grid if enabled
+      let finalPosition = centeredPosition;
+      if (ui.snapToGrid) {
+        finalPosition = {
+          x: Math.round(centeredPosition.x / ui.gridSize) * ui.gridSize,
+          y: Math.round(centeredPosition.y / ui.gridSize) * ui.gridSize,
+        };
+      }
+
+      // Create the new node at the drop position
+      console.log('🎯 Dropping node:', nodeType, 'at centered position:', finalPosition);
+      addNode(nodeType as NodeType, finalPosition);
+    }
+  }, [reactFlowInstance, ui.snapToGrid, ui.gridSize, addNode]);return (
     <div className="w-full h-full bg-background-tertiary relative">      {/* Snap-to-Grid Status Indicator */}
       {ui.snapToGrid && (
         <div className="absolute top-4 right-4 z-50 bg-accent-primary/90 text-white px-3 py-1 rounded text-xs font-medium shadow-lg flex items-center gap-2">
           <span>⚡</span>
           <span>Snap Active</span>
           <span className="opacity-70 text-xs">(Ctrl+G)</span>
-        </div>
-      )}<ReactFlow
+        </div>      )}<ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={handleNodesChange}
@@ -286,6 +326,8 @@ export const Canvas: React.FC = () => {
         onConnect={onConnect}
         onPaneClick={onPaneClick}
         onEdgeClick={onEdgeClick}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
         nodeTypes={nodeTypes}
         connectionMode={ConnectionMode.Loose}
         defaultViewport={{
@@ -343,10 +385,17 @@ export const Canvas: React.FC = () => {
           position={connectionPanelPosition}
           onClose={handleConnectionPanelClose}
         />
-      )}
-
-      {/* Smart Scroll Demo Component */}
+      )}      {/* Smart Scroll Demo Component */}
       <SmartScrollDemo />
     </div>
+  );
+};
+
+// Main Canvas component wrapped with ReactFlowProvider
+export const Canvas: React.FC = () => {
+  return (
+    <ReactFlowProvider>
+      <CanvasInner />
+    </ReactFlowProvider>
   );
 };

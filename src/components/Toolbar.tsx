@@ -25,15 +25,53 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
     });
   };
 
+  // Handle drag start for drag-and-drop node creation
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData('application/reactflow', nodeType);
+    e.dataTransfer.setData('application/nodeType', nodeType);
+    e.dataTransfer.effectAllowed = 'move';
+    
+    // Create a custom drag image with the node type info
+    const dragImage = document.createElement('div');
+    dragImage.style.position = 'absolute';
+    dragImage.style.top = '-1000px';
+    dragImage.style.background = className.includes('bg-blue') ? '#3B82F6' : 
+                                className.includes('bg-green') ? '#10B981' :
+                                className.includes('bg-orange') ? '#F97316' :
+                                className.includes('bg-purple') ? '#8B5CF6' :
+                                className.includes('bg-yellow') ? '#EAB308' :
+                                className.includes('bg-red') ? '#EF4444' :
+                                className.includes('bg-gray') ? '#6B7280' : '#06B6D4';
+    dragImage.style.color = 'white';
+    dragImage.style.padding = '8px 12px';
+    dragImage.style.borderRadius = '8px';
+    dragImage.style.fontSize = '12px';
+    dragImage.style.fontWeight = 'bold';
+    dragImage.style.border = '2px solid rgba(255, 255, 255, 0.3)';
+    dragImage.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+    dragImage.innerHTML = `${icon} ${label}`;
+    
+    document.body.appendChild(dragImage);
+    e.dataTransfer.setDragImage(dragImage, 60, 20);
+    
+    // Clean up drag image after a short delay
+    setTimeout(() => {
+      document.body.removeChild(dragImage);
+    }, 0);
+  };
+
   return (
     <button
       onClick={handleAddNode}
+      draggable={true}
+      onDragStart={handleDragStart}
       className={`
         ${className} px-3 py-2 rounded-lg border-2 font-medium text-sm
         transition-all duration-200 hover:shadow-md hover:scale-105
         flex items-center gap-2 min-w-[120px] justify-center
+        cursor-grab active:cursor-grabbing
       `}
-      title={`Add ${label} Node`}
+      title={`Click to add or drag to canvas - ${label} Node`}
     >
       <span className="text-lg">{icon}</span>
       {label}
