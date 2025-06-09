@@ -1,11 +1,12 @@
 # TASK-two-layer-business-technical-enhancement.md
 
 ## Task Overview
-Implement a two-layer architecture for node information capture - a simple business layer for executives/stakeholders and an advanced technical layer for developers. Add project-level technical configuration panel to enhance AI code generation capabilities.
+Implement a two-layer architecture for node information capture - a simple business layer for executives/stakeholders and an advanced technical layer for developers. Add project-level technical configuration panel to enhance AI code generation capabilities for the complete **10-node system**.
 
 ## Background & Context
 
 ### Current Situation
+- **10 Node Types**: UseCase, Screen, User, Process, Storage, Controller, Error, Presentation, Concept, Attachment
 - Nodes contain mixed business and technical properties without clear separation
 - No distinction between information that executives vs developers should fill
 - Project-level technical context scattered across individual nodes
@@ -23,7 +24,7 @@ Implement a two-layer architecture for node information capture - a simple busin
 ### Functional Requirements
 
 #### 1. Business Context Layer (Always Visible)
-**For ALL Node Types:**
+**For ALL 10 Node Types:**
 - **Purpose**: Plain English description of what this component does
 - **Business Value**: Why this matters to the business
 - **Success Criteria**: How to measure if this works correctly
@@ -35,6 +36,32 @@ Purpose: "Allow users to access their accounts securely"
 Business Value: "Reduces support calls and protects customer data"
 Success Criteria: "Users can login in under 10 seconds with 99.9% success rate"
 Stakeholder Impact: "Customers get secure access, support team gets fewer password reset calls"
+```
+
+**Example for New Node Types:**
+
+**Presentation Node:**
+```
+Purpose: "Create executive summary slides from technical diagrams"
+Business Value: "Enables stakeholder communication and project buy-in"
+Success Criteria: "Clear visual narrative that drives decision-making"
+Stakeholder Impact: "Executives get digestible insights, teams get approval faster"
+```
+
+**Concept Node:**
+```
+Purpose: "Define and document key business concepts and definitions"
+Business Value: "Ensures consistent understanding across teams"
+Success Criteria: "All team members use consistent terminology"
+Stakeholder Impact: "Reduces miscommunication, improves collaboration"
+```
+
+**Attachment Node:**
+```
+Purpose: "Link relevant documents and resources to project components"
+Business Value: "Centralizes project knowledge and reduces context switching"
+Success Criteria: "All team members can quickly find relevant resources"
+Stakeholder Impact: "Faster onboarding, better informed decisions"
 ```
 
 #### 2. Technical Context Layer (Collapsible - "Show Technical Properties")
@@ -71,6 +98,24 @@ Stakeholder Impact: "Customers get secure access, support team gets fewer passwo
 - Access Patterns: read_heavy, write_heavy, balanced
 - Data Relationships: one-to-many, many-to-many
 - Indexing Strategy: performance optimization
+
+**Presentation Node:**
+- Slide Template: keynote-style, technical-overview, executive-summary
+- Auto-advance: boolean with duration settings
+- Transition Effects: fade, slide, zoom, flip
+- Export Format: PDF, PowerPoint, HTML
+
+**Concept Node:**
+- Documentation Framework: Wiki, Confluence, Notion, Markdown
+- Knowledge Domain: business, technical, hybrid
+- Reference Sources: internal docs, external standards
+- Complexity Level: basic, intermediate, advanced, expert
+
+**Attachment Node:**
+- File Storage: local, cloud, CDN, version-controlled
+- Access Control: public, internal, restricted, confidential
+- Sync Strategy: manual, automatic, on-demand
+- Preview Generation: thumbnails, metadata extraction
 
 #### 3. Project Technical Configuration Panel
 **New Section in Toolbar (Bottom Position):**
@@ -158,7 +203,8 @@ Select patterns that best describe the intended behavior."
 ┌─────────────────────────────────────────┐
 │ 🎯 Add Nodes                           │  ← Existing (core workflow)
 │ [UseCase] [Screen] [User] [Process]     │
-│ [Storage] [Controller] [Error] [Base]   │
+│ [Storage] [Controller] [Error]          │
+│ [Presentation] [Concept] [Attachment]   │  ← NEW 3 node types
 └─────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────┐
@@ -213,7 +259,7 @@ interface EnhancedScreenNode extends ScreenNode {
   // Keep existing properties for backward compatibility
 }
 
-// Apply to all 8 node types: UseCase, Screen, User, Process, Storage, Controller, Error, Base
+// Apply to all 10 node types: UseCase, Screen, User, Process, Storage, Controller, Error, Presentation, Concept, Attachment
 ```
 
 #### 1.3 UI Components Enhancement
@@ -259,7 +305,28 @@ interface ScreenTechnicalContext {
   accessibilityLevel?: 'basic' | 'wcag_aa' | 'wcag_aaa'
 }
 
-// Continue for Process, Storage, Controller, Error, User nodes
+interface PresentationTechnicalContext {
+  slideTemplate?: string            // "keynote-style", "technical-overview"
+  autoAdvance?: boolean
+  transitionEffects?: string        // "fade", "slide", "zoom"
+  exportFormat?: string[]           // ["PDF", "PowerPoint", "HTML"]
+}
+
+interface ConceptTechnicalContext {
+  documentationFramework?: string   // "Wiki", "Confluence", "Notion"
+  knowledgeDomain?: 'business' | 'technical' | 'hybrid'
+  referenceSources?: string[]       // ["internal_docs", "external_standards"]
+  complexityLevel?: 'basic' | 'intermediate' | 'advanced' | 'expert'
+}
+
+interface AttachmentTechnicalContext {
+  fileStorage?: string              // "local", "cloud", "CDN"
+  accessControl?: 'public' | 'internal' | 'restricted' | 'confidential'
+  syncStrategy?: string             // "manual", "automatic", "on-demand"
+  previewGeneration?: boolean       // thumbnails, metadata extraction
+}
+
+// Continue for Process, Storage, Controller, Error, User, Presentation, Concept, Attachment nodes
 ```
 
 #### 2.2 Collapsible UI Implementation
@@ -608,7 +675,7 @@ export function exportToEnhancedYAML(
 1. Create `BusinessContext` interface and extend node types
 2. Add business context section to EditorPanel
 3. Update nodeStore for business context handling
-4. Basic business context fields for all 8 node types
+4. Basic business context fields for all 10 node types (including Presentation, Concept, Attachment)
 
 ### Sprint 2: Technical Layer & Project Settings
 **Week 3-4: Advanced Features**
@@ -628,8 +695,8 @@ export function exportToEnhancedYAML(
 ## Success Criteria
 
 ### Functional Success
-- [ ] Business context fields available on all node types
-- [ ] Technical properties collapsible and contextual
+- [ ] Business context fields available on all 10 node types (including Presentation, Concept, Attachment)
+- [ ] Technical properties collapsible and contextual for all 10 node types
 - [ ] Project technical configuration panel functional
 - [ ] Enhanced YAML export with business/technical layers
 - [ ] Contextual help system operational
