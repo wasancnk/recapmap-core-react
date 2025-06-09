@@ -4,6 +4,8 @@ import { Canvas } from './Canvas';
 import { Toolbar } from './Toolbar';
 import { PropertyPanelManager } from './PropertyPanelManager';
 import { ExportPanelManager } from './ExportPanelManager';
+import { PresentationPanelManager } from './PresentationPanelManager';
+import { PresentationControlBar } from './PresentationControlBar';
 import { useUIStore } from '../stores/uiStore';
 
 // Status Bar Component with Canvas Controls
@@ -80,6 +82,8 @@ const StatusBar: React.FC = () => {
 };
 
 export const CanvasLayout: React.FC = () => {
+  const { ui } = useUIStore();
+  
   // Apply no-scroll class to body when canvas is active
   useEffect(() => {
     document.body.classList.add('canvas-no-scroll');
@@ -88,22 +92,35 @@ export const CanvasLayout: React.FC = () => {
     return () => {
       document.body.classList.remove('canvas-no-scroll');
     };
-  }, []);  return (
+  }, []);
+
+  return (
     <ReactFlowProvider>
       <div className="w-full h-screen bg-background-tertiary relative overflow-hidden">
         {/* Main Canvas */}
         <Canvas />
         
-        {/* Floating Toolbar */}
-        <Toolbar />
-          {/* Property Panel Manager */}
-        <PropertyPanelManager />
+        {/* UI Elements - Hidden during presentation mode */}
+        {!ui.isPresentationMode && (
+          <>
+            {/* Floating Toolbar */}
+            <Toolbar />
+            
+            {/* Property Panel Manager */}
+            <PropertyPanelManager />
+            
+            {/* Export Panel Manager */}
+            <ExportPanelManager />
+            
+            {/* Status Bar */}
+            <StatusBar />
+          </>
+        )}
+          {/* Presentation Panel Manager - Only shown during presentation mode */}
+        {ui.isPresentationMode && <PresentationPanelManager />}
         
-        {/* Export Panel Manager */}
-        <ExportPanelManager />
-        
-        {/* Status Bar */}
-        <StatusBar />
+        {/* Presentation Control Bar - Bottom center controls during presentation mode */}
+        <PresentationControlBar />
       </div>
     </ReactFlowProvider>
   );

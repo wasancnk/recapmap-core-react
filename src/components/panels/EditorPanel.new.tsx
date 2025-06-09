@@ -70,7 +70,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
       deleteNode(nodeId);
     }
   };
-
   // Get node type info
   const nodeTypeConfig = {
     'usecase': { icon: '🎯', label: 'Use Case' },
@@ -80,10 +79,12 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
     'storage': { icon: '💾', label: 'Storage' },
     'controller': { icon: '🎮', label: 'Controller' },
     'error': { icon: '⚠️', label: 'Error' },
-    'base': { icon: '🔧', label: 'Base' }
+    'presentation': { icon: '📽️', label: 'Presentation' },
+    'concept': { icon: '💡', label: 'Concept' },
+    'attachment': { icon: '📎', label: 'Attachment' }
   };
 
-  const config = nodeTypeConfig[node.type] || nodeTypeConfig['base'];
+  const config = nodeTypeConfig[node.type] || nodeTypeConfig['concept'];
 
   return (
     <div className="p-4 h-full overflow-y-auto">

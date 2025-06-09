@@ -32,14 +32,19 @@ interface UIStore {
   maximizePanel: (id: string) => void
   bringPanelToFront: (id: string) => void
   closeAllPanels: () => void
-    // UI Actions
+  // UI Actions
   setTool: (tool: Tool) => void
   toggleGrid: () => void
   setGridSize: (size: number) => void
   toggleSnapToGrid: () => void
   toggleMiniMap: () => void
-  setTheme: (theme: 'dark' | 'light') => void
+  setTheme: (theme: 'dark' | 'light' | 'bright') => void
   toggleSidebar: () => void
+  
+  // Presentation Mode Actions
+  togglePresentationMode: () => void
+  setPresentationMode: (enabled: boolean) => void
+  updatePresentationSettings: (settings: Partial<UIState['presentationSettings']>) => void
   
   // Notification Actions
   addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => string
@@ -71,6 +76,20 @@ const defaultUIState: UIState = {
   theme: 'dark',
   sidebarCollapsed: false,
   notifications: [],
+  isPresentationMode: false,
+  presentationSettings: {
+    currentSlide: 1,
+    totalSlides: 1,
+    showPageNumbers: true,
+    showTimestamp: false,
+    autoAdvance: false,
+    autoAdvanceInterval: 30,
+    hideToolbar: true,
+    hidePanels: true,
+    presentationTheme: 'bright',
+    backgroundColor: undefined,
+    backgroundImage: undefined
+  }
 }
 
 // Create the UI store
@@ -249,21 +268,42 @@ export const useUIStore = create<UIStore>()(
         set((state) => ({
           ui: { ...state.ui, isMiniMapVisible: !state.ui.isMiniMapVisible },
         }), false, 'toggleMiniMap')
-      },
-
-      setTheme: (theme: 'dark' | 'light') => {
+      },      setTheme: (theme: 'dark' | 'light' | 'bright') => {
         set((state) => ({
           ui: { ...state.ui, theme },
         }), false, 'setTheme')
         
         // Apply theme to document
         document.documentElement.classList.toggle('dark', theme === 'dark')
+        document.documentElement.classList.toggle('bright', theme === 'bright')
       },
 
       toggleSidebar: () => {
         set((state) => ({
           ui: { ...state.ui, sidebarCollapsed: !state.ui.sidebarCollapsed },
         }), false, 'toggleSidebar')
+      },
+
+      // Presentation Mode Actions
+      togglePresentationMode: () => {
+        set((state) => ({
+          ui: { ...state.ui, isPresentationMode: !state.ui.isPresentationMode },
+        }), false, 'togglePresentationMode')
+      },
+
+      setPresentationMode: (enabled: boolean) => {
+        set((state) => ({
+          ui: { ...state.ui, isPresentationMode: enabled },
+        }), false, 'setPresentationMode')
+      },
+
+      updatePresentationSettings: (settings: Partial<UIState['presentationSettings']>) => {
+        set((state) => ({
+          ui: { 
+            ...state.ui, 
+            presentationSettings: { ...state.ui.presentationSettings, ...settings }
+          },
+        }), false, 'updatePresentationSettings')
       },
 
       // Notification Actions
@@ -276,11 +316,10 @@ export const useUIStore = create<UIStore>()(
           id,
           timestamp,
         }
-        
-        set((state) => ({
+          set((state) => ({
           ui: {
             ...state.ui,
-            notifications: [...state.ui.notifications, newNotification],
+            notifications: [...(state.ui.notifications || []), newNotification],
           },
         }), false, 'addNotification')
         
@@ -292,13 +331,11 @@ export const useUIStore = create<UIStore>()(
         }
         
         return id
-      },
-
-      removeNotification: (id: string) => {
+      },      removeNotification: (id: string) => {
         set((state) => ({
           ui: {
             ...state.ui,
-            notifications: state.ui.notifications.filter((notif) => notif.id !== id),
+            notifications: (state.ui.notifications || []).filter((notif) => notif.id !== id),
           },
         }), false, 'removeNotification')
       },
@@ -327,23 +364,25 @@ export const useUIStore = create<UIStore>()(
       getCurrentTool: () => {
         return get().ui.selectedTool
       },
-    }),
-    {
-      name: 'recapmap-ui-store',
-      partialize: (state) => ({
-        canvas: state.canvas,
-        ui: {
-          selectedTool: state.ui.selectedTool,
-          isGridVisible: state.ui.isGridVisible,
-          isMiniMapVisible: state.ui.isMiniMapVisible,
-          snapToGrid: state.ui.snapToGrid,
-          gridSize: state.ui.gridSize,
-          theme: state.ui.theme,
-          sidebarCollapsed: state.ui.sidebarCollapsed,
-          // Exclude transient state like notifications
-        }
-      }),
-    }
+    }),      {
+        name: 'recapmap-ui-store',
+        partialize: (state) => ({
+          canvas: state.canvas,
+          ui: {
+            selectedTool: state.ui.selectedTool,
+            isGridVisible: state.ui.isGridVisible,
+            isMiniMapVisible: state.ui.isMiniMapVisible,
+            snapToGrid: state.ui.snapToGrid,
+            gridSize: state.ui.gridSize,
+            theme: state.ui.theme,
+            sidebarCollapsed: state.ui.sidebarCollapsed,
+            isPresentationMode: state.ui.isPresentationMode,
+            presentationSettings: state.ui.presentationSettings,
+            // Always include empty notifications array in persisted state
+            notifications: [],
+          }
+        }),
+      }
     ),
     {
       name: 'recapmap-ui-store',
@@ -362,6 +401,7 @@ function getPanelTitle(type: PanelType): string {
     'ai-assistant': 'AI Assistant',
     'validation': 'Validation',
     'settings': 'Settings',
+    'presentation': 'Presentation',
   }
   return titles[type]
 }
@@ -376,6 +416,7 @@ function getPanelDefaultSize(type: PanelType): { width: number; height: number }
     'ai-assistant': { width: 400, height: 500 },
     'validation': { width: 450, height: 300 },
     'settings': { width: 500, height: 400 },
+    'presentation': { width: 400, height: 600 },
   }
   return sizes[type]
 }

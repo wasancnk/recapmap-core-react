@@ -10,14 +10,13 @@ export default {
       // 8-Node System Color Palette
       colors: {
         // Node Type Colors
-        nodes: {
-          usecase: {
-            50: '#eff6ff',
-            100: '#dbeafe', 
-            500: '#3b82f6',  // Primary Blue
-            600: '#2563eb',
-            700: '#1d4ed8',
-            900: '#1e3a8a'
+        nodes: {          usecase: {
+            50: '#f7fee7',
+            100: '#ecfccb', 
+            500: '#4d7c0f',  // Darker green-lime - better contrast
+            600: '#365314',  // Darker green for borders
+            700: '#1a2e05',  // Very dark green for hover states
+            900: '#0d1502'
           },
           screen: {
             50: '#ecfdf5',
@@ -58,14 +57,36 @@ export default {
             600: '#dc2626',
             700: '#b91c1c',
             900: '#7f1d1d'
-          },
-          error: {
+          },          error: {
             50: '#f8fafc',
             100: '#f1f5f9',
             500: '#6b7280',  // Primary Gray
             600: '#4b5563',
             700: '#374151',
             900: '#111827'
+          },          presentation: {
+            50: '#eef2ff',
+            100: '#e0e7ff',
+            500: '#4f46e5',  // Darker/richer Indigo
+            600: '#4338ca',  // Even darker for borders
+            700: '#3730a3',  // Darkest for hover states
+            900: '#312e81'
+          },
+          concept: {
+            50: '#ecfeff',
+            100: '#cffafe',
+            500: '#06b6d4',  // Primary Cyan
+            600: '#0891b2',
+            700: '#0e7490',
+            900: '#164e63'
+          },
+          attachment: {
+            50: '#fdf2f8',
+            100: '#fce7f3',
+            500: '#ec4899',  // Primary Pink
+            600: '#db2777',
+            700: '#be185d',
+            900: '#831843'
           }
         },
         

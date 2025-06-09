@@ -168,11 +168,12 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               Title
-            </label>
-            <input
+            </label>            <input
               type="text"
               value={node.title}
               onChange={(e) => handleBasicPropertyChange('title', e.target.value)}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
               className="w-full px-3 py-2 border border-surface-border rounded-md bg-surface-secondary text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
               placeholder="Enter node title"
             />
@@ -182,10 +183,11 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               Description
-            </label>
-            <textarea
+            </label>            <textarea
               value={node.description || ''}
               onChange={(e) => handleBasicPropertyChange('description', e.target.value)}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
               rows={3}
               className="w-full px-3 py-2 border border-surface-border rounded-md bg-surface-secondary text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent resize-none"
               placeholder="Enter node description"

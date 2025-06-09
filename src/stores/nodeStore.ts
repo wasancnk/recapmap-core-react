@@ -173,8 +173,87 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         // Logging & Monitoring
         loggingRequirements: [],
         alertingThreshold: undefined,
-        recoveryProcedure: undefined,
-      }
+        recoveryProcedure: undefined,      }
+    
+    case 'presentation':
+      return {
+        ...baseNode,
+        type: 'presentation',
+        // Presentation Structure
+        presentationTitle: baseNode.title,
+        slideOrder: 1,
+        // Content Management
+        linkedNodes: [],
+        slideContent: {
+          title: baseNode.title,
+          subtitle: '',
+          content: [],
+          notes: ''
+        },
+        // Presentation Settings
+        transition: 'fade',
+        duration: undefined,
+        backgroundColor: undefined,
+        backgroundImage: undefined,
+        // Layout Configuration
+        layout: 'title',
+        showPageNumber: true,
+        showTimestamp: false,        // Navigation
+        navigationHints: []
+      };
+    
+    case 'concept':
+      return {
+        ...baseNode,
+        type: 'concept',
+        // Concept Definition
+        conceptName: baseNode.title,
+        conceptType: 'definition',
+        // Content Structure
+        definition: baseNode.description || '',
+        examples: [],
+        counterExamples: [],
+        // Relationships
+        relatedConcepts: [],
+        prerequisites: [],
+        // Context
+        domain: '',
+        complexity: 'basic',
+        tags: [],        // Documentation
+        references: [],
+        notes: ''
+      };
+
+    case 'attachment':
+      return {
+        ...baseNode,
+        type: 'attachment',
+        // Attachment Core Properties
+        attachmentName: baseNode.title,
+        attachmentType: 'file',
+        // File/Resource Information
+        fileName: undefined,
+        fileSize: undefined,
+        mimeType: undefined,
+        url: undefined,
+        filePath: undefined,
+        // Content Management
+        content: undefined,
+        preview: undefined,
+        // Metadata
+        tags: [],
+        category: '',
+        version: undefined,
+        // Access & Security
+        isPublic: false,
+        accessLevel: 'internal',
+        permissions: [],
+        // Integration
+        sourceSystem: undefined,
+        lastSyncedAt: undefined,        // Organization
+        folderPath: undefined,
+        relatedNodes: []
+      };
     
     default:
       return baseNode as RecapMapNode

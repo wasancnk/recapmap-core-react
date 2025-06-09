@@ -37,17 +37,17 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({ nodeId }) => {
 
   // Get node type configuration for icon
   const nodeTypeConfig = {
-    'usecase': { icon: '🎯', label: 'Use Case' },
-    'screen': { icon: '📱', label: 'Screen' },
+    'usecase': { icon: '🎯', label: 'Use Case' },    'screen': { icon: '📱', label: 'Screen' },
     'user': { icon: '👤', label: 'User' },
     'process': { icon: '⚙️', label: 'Process' },
-    'storage': { icon: '💾', label: 'Storage' },
-    'controller': { icon: '🎮', label: 'Controller' },
+    'storage': { icon: '💾', label: 'Storage' },    'controller': { icon: '🎮', label: 'Controller' },
     'error': { icon: '⚠️', label: 'Error' },
-    'base': { icon: '🔧', label: 'Base' }
+    'concept': { icon: '💡', label: 'Concept' },
+    'presentation': { icon: '📽️', label: 'Presentation' },
+    'attachment': { icon: '📎', label: 'Attachment' }
   };
 
-  const config = nodeTypeConfig[node.type] || nodeTypeConfig['base'];
+  const config = nodeTypeConfig[node.type] || nodeTypeConfig['concept'];
     return (
     <div className="p-4 h-full overflow-y-auto scrollbar-dark">
       {/* Node Header with Type */}

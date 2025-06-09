@@ -21,7 +21,7 @@ export interface BaseNode {
   updatedAt: string
 }
 
-// 8-Node System Types
+// 10-Node System Types - Following Apple's Design Philosophy of Elegant Simplicity
 export type NodeType = 
   | 'usecase'     // Business requirements, user stories
   | 'screen'      // UI screens, interfaces, views  
@@ -30,7 +30,9 @@ export type NodeType =
   | 'storage'     // Databases, files, data stores
   | 'controller'  // Decision points, flow control
   | 'error'       // Error handling, rejection flows
-  | 'base'        // Abstract base (for templates)
+  | 'presentation'// Presentation page for keynote-style presentations
+  | 'concept'     // General concepts, abstract ideas, definitions
+  | 'attachment'  // Files, images, links, resources, documents
 
 // Specific Node Type Interfaces with Enhanced Properties
 
@@ -184,7 +186,84 @@ export interface ErrorNode extends BaseNode {
   recoveryProcedure?: string
 }
 
-// Union type for all node types
+export interface PresentationNode extends BaseNode {
+  type: 'presentation'
+  // Presentation Structure
+  presentationTitle: string
+  slideOrder: number
+  // Content Management
+  linkedNodes: string[] // IDs of nodes to include in this presentation page
+  slideContent: {
+    title: string
+    subtitle?: string
+    content: string[]
+    notes?: string // Speaker notes
+  }
+  // Presentation Settings
+  transition: 'fade' | 'slide' | 'zoom' | 'flip' | 'none'
+  duration?: number // Auto-advance time in seconds
+  backgroundColor?: string
+  backgroundImage?: string
+  // Layout Configuration
+  layout: 'title' | 'content' | 'two-column' | 'full-screen' | 'node-showcase'
+  showPageNumber: boolean
+  showTimestamp: boolean
+  // Navigation
+  navigationHints: string[]
+}
+
+export interface ConceptNode extends BaseNode {
+  type: 'concept'
+  // Concept Definition
+  conceptName: string
+  conceptType: 'definition' | 'principle' | 'framework' | 'methodology' | 'best-practice' | 'guideline'
+  // Content Structure
+  definition: string
+  examples: string[]
+  counterExamples?: string[]
+  // Relationships
+  relatedConcepts: string[]
+  prerequisites: string[]
+  // Context
+  domain: string
+  complexity: 'basic' | 'intermediate' | 'advanced' | 'expert'
+  tags: string[]
+  // Documentation
+  references: string[]
+  notes?: string
+}
+
+export interface AttachmentNode extends BaseNode {
+  type: 'attachment'
+  // Attachment Core Properties
+  attachmentName: string
+  attachmentType: 'file' | 'image' | 'link' | 'document' | 'video' | 'audio' | 'code' | 'data'
+  // File/Resource Information
+  fileName?: string
+  fileSize?: number
+  mimeType?: string
+  url?: string
+  filePath?: string
+  // Content Management
+  content?: string // For text-based attachments
+  preview?: string // Preview text or base64 image
+  // Metadata
+  tags: string[]
+  category: string
+  version?: string
+  // Access & Security
+  isPublic: boolean
+  accessLevel: 'public' | 'internal' | 'restricted' | 'confidential'
+  permissions: string[]
+  // Integration
+  sourceSystem?: string
+  lastSyncedAt?: string
+  // Organization
+  folderPath?: string
+  relatedNodes: string[]
+}
+
+// Complete 10-Node System Union Type - Following Apple's Design Philosophy
 export type RecapMapNode = 
   | UseCaseNode 
   | ScreenNode 
@@ -193,6 +272,9 @@ export type RecapMapNode =
   | StorageNode 
   | ControllerNode 
   | ErrorNode
+  | PresentationNode
+  | ConceptNode
+  | AttachmentNode
 
 // Connection between nodes
 export interface NodeConnection {
@@ -254,6 +336,7 @@ export type PanelType =
   | 'ai-assistant'
   | 'validation'
   | 'settings'
+  | 'presentation'
 
 // UI State types
 export interface UIState {
@@ -262,9 +345,24 @@ export interface UIState {
   isMiniMapVisible: boolean
   snapToGrid: boolean
   gridSize: number
-  theme: 'dark' | 'light'
+  theme: 'dark' | 'light' | 'bright'
   sidebarCollapsed: boolean
   notifications: Notification[]
+  // Presentation Mode
+  isPresentationMode: boolean
+  presentationSettings: {
+    currentSlide: number
+    totalSlides: number
+    showPageNumbers: boolean
+    showTimestamp: boolean
+    autoAdvance: boolean
+    autoAdvanceInterval: number // seconds
+    hideToolbar: boolean
+    hidePanels: boolean
+    presentationTheme: 'bright' | 'dark' | 'custom'
+    backgroundColor?: string
+    backgroundImage?: string
+  }
 }
 
 export type Tool =
@@ -277,6 +375,9 @@ export type Tool =
   | 'storage'
   | 'controller'
   | 'error'
+  | 'presentation'
+  | 'concept'
+  | 'attachment'
   | 'connect'
 
 export interface Notification {

@@ -175,9 +175,18 @@
   .node-controller {
     @apply bg-nodes-controller-500 border-nodes-controller-600 text-white;
   }
-
   .node-error {
     @apply bg-nodes-error-500 border-nodes-error-600 text-white;
+  }  .node-presentation {
+    @apply bg-nodes-presentation-500 border-nodes-presentation-600 text-white;
+  }
+
+  .node-concept {
+    @apply bg-nodes-concept-500 border-nodes-concept-600 text-white;
+  }
+
+  .node-attachment {
+    @apply bg-nodes-attachment-500 border-nodes-attachment-600 text-white;
   }
 
   /* Panel Base Styles */
@@ -212,6 +221,88 @@
     background-image: 
       radial-gradient(circle at 1px 1px, rgba(75, 85, 99, 0.3) 1px, transparent 0);
     background-size: 20px 20px;
+  }
+  /* Presentation Node Stripe Pattern Enhancement */
+  .presentation-stripes {
+    background-image: linear-gradient(45deg, 
+      #4f46e5 25%, 
+      #6366f1 25%, 
+      #6366f1 50%, 
+      #4f46e5 50%, 
+      #4f46e5 75%, 
+      #6366f1 75%) !important;
+    background-size: 8px 8px !important;
+  }
+  /* Use Case Node Stripe Pattern Enhancement */
+  .usecase-stripes {
+    background-image: linear-gradient(45deg, 
+      #4d7c0f 25%, 
+      #65a30d 25%, 
+      #65a30d 50%, 
+      #4d7c0f 50%, 
+      #4d7c0f 75%, 
+      #65a30d 75%) !important;
+    background-size: 8px 8px !important;
+  }
+  /* Enhanced presentation node styling with stripes */
+  .node-presentation {
+    background-image: linear-gradient(45deg, 
+      #4f46e5 25%, 
+      #6366f1 25%, 
+      #6366f1 50%, 
+      #4f46e5 50%, 
+      #4f46e5 75%, 
+      #6366f1 75%) !important;
+    background-size: 8px 8px !important;
+    border-color: #3730a3 !important;
+  }
+  /* Enhanced use case node styling with lime stripes */
+  .node-usecase {
+    background-image: linear-gradient(45deg, 
+      #4d7c0f 25%, 
+      #65a30d 25%, 
+      #65a30d 50%, 
+      #4d7c0f 50%, 
+      #4d7c0f 75%, 
+      #65a30d 75%) !important;
+    background-size: 8px 8px !important;
+    border-color: #365314 !important;
+  }  /* Enhanced panel button visibility for all nodes */
+  .panel-toggle-button {
+    /* Always maintain consistent border to prevent layout shift */
+    border: 1px solid transparent !important;
+    transition: all 0.2s ease !important;
+    background: rgba(17, 24, 39, 0.85) !important;
+    color: white !important;
+    border-color: rgba(75, 85, 99, 0.3) !important;
+  }
+
+  /* Base hover state for all panel buttons */
+  .panel-toggle-button:hover {
+    background: rgba(17, 24, 39, 0.95) !important;
+    border-color: rgba(75, 85, 99, 0.5) !important;
+  }
+  /* Enhanced styling for anchor node buttons */
+  .node-usecase .panel-toggle-button,
+  .node-presentation .panel-toggle-button {
+    backdrop-filter: blur(4px) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  /* Unified active/open state - consistent blue background for all node types */
+  .panel-toggle-button.panel-open {
+    background: rgba(59, 130, 246, 0.8) !important; /* Strong blue background for all nodes */
+    border-color: rgba(0, 0, 0, 0.8) !important; /* Solid blue border */
+    color: white !important;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4) !important; /* Blue glow effect */
+  }
+
+  /* Disabled state for all buttons */
+  .panel-toggle-button:disabled {
+    background: rgba(17, 24, 39, 0.4) !important;
+    color: rgba(156, 163, 175, 0.6) !important;
+    border-color: rgba(75, 85, 99, 0.2) !important;
+    cursor: not-allowed !important;
   }
 }
 
@@ -532,5 +623,93 @@
 
   .connector-hint {
     animation: connector-pulse 2s ease-in-out infinite;
+  }
+
+  /* Presentation Control Bar Styles */
+  .presentation-control-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: auto;
+  }
+
+  .presentation-control-bar-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .presentation-control-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .presentation-control-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .presentation-control-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .presentation-control-btn-exit {
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+  }
+
+  .presentation-control-btn-exit:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 1);
+  }
+
+  .presentation-control-btn-nav {
+    background: rgba(75, 85, 99, 0.8);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .presentation-control-btn-nav:hover:not(:disabled) {
+    background: rgba(75, 85, 99, 1);
+    color: white;
+  }
+
+  .presentation-control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .presentation-control-btn-text {
+    font-size: 13px;
+  }
+
+  /* Hide text on small screens to save space */
+  @media (max-width: 640px) {
+    .presentation-control-btn-text {
+      display: none;
+    }
+    
+    .presentation-control-btn {
+      padding: 8px;
+      min-width: 40px;
+      justify-content: center;
+    }
   }
 }

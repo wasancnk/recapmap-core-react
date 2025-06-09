@@ -16,8 +16,8 @@ describe('Snap-to-Grid Integration', () => {
         bounds: { left: -1000, top: -1000, right: 1000, bottom: 1000 },
       },
       panels: [],
-      activePanelId: null,
-      maxZIndex: 100,      ui: {
+      activePanelId: null,      maxZIndex: 100,
+      ui: {
         selectedTool: 'select',
         isGridVisible: true,
         isMiniMapVisible: true,
@@ -26,6 +26,18 @@ describe('Snap-to-Grid Integration', () => {
         theme: 'dark',
         sidebarCollapsed: false,
         notifications: [],
+        isPresentationMode: false,
+        presentationSettings: {
+          currentSlide: 0,
+          totalSlides: 0,
+          showPageNumbers: true,
+          showTimestamp: false,
+          autoAdvance: false,
+          autoAdvanceInterval: 5,
+          hideToolbar: false,
+          hidePanels: false,
+          presentationTheme: 'dark',
+        },
       },
     })
   })

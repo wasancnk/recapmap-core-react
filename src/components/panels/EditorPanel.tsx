@@ -67,8 +67,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${node.title}"?`)) {
       deleteNode(nodeId);
-    }
-  };
+    }  };
 
   // Get node type info
   const nodeTypeConfig = {
@@ -76,15 +75,17 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
     'screen': { icon: '📱', label: 'Screen' },
     'user': { icon: '👤', label: 'User' },
     'process': { icon: '⚙️', label: 'Process' },
-    'storage': { icon: '💾', label: 'Storage' },
-    'controller': { icon: '🎮', label: 'Controller' },
+    'storage': { icon: '💾', label: 'Storage' },    'controller': { icon: '🎮', label: 'Controller' },
     'error': { icon: '⚠️', label: 'Error' },
-    'base': { icon: '🔧', label: 'Base' }
+    'concept': { icon: '💡', label: 'Concept' },
+    'presentation': { icon: '📽️', label: 'Presentation' },
+    'attachment': { icon: '📎', label: 'Attachment' }
   };
 
-  const config = nodeTypeConfig[node.type] || nodeTypeConfig['base'];
+  const config = nodeTypeConfig[node.type] || nodeTypeConfig['concept'];
+
   return (
-    <div className="p-4 h-full overflow-y-auto scrollbar-dark">      {/* Header with Save Button */}
+    <div className="p-4 h-full overflow-y-auto scrollbar-dark">{/* Header with Save Button */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-lg">{config.icon}</span>
@@ -113,11 +114,12 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
         {/* Title Field */}
         <div>          <label className="block text-sm font-medium text-gray-300 mb-2">
             Title
-          </label>
-          <input
+          </label>          <input
             type="text"
             value={localData.title}
             onChange={(e) => handleTitleChange(e.target.value)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
             className="w-full px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             placeholder="Enter node title"
           />
@@ -126,10 +128,11 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
         {/* Description Field */}
         <div>          <label className="block text-sm font-medium text-gray-300 mb-2">
             Description
-          </label>
-          <textarea
+          </label>          <textarea
             value={localData.description}
             onChange={(e) => handleDescriptionChange(e.target.value)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
             rows={4}
             className="w-full px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
             placeholder="Enter node description"

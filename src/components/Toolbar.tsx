@@ -37,25 +37,33 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
     e.dataTransfer.setData('application/reactflow', nodeType);
     e.dataTransfer.setData('application/nodeType', nodeType);
     e.dataTransfer.effectAllowed = 'move';
-    
-    // Create a custom drag image with the node type info
+      // Create a custom drag image with the node type info
     const dragImage = document.createElement('div');
     dragImage.style.position = 'absolute';
-    dragImage.style.top = '-1000px';
-    dragImage.style.background = className.includes('bg-blue') ? '#3B82F6' : 
+    dragImage.style.top = '-1000px';    dragImage.style.background = className.includes('bg-lime') ? '#4d7c0f' :
+                                className.includes('bg-blue') ? '#3B82F6' : 
                                 className.includes('bg-green') ? '#10B981' :
                                 className.includes('bg-orange') ? '#F97316' :
                                 className.includes('bg-purple') ? '#8B5CF6' :
                                 className.includes('bg-yellow') ? '#EAB308' :
                                 className.includes('bg-red') ? '#EF4444' :
-                                className.includes('bg-gray') ? '#6B7280' : '#06B6D4';
+                                className.includes('bg-gray') ? '#6B7280' : 
+                                className.includes('bg-indigo') ? '#4F46E5' :
+                                className.includes('bg-cyan') ? '#06B6D4' : '#EC4899';
     dragImage.style.color = 'white';
     dragImage.style.padding = '8px 12px';
     dragImage.style.borderRadius = '8px';
-    dragImage.style.fontSize = '12px';
-    dragImage.style.fontWeight = 'bold';
+    dragImage.style.fontSize = '12px';    dragImage.style.fontWeight = 'bold';
     dragImage.style.border = '2px solid rgba(255, 255, 255, 0.3)';
     dragImage.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+      // Add stripe pattern for presentation and use case nodes
+    if (className.includes('bg-indigo')) {      dragImage.style.backgroundImage = 'linear-gradient(45deg, #4F46E5 25%, #6366F1 25%, #6366F1 50%, #4F46E5 50%, #4F46E5 75%, #6366F1 75%)';
+      dragImage.style.backgroundSize = '8px 8px';
+    } else if (className.includes('bg-lime')) {
+      dragImage.style.backgroundImage = 'linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%)';
+      dragImage.style.backgroundSize = '8px 8px';
+    }
+    
     dragImage.innerHTML = `${icon} ${label}`;
     
     document.body.appendChild(dragImage);
@@ -88,7 +96,7 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
 
 export const Toolbar: React.FC = () => {
   const { nodes, connections, deleteNode, clearSelection } = useNodeStore();
-  const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid } = useUIStore();
+  const { addNotification, openPanel, ui, toggleSnapToGrid, toggleGrid, togglePresentationMode, setTheme } = useUIStore();
   const { project, updateProject } = useProjectStore();
   const { reset: resetPanels } = usePanelStore();
   
@@ -171,11 +179,10 @@ export const Toolbar: React.FC = () => {
     label: string;
     className: string;
     icon: string;
-  }> = [
-    {
+  }> = [    {
       type: 'usecase',
       label: 'Use Case',
-      className: 'bg-blue-500 border-blue-600 text-white hover:bg-blue-600',
+      className: 'bg-lime-700 border-lime-800 text-white hover:bg-lime-800 usecase-stripes',
       icon: '🎯'
     },
     {
@@ -201,25 +208,30 @@ export const Toolbar: React.FC = () => {
       label: 'Storage',
       className: 'bg-yellow-500 border-yellow-600 text-black hover:bg-yellow-600',
       icon: '💾'
-    },
-    {
+    },    {
       type: 'controller',
       label: 'Controller',
       className: 'bg-red-500 border-red-600 text-white hover:bg-red-600',
       icon: '🎮'
     },
     {
-      type: 'error',
-      label: 'Error',
-      className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
-      icon: '⚠️'
-    },    {
-      type: 'base',
-      label: 'Base',
+      type: 'concept',
+      label: 'Concept',
       className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
-      icon: '🏗️'
+      icon: '💡'
+    },{
+      type: 'presentation',
+      label: 'Presentation',
+      className: 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 presentation-stripes',
+      icon: '📽️'
     },
-  ];  const handleClearAll = () => {
+    {
+      type: 'attachment',
+      label: 'Attachment',
+      className: 'bg-pink-500 border-pink-600 text-white hover:bg-pink-600',
+      icon: '📎'
+    },
+  ];const handleClearAll = () => {
     if (nodes.length > 0 || connections.length > 0) {
       if (window.confirm('Are you sure you want to clear all nodes and connections?')) {
         // Clear selection first
@@ -269,8 +281,7 @@ export const Toolbar: React.FC = () => {
         </div>
         
         {/* Project Information Section */}
-        <div className="mb-4 space-y-2">
-          {/* Project Name */}
+        <div className="mb-4 space-y-2">          {/* Project Name */}
           {isEditingName ? (
             <input
               type="text"
@@ -278,6 +289,8 @@ export const Toolbar: React.FC = () => {
               onChange={(e) => handleNameChange(e.target.value)}
               onBlur={handleNameSave}
               onKeyDown={handleNameKeyDown}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
               autoFocus
               className="w-full px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
               placeholder="Enter project name"
@@ -290,15 +303,15 @@ export const Toolbar: React.FC = () => {
             >
               {project.name || 'Untitled Project'}
             </div>
-          )}
-
-          {/* Project Description */}
+          )}          {/* Project Description */}
           {isEditingDescription ? (
             <textarea
               value={editDescription}
               onChange={(e) => handleDescriptionChange(e.target.value)}
               onBlur={handleDescriptionSave}
               onKeyDown={handleDescriptionKeyDown}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
               autoFocus
               rows={2}
               className="w-full px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
@@ -380,12 +393,51 @@ export const Toolbar: React.FC = () => {
                 }
               `}
               title="Toggle snap to grid (Ctrl+G)"
-            >
-              <span className="mr-2">{ui.snapToGrid ? '⚡' : '○'}</span>
+            >              <span className="mr-2">{ui.snapToGrid ? '⚡' : '○'}</span>
               Snap to Grid
             </button>
           </div>
-        </div>        {/* Canvas Actions */}
+        </div>
+
+        {/* Presentation Mode Controls */}
+        <div className="border-t border-surface-border pt-3 mb-4">
+          <h4 className="text-text-primary font-semibold mb-2 text-xs">Presentation Mode</h4>
+          
+          <div className="space-y-2">
+            <button
+              onClick={togglePresentationMode}
+              className={`
+                w-full px-3 py-2 rounded text-sm font-medium transition-colors
+                ${ui.isPresentationMode 
+                  ? 'bg-purple-600 text-white border border-purple-600 hover:bg-purple-700' 
+                  : 'bg-surface-secondary text-text-secondary border border-surface-border hover:bg-surface-tertiary'
+                }
+              `}
+              title="Toggle presentation mode - hides UI elements for keynote-style presentation"
+            >
+              <span className="mr-2">{ui.isPresentationMode ? '📽️' : '🖼️'}</span>
+              {ui.isPresentationMode ? 'Exit Presentation' : 'Start Presentation'}
+            </button>
+            
+            {/* Theme Toggle for Presentation */}
+            <button
+              onClick={() => setTheme(ui.theme === 'bright' ? 'dark' : 'bright')}
+              className={`
+                w-full px-3 py-2 rounded text-sm font-medium transition-colors
+                ${ui.theme === 'bright'
+                  ? 'bg-yellow-500 text-black border border-yellow-600 hover:bg-yellow-600' 
+                  : 'bg-surface-secondary text-text-secondary border border-surface-border hover:bg-surface-tertiary'
+                }
+              `}
+              title="Toggle between dark theme and bright theme for presentations"
+            >
+              <span className="mr-2">{ui.theme === 'bright' ? '☀️' : '🌙'}</span>
+              {ui.theme === 'bright' ? 'Bright Mode' : 'Dark Mode'}
+            </button>
+          </div>
+        </div>
+
+        {/* Canvas Actions */}
         <div className="border-t border-surface-border pt-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-text-secondary text-xs">

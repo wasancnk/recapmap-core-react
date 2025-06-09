@@ -251,24 +251,27 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             <span>⇄</span>
             <span>Swap Direction</span>
           </button>
-        </div>        {/* Label */}
-        <div className="space-y-1">
+        </div>        {/* Label */}        <div className="space-y-1">
           <label htmlFor="connectionLabel" className="text-xs font-medium text-gray-300">Label</label>
           <input
             id="connectionLabel"
             type="text"
             value={formData.label}
             onChange={(e) => handleInputChange('label', e.target.value)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
             placeholder="Connection label (optional)"
             className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
           />
-        </div>        {/* Direction & Style */}
+        </div>{/* Direction & Style */}
         <div className="space-y-2">
           <h4 className="text-xs font-semibold text-gray-200 uppercase tracking-wide">Direction & Style</h4>            <div className="space-y-1">
             <label htmlFor="directionType" className="text-xs font-medium text-gray-300">Direction Type</label>            <select
               id="directionType"
               value={formData.directionType}
               onChange={(e) => handleInputChange('directionType', e.target.value)}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
               className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
             >
               <option value="oneway" selected={formData.directionType === 'oneway'}>One-way →</option>
@@ -280,6 +283,8 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
               id="lineStyle"
               value={formData.style}
               onChange={(e) => handleInputChange('style', e.target.value)}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
               className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
             >
               <option value="solid" selected={formData.style === 'solid'}>Solid</option>
@@ -292,12 +297,16 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
                 type="color"
                 value={formData.color}
                 onChange={(e) => handleInputChange('color', e.target.value)}
+                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 className="w-10 h-8 border border-gray-600 rounded-md cursor-pointer"
               />
               <input
                 type="text"
                 value={formData.color}
                 onChange={(e) => handleInputChange('color', e.target.value)}
+                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 className="flex-1 px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
               />
             </div>
@@ -308,6 +317,8 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             id="relationshipType"
             value={formData.type}
             onChange={(e) => handleInputChange('type', e.target.value)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
             className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
           >
             <option value="data" selected={formData.type === 'data'}>Data Flow</option>
@@ -320,6 +331,8 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             id="priority"
             value={formData.priority}
             onChange={(e) => handleInputChange('priority', e.target.value)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
             className="w-full px-2 py-1.5 bg-gray-800 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
           >
             <option value="low" selected={formData.priority === 'low'}>Low</option>
@@ -327,7 +340,7 @@ export const ConnectionPropertyPanel: React.FC<ConnectionPropertyPanelProps> = (
             <option value="high" selected={formData.priority === 'high'}>High</option>
             <option value="critical" selected={formData.priority === 'critical'}>Critical</option>
           </select>
-        </div>        {/* Action Buttons */}
+        </div>{/* Action Buttons */}
         <div className="flex space-x-2 pt-3 border-t border-gray-700/50">
           <button
             onClick={handleSave}

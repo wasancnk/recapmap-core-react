@@ -13,7 +13,7 @@ RecapMap's visual identity is built around a dark theme optimized for profession
 ## Color System
 
 ### 8-Node Color Assignments
-- **🔵 Use Case (Blue)** - `#3b82f6`: User intentions, requirements, business goals
+- **🟢 Use Case (Dark Green)** - `#4d7c0f`: User intentions, requirements, business goals
 - **🟢 Screen (Green)** - `#10b981`: User interfaces, touchpoints, interaction layers
 - **🟠 User (Orange)** - `#f59e0b`: Human actors, personas, stakeholders
 - **🟣 Process (Purple)** - `#8b5cf6`: Business logic, workflows, transformation

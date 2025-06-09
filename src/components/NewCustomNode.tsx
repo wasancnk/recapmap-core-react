@@ -19,12 +19,11 @@ const NewCustomNode = ({
   const [isToggling, setIsToggling] = React.useState(false);
 
   // Node type configurations with icons and colors
-  const nodeTypeConfig = {
-    'usecase': { 
+  const nodeTypeConfig = {    'usecase': { 
       icon: '🎯', 
       label: 'Use Case',
       bgColor: '#1e1e2f',
-      borderColor: '#3B82F6', // Blue
+      borderColor: '#4d7c0f', // Darker green-lime
       textColor: '#FFFFFF'
     },
     'screen': { 
@@ -67,13 +66,24 @@ const NewCustomNode = ({
       label: 'Error',
       bgColor: '#1e1e2f',
       borderColor: '#6B7280', // Gray
-      textColor: '#FFFFFF'
-    },
-    'base': { 
-      icon: '🔧', 
-      label: 'Base',
+      textColor: '#FFFFFF'    },
+    'concept': { 
+      icon: '💡', 
+      label: 'Concept',
       bgColor: '#1e1e2f',
       borderColor: '#06B6D4', // Cyan
+      textColor: '#FFFFFF'    },    'presentation': { 
+      icon: '📽️', 
+      label: 'Presentation',
+      bgColor: '#1e1e2f',
+      borderColor: '#4F46E5', // Darker/richer Indigo
+      textColor: '#FFFFFF'
+    },
+    'attachment': { 
+      icon: '📎', 
+      label: 'Attachment',
+      bgColor: '#1e1e2f',
+      borderColor: '#EC4899', // Pink
       textColor: '#FFFFFF'
     },
   };
@@ -147,25 +157,45 @@ const NewCustomNode = ({
     // Reset toggle state after a short delay
     setTimeout(() => setIsToggling(false), 100);
   }, [id, panelStore, isToggling]);
-
   // Show connectors when hovering or when connecting
-  const showConnectors = isHovered || connectingFromHandle || selected;return (
+  const showConnectors = isHovered || connectingFromHandle || selected;
+  // Special styling for anchor nodes (presentation and usecase) with stripe patterns
+  const nodeStyle = data.nodeType === 'presentation' ? {
+    backgroundColor: config.bgColor,
+    borderColor: config.borderColor,
+    color: config.textColor,
+    width: '200px',
+    height: '160px', 
+    padding: '12px',
+    backgroundImage: 'linear-gradient(45deg, #4f46e5 25%, #6366f1 25%, #6366f1 50%, #4f46e5 50%, #4f46e5 75%, #6366f1 75%)',
+    backgroundSize: '8px 8px'  } : data.nodeType === 'usecase' ? {
+    backgroundColor: config.bgColor,
+    borderColor: config.borderColor,
+    color: config.textColor,
+    width: '200px',
+    height: '160px', 
+    padding: '12px',
+    backgroundImage: 'linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%)',
+    backgroundSize: '8px 8px'
+  } : {
+    backgroundColor: config.bgColor,
+    borderColor: config.borderColor,
+    color: config.textColor,
+    width: '200px',
+    height: '160px',
+    padding: '12px'
+  };
+  return (
     <div 
       className={`
         rounded-lg border-2 
         transition-all duration-200 hover:bg-opacity-90 cursor-pointer
         relative flex flex-col
         node-uniform-size node-grid-aligned
+        node-${data.nodeType}
         ${selectedStyle}
       `}
-        style={{
-          backgroundColor: config.bgColor,
-          borderColor: config.borderColor,
-          color: config.textColor,
-          width: '200px',        // Wider for better card layout
-          height: '160px',       // Fixed height for consistency
-          padding: '12px',       // Standard node padding
-        }}
+        style={nodeStyle}
         onDoubleClick={handleDoubleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -355,12 +385,12 @@ const NewCustomNode = ({
           <button
             onClick={toggleSummaryPanel}
             disabled={isToggling}
-            className={`text-xs px-2 py-1 rounded transition-colors ${
+            className={`panel-toggle-button text-xs px-2 py-1 rounded transition-all ${
               isToggling 
-                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                ? '' // Disabled styling handled by CSS
                 : panelStore.isPanelOpen(id, 'summary')
-                ? 'bg-blue-500/40 text-blue-200 hover:bg-blue-500/50'
-                : 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
+                ? 'panel-open'
+                : ''
             }`}
             title={
               isToggling 
@@ -375,12 +405,12 @@ const NewCustomNode = ({
           <button
             onClick={toggleEditorPanel}
             disabled={isToggling}
-            className={`text-xs px-2 py-1 rounded transition-colors ${
+            className={`panel-toggle-button text-xs px-2 py-1 rounded transition-all ${
               isToggling 
-                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                ? '' // Disabled styling handled by CSS
                 : panelStore.isPanelOpen(id, 'editor')
-                ? 'bg-green-500/40 text-green-200 hover:bg-green-500/50'
-                : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
+                ? 'panel-open'
+                : ''
             }`}
             title={
               isToggling 

@@ -23,12 +23,11 @@ export const TailwindTest: React.FC = () => {
           <h2 className="text-2xl font-semibold text-text-primary mb-6">
             8-Node Color Palette
           </h2>
-          <div className="grid grid-cols-4 gap-6">
-            {/* Use Case Node */}
+          <div className="grid grid-cols-4 gap-6">            {/* Use Case Node */}
             <div className="node-base node-usecase">
               <div className="text-sm font-semibold mb-2">USE CASE</div>
-              <div className="text-xs">Blue Theme</div>
-              <div className="text-xs opacity-75">#3B82F6</div>
+              <div className="text-xs">Dark Green Theme</div>
+              <div className="text-xs opacity-75">#4D7C0F</div>
             </div>
 
             {/* Screen Node */}

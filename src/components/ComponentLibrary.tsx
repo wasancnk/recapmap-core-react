@@ -10,7 +10,7 @@ interface ComponentShowcaseProps {
   children: React.ReactNode;
 }
 
-const ComponentShowcase: React.FC<ComponentShowcaseProps> = ({ 
+const ComponentShowcase: React.FC<ComponentShowcaseProps> = ({
   name, 
   component, 
   description, 
@@ -180,8 +180,7 @@ function CanvasLayout() {
             >
               <div className="bg-surface-primary border border-surface-border rounded-lg p-4 max-w-md">
                 <h3 className="text-text-primary font-semibold mb-3 text-sm">Add Nodes</h3>
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  <button className="bg-blue-500 border-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2 justify-center">
+                <div className="grid grid-cols-2 gap-2 mb-4">                  <button className="bg-lime-700 border-lime-800 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2 justify-center usecase-stripes">
                     🎯 Use Case
                   </button>
                   <button className="bg-green-500 border-green-600 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2 justify-center">
@@ -309,18 +308,17 @@ const { currentProject, saveProject } = useProjectStore();`}
               <p className="text-text-secondary">
                 RecapMap uses an 8-node system for comprehensive business modeling. Each node type has specific colors, icons, and purposes.
               </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            </div>            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {[
-                { type: 'usecase', name: 'Use Case', color: 'bg-blue-500 border-blue-600', icon: '🎯', desc: 'Business requirements and user stories' },
-                { type: 'screen', name: 'Screen', color: 'bg-green-500 border-green-600', icon: '📱', desc: 'UI screens, interfaces, and views' },
-                { type: 'user', name: 'User', color: 'bg-orange-500 border-orange-600', icon: '👤', desc: 'User roles, personas, and actors' },
+                { type: 'usecase', name: 'Use Case', color: 'bg-lime-700 border-lime-800 usecase-stripes', icon: '🎯', desc: 'Business requirements and user stories' },
+                { type: 'screen', name: 'Screen', color: 'bg-green-500 border-green-600', icon: '📱', desc: 'UI screens, interfaces, and views' },                { type: 'user', name: 'User', color: 'bg-orange-500 border-orange-600', icon: '👤', desc: 'User roles, personas, and actors' },
                 { type: 'process', name: 'Process', color: 'bg-purple-500 border-purple-600', icon: '⚙️', desc: 'Business processes and tools' },
                 { type: 'storage', name: 'Storage', color: 'bg-yellow-500 border-yellow-600 text-black', icon: '💾', desc: 'Databases, files, and data stores' },
                 { type: 'controller', name: 'Controller', color: 'bg-red-500 border-red-600', icon: '🎮', desc: 'Decision points and flow control' },
                 { type: 'error', name: 'Error', color: 'bg-gray-500 border-gray-600', icon: '⚠️', desc: 'Error handling and rejection flows' },
-                { type: 'base', name: 'Base', color: 'bg-cyan-500 border-cyan-600', icon: '🔧', desc: 'Abstract templates and base types' },
+                { type: 'presentation', name: 'Presentation', color: 'bg-indigo-600 border-indigo-700 presentation-stripes', icon: '📽️', desc: 'Keynote-style presentation slides with enhanced visual distinction' },
+                { type: 'concept', name: 'Concept', color: 'bg-cyan-500 border-cyan-600', icon: '💡', desc: 'Core concepts and definitions' },
+                { type: 'attachment', name: 'Attachment', color: 'bg-pink-500 border-pink-600', icon: '📎', desc: 'Files, documents, and resources' },
               ].map((node) => (
                 <div key={node.type} className="bg-surface-primary border border-surface-border rounded-lg p-4">
                   <div className={`${node.color} text-white px-4 py-3 rounded-lg border-2 mb-3 text-center`}>
@@ -340,9 +338,8 @@ const { currentProject, saveProject } = useProjectStore();`}
               component="CustomNode"
               description="Internal node component used by React Flow canvas with 8-node styling"
               usage={`// Internal to Canvas.tsx - React Flow handles rendering
-const CustomNode = ({ data, selected }) => {
-  const nodeTypeStyles = {
-    'usecase': 'bg-blue-500 border-blue-600 text-white',
+const CustomNode = ({ data, selected }) => {  const nodeTypeStyles = {
+    'usecase': 'bg-lime-700 border-lime-800 text-white usecase-stripes',
     'screen': 'bg-green-500 border-green-600 text-white',
     // ... other node types
   };
@@ -357,8 +354,7 @@ const CustomNode = ({ data, selected }) => {
   );
 };`}
             >
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-blue-500 border-blue-600 border-2 text-white px-4 py-2 rounded-lg text-center">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">                <div className="bg-lime-700 border-lime-800 border-2 text-white px-4 py-2 rounded-lg text-center usecase-stripes">
                   <div className="font-medium text-sm">Use Case Node</div>
                   <div className="text-xs opacity-80 mt-1">Sample description</div>
                 </div>
