@@ -1,17 +1,54 @@
-# RecapMap Core - React Application
+# RecapMap - Collaboration Operating System
 
-A React + TypeScript + Vite application for visualizing and managing business models through interactive node-based diagrams.
+## 🌍 The Heart of RecapMap
 
-## 🎯 Overview
+**RecapMap is more than a platform - it's humanity's answer to the mother of all problems: ineffective collaboration.**
 
-RecapMap is a professional diagramming tool designed for business modeling, system architecture visualization, and process mapping. Built with modern web technologies and optimized for developer productivity.
+Every major global challenge shares one root cause: our inability to collaborate effectively at scale. Climate change, unemployment, social inequality, innovation bottlenecks - they all persist because we can't coordinate human potential efficiently.
 
-### Key Features
-- **8-Node System**: Specialized node types (Use Case, Screen, User, Process, Storage, Controller, Error, Integration)
+## 🎯 The Vision
+
+While the world has created countless platforms (Miro, Figma, Notion, JIRA, Discord, Teams, etc.), we still struggle with the fundamental question: *"How can people collaborate better to solve problems together?"*
+
+**RecapMap exists to:**
+- **Break down collaboration silos** that fragment our efforts
+- **Reduce operational costs** that kill collaborative initiatives  
+- **Accelerate problem-solving** from ideation to impact
+- **Unleash human potential** through seamless coordination
+
+## 🧠 The Philosophy
+
+### Collaboration as the Meta-Problem
+- All 17 UN Sustainable Development Goals require effective collaboration
+- Innovation, change, and progress depend on human coordination
+- Current tools create more silos instead of eliminating them
+- We need **collaboration infrastructure**, not just another tool
+
+### AI-First + Human-First Architecture
+RecapMap's **node-based system** serves as a universal language:
+- **For Humans**: Visual, intuitive mind-mapping that matches natural thinking
+- **For AI**: Structured data enabling maximum operational precision
+- **Together**: Shared mental models that both can understand and manipulate
+
+This creates the perfect bridge between human creativity and AI execution capability.
+
+## 🚀 Technical Overview
+
+A React + TypeScript + Vite application implementing the collaboration operating system through interactive node-based interfaces.
+
+### Core Capabilities
+- **Universal Node System**: Everything is a node - enabling both human understanding and AI precision
+- **Collaboration Acceleration**: From discussion to impact in minutes, not months
+- **Platform Consolidation**: Replace multiple scattered tools with one unified system
+- **Operational Cost Reduction**: Eliminate the friction that kills collaborative projects
+- **AI-Powered Insights**: Intelligent suggestions for optimal collaboration patterns
+
+### Technical Features
+- **12-Node Architecture**: Comprehensive node types (Use Case, Screen, Persona, Process, Resource, Storage, Task, Expectation, Outcome, Note, Presentation, Knowledge)
 - **Interactive Canvas**: Drag-and-drop interface with smart grid snapping
 - **Dark Theme**: Developer-optimized visual design with accessibility compliance
 - **Export Capabilities**: YAML and visual export formats
-- **Real-time Updates**: Zustand-powered state management for instant feedback
+- **Real-time Collaboration**: Zustand-powered state management for instant feedback
 
 ## 🚀 Quick Start
 
@@ -69,7 +106,7 @@ The `kb/` (Knowledge Base) folder contains our organized documentation system. W
 kb/
 ├── README.md              # KB overview and usage guide
 ├── architecture/          # System architecture & technical specs
-│   ├── 8-node-system.md
+│   ├── 12-node-system.md
 │   ├── technical-decisions.md
 │   └── api-contracts.md
 ├── design/               # UI/UX design system & standards
@@ -120,15 +157,28 @@ When asked to document anything about this project:
 ### Design & Visualization
 - **React Flow** - Node-based diagram library
 - **Custom Design System** - Dark theme with accessibility focus
-- **Professional Color Palette** - 8-node semantic color coding
+- **Professional Color Palette** - 12-node semantic color coding
 
 ## 🎨 Design Philosophy
 
-RecapMap follows a **developer-first design approach**:
-- **Dark Theme Optimized** - Reduced eye strain for extended use
-- **Semantic Color Coding** - Each node type has logical, memorable colors
-- **WCAG 2.1 AA Compliant** - Accessible for all users
-- **Professional Aesthetics** - Enterprise-ready visual design
+RecapMap embodies a **collaboration-first design approach**:
+
+### Universal Mental Models
+- **Node-Based Thinking** - Everything is connected, just like human thought
+- **Visual Relationships** - Immediate understanding of complex collaborations
+- **Semantic Clarity** - Each element has clear meaning and purpose
+- **AI-Human Symbiosis** - Designed for both human intuition and AI precision
+
+### Experience Principles
+- **Reduce Cognitive Load** - One platform instead of context-switching chaos
+- **Accelerate Understanding** - Visual collaboration patterns over abstract concepts
+- **Enable Flow States** - Minimal friction from idea to implementation
+- **Scale Human Potential** - Amplify what people can achieve together
+
+### Technical Excellence
+- **Dark Theme Optimized** - Reduced eye strain for extended collaborative sessions
+- **WCAG 2.1 AA Compliant** - Accessible collaboration for all users
+- **Professional Aesthetics** - Enterprise-ready for serious problem-solving
 
 ## 🧪 Testing Strategy
 
@@ -198,10 +248,22 @@ npm run preview      # Preview production build locally
 ## 📚 Additional Resources
 
 - **Knowledge Base**: `kb/README.md` - Complete documentation index
-- **Architecture Guide**: `kb/architecture/8-node-system.md`
-- **Design System**: `kb/design/design-system.md`
-- **Setup Guide**: `kb/development/project-setup.md`
+- **Platform Vision**: `kb/vision/platform-overview.md` - The big picture strategy
+- **Architecture Guide**: `kb/architecture/12-node-system.md` - Technical deep-dive
+- **Design System**: `kb/design/design-system.md` - UI/UX principles
+- **Setup Guide**: `kb/development/project-setup.md` - Development environment
+
+## 🌟 Join the Mission
+
+**We're not just building software - we're building the infrastructure for human collaboration.**
+
+Every commit, every component, every feature brings us closer to a world where:
+- Ideas become reality in minutes, not months
+- Global problems get solved through coordinated human effort  
+- Collaboration becomes humanity's superpower, not its bottleneck
 
 ---
+
+*"The future belongs to those who can coordinate human potential at scale. RecapMap is that coordination layer."*
 
 **Remember**: Always document in `kb/` folder structure. Keep the knowledge base current and organized for future developers and AI assistants.
