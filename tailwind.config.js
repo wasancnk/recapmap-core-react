@@ -78,14 +78,13 @@ export default {
             600: '#7c3aed',
             700: '#6d28d9',
             900: '#4c1d95'
-          },
-          storage: {
-            50: '#fefce8',
-            100: '#fef3c7',
-            500: '#eab308',  // Primary Yellow
-            600: '#ca8a04',
-            700: '#a16207',
-            900: '#713f12'
+          },          storage: {
+            50: '#f8fafc',
+            100: '#f1f5f9',
+            500: '#6b7280',  // Primary Gray (moved from knowledge)
+            600: '#4b5563',
+            700: '#374151',
+            900: '#111827'
           },
           
           // Information & Assets Nodes  
@@ -98,22 +97,30 @@ export default {
             900: '#831843'
           },
           knowledge: {
-            50: '#f8fafc',
-            100: '#f1f5f9',
-            500: '#6b7280',  // Primary Gray
-            600: '#4b5563',
-            700: '#374151',
-            900: '#111827'
-          },
-          
-          // Meta-Collaboration Tools Nodes
-          note: {
             50: '#ecfeff',
             100: '#cffafe',
-            500: '#06b6d4',  // Primary Cyan (unchanged from concept)
+            500: '#06b6d4',  // Primary Cyan (moved from note)
             600: '#0891b2',
             700: '#0e7490',
             900: '#164e63'
+          },
+          
+          // Meta-Collaboration Tools Nodes (Sticky Note Style)
+          note: {
+            50: '#fffbeb',
+            100: '#fef3c7',
+            500: '#fbbf24',  // Pastel Yellow - WCAG compliant with black text
+            600: '#f59e0b',
+            700: '#d97706',
+            900: '#92400e'
+          },
+          task: {
+            50: '#fdf2f8',
+            100: '#fce7f3',
+            500: '#f9a8d4',  // Pastel Rose Gold - WCAG compliant with black text
+            600: '#ec4899',
+            700: '#db2777',
+            900: '#831843'
           }
         },
         

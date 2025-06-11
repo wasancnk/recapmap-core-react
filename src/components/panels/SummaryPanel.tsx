@@ -33,8 +33,7 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({ nodeId }) => {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
-  // Get node type configuration for icon
+  };  // Get node type configuration for icon
   const nodeTypeConfig = {
     'usecase': { icon: '🎯', label: 'Use Case' },
     'presentation': { icon: '📽️', label: 'Presentation' },
@@ -46,8 +45,8 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({ nodeId }) => {
     'resource': { icon: '📎', label: 'Resource' },
     'knowledge': { icon: '🧠', label: 'Knowledge' },
     'storage': { icon: '💾', label: 'Storage' },
-    'task': { icon: '⚡', label: 'Task' },
-    'note': { icon: '📝', label: 'Note' }
+    'task': { icon: '✔️', label: 'Task' },
+    'note': { icon: '🖊️', label: 'Note' }
   };
 
   const config = nodeTypeConfig[node.type] || nodeTypeConfig['note'];

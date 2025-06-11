@@ -81,8 +81,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
     'resource': { icon: '📎', label: 'Resource' },
     'knowledge': { icon: '🧠', label: 'Knowledge' },
     'storage': { icon: '💾', label: 'Storage' },
-    'task': { icon: '⚡', label: 'Task' },
-    'note': { icon: '📝', label: 'Note' }
+    'task': { icon: '✔️', label: 'Task' },
+    'note': { icon: '🖊️', label: 'Note' }
   };
 
   const config = nodeTypeConfig[node.type] || nodeTypeConfig['note'];

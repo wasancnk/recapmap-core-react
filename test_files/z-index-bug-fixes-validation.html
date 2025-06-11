@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Index Bug Fixes Validation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bug-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f7fafc;
+        }
+        
+        .bug-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status.fixed {
+            background: #c6f6d5;
+            color: #276749;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .test-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .test-step {
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .expected {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .implementation-details {
+            background: #edf2f7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .highlight {
+            background: #fef5e7;
+            color: #744210;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>🐛➡️✅ Z-Index Bug Fixes Validation</h1>
+            <p>Testing the fixes for two critical bugs in the RecapMap 12-Node System with Dynamic Z-Index</p>
+            <p><strong>Date:</strong> June 12, 2025</p>
+        </div>
+
+        <!-- Bug 1: Selection State Bug -->
+        <div class="bug-section">
+            <div class="bug-title">
+                🐛 Bug #1: Selection State Not Clearing 
+                <span class="status fixed">FIXED</span>
+            </div>
+            
+            <p><strong>Issue:</strong> Once a panel is opened and closed, clicking on empty space doesn't revert the node's selected state to unselected.</p>
+            
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>🧪 Manual Test Scenario</h4>
+                    <div class="test-step">
+                        <span class="step-number">1</span>
+                        Click on any node to select it
+                    </div>
+                    <div class="test-step">
+                        <span class="step-number">2</span>
+                        Hover over the node and click a panel button (📋 or ✏️)
+                    </div>
+                    <div class="test-step">
+                        <span class="step-number">3</span>
+                        Close the panel by clicking the × button
+                    </div>
+                    <div class="test-step">
+                        <span class="step-number">4</span>
+                        Click on empty canvas space
+                    </div>
+                    <div class="expected">
+                        <strong>Expected:</strong> Node should become unselected (lose the white ring and scaling effect)
+                    </div>
+                </div>
+                
+                <div class="test-item">
+                    <h4>🔧 Fix Implementation</h4>
+                    <ul>
+                        <li>Added separate <span class="highlight">nodeState</span> tracking</li>
+                        <li>Added selection synchronization useEffect</li>
+                        <li>Fixed className logic to use state instead of z-index comparison</li>
+                        <li>Enhanced React Flow integration</li>
+                    </ul>
+                    <div class="code-snippet">
+// Selection state synchronization
+React.useEffect(() => {
+  if (!selected && nodeState === 'selected') {
+    console.log('Node deselected, resetting...');
+    setNodeZIndex(NODE_Z_INDEX.INACTIVE);
+    setNodeState('inactive');
+  }
+}, [selected, nodeState, id]);
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bug 2: Dynamic Z-Index Bug -->
+        <div class="bug-section">
+            <div class="bug-title">
+                🐛 Bug #2: Dynamic Z-Index Not Working 
+                <span class="status fixed">FIXED</span>
+            </div>
+            
+            <p><strong>Issue:</strong> The dynamic z-index system was not working properly - selected nodes weren't becoming the max z-index. Requested logic: <span class="highlight">new z_index = max([existing_z_indexes]) + 1</span></p>
+            
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>🧪 Manual Test Scenario</h4>
+                    <div class="test-step">
+                        <span class="step-number">1</span>
+                        Select multiple nodes one by one
+                    </div>
+                    <div class="test-step">
+                        <span class="step-number">2</span>
+                        Open browser dev tools and inspect z-index values
+                    </div>
+                    <div class="test-step">
+                        <span class="step-number">3</span>
+                        Check console for dynamic z-index calculations
+                    </div>
+                    <div class="test-step">
+                        <span class="step-number">4</span>
+                        Verify visual layering in overlapping nodes
+                    </div>
+                    <div class="expected">
+                        <strong>Expected:</strong> Each newly selected node gets max(existing) + 1 z-index and appears on top
+                    </div>
+                </div>
+                
+                <div class="test-item">
+                    <h4>🔧 Fix Implementation</h4>
+                    <ul>
+                        <li>Implemented proper DOM z-index scanning</li>
+                        <li>Fixed Zustand store access issue</li>
+                        <li>Added console logging for debugging</li>
+                        <li>True dynamic calculation: max + 1</li>
+                    </ul>
+                    <div class="code-snippet">
+// Dynamic z-index calculation
+const calculateDynamicZIndex = (baseZIndex, isSelected) => {
+  if (!isSelected) return baseZIndex;
+  
+  const existingZIndexes = [];
+  document.querySelectorAll('[data-node-type]')
+    .forEach(el => {
+      const zIndex = parseInt(
+        window.getComputedStyle(el).zIndex, 10
+      );
+      if (!isNaN(zIndex) && zIndex > 0) {
+        existingZIndexes.push(zIndex);
+      }
+    });
+  
+  const maxZIndex = Math.max(...existingZIndexes);
+  return maxZIndex + 1;
+};
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Instructions -->
+        <div class="implementation-details">
+            <h3>🧑‍💻 Testing Instructions</h3>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>Quick Test</h4>
+                    <button class="test-button" onclick="window.open('http://localhost:5173', '_blank')">
+                        Open RecapMap
+                    </button>
+                    <p>Follow the manual test scenarios above to verify both fixes.</p>
+                </div>
+                
+                <div class="test-item">
+                    <h4>Developer Console</h4>
+                    <p>Press <kbd>F12</kbd> to open dev tools and check:</p>
+                    <ul>
+                        <li>Console logs for z-index calculations</li>
+                        <li>Element inspector for actual z-index values</li>
+                        <li>No React warnings or errors</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Summary -->
+        <div class="implementation-details">
+            <h3>⚙️ Technical Summary</h3>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>Files Modified</h4>
+                    <ul>
+                        <li><code>src/components/NewCustomNode.tsx</code></li>
+                        <li>Updated z-index calculation logic</li>
+                        <li>Enhanced state management</li>
+                        <li>Fixed React Flow integration</li>
+                    </ul>
+                </div>
+                
+                <div class="test-item">
+                    <h4>Key Improvements</h4>
+                    <ul>
+                        <li>✅ True dynamic z-index: max + 1</li>
+                        <li>✅ Proper selection state reset</li>
+                        <li>✅ Console logging for debugging</li>
+                        <li>✅ No breaking changes to existing features</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity for better testing experience
+        console.log('🧪 Z-Index Bug Fixes Validation Page Loaded');
+        console.log('📝 Test both scenarios described above to verify the fixes');
+        
+        // Track page interactions
+        let testCount = 0;
+        document.addEventListener('click', () => {
+            testCount++;
+            if (testCount === 5) {
+                console.log('🎉 Keep testing! Both bugs should be fixed now.');
+            }
+        });
+    </script>
+</body>
+</html>

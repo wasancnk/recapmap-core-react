@@ -40,8 +40,7 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
     const dragImage = document.createElement('div');
     dragImage.style.position = 'absolute';
     dragImage.style.top = '-1000px';
-    
-    // Map button className to drag image background color (synchronized with button colors)
+      // Map button className to drag image background color (synchronized with button colors)
     dragImage.style.background = className.includes('bg-lime') ? '#4d7c0f' :
                                 className.includes('bg-blue') ? '#3B82F6' : 
                                 className.includes('bg-green') ? '#10B981' :
@@ -49,13 +48,16 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
                                 className.includes('bg-orange') ? '#F97316' :
                                 className.includes('bg-purple') ? '#8B5CF6' :
                                 className.includes('bg-violet') ? '#7c3aed' :
+                                className.includes('bg-yellow-300') ? '#fde047' :  // Pastel yellow for note
                                 className.includes('bg-yellow') ? '#EAB308' :
                                 className.includes('bg-red') ? '#EF4444' :
                                 className.includes('bg-gray') ? '#6B7280' : 
                                 className.includes('bg-indigo') ? '#4F46E5' :
-                                className.includes('bg-cyan') ? '#06B6D4' : 
+                                className.includes('bg-cyan') ? '#06B6D4' :                                className.includes('bg-pink-300') ? '#f9a8d4' :  // Pastel rose gold for task
                                 className.includes('bg-pink') ? '#EC4899' : '#6B7280';
-    dragImage.style.color = 'white';
+    
+    // Set text color based on node type - sticky notes need black text on bright backgrounds
+    dragImage.style.color = (className.includes('bg-yellow-300') || className.includes('bg-pink-300')) ? 'black' : 'white';
     dragImage.style.padding = '8px 12px';
     dragImage.style.borderRadius = '8px';
     dragImage.style.fontSize = '12px';    dragImage.style.fontWeight = 'bold';
@@ -227,8 +229,7 @@ export const Toolbar: React.FC = () => {
       type: 'outcome',
       label: 'Outcome',
       className: 'bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600',
-      icon: '✅'
-    },
+      icon: '✅'    },
     // Information & Assets
     {
       type: 'resource',
@@ -245,21 +246,20 @@ export const Toolbar: React.FC = () => {
     {
       type: 'storage',
       label: 'Storage',
-      className: 'bg-yellow-500 border-yellow-600 text-black hover:bg-yellow-600',
+      className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
       icon: '💾'
-    },
-    // Meta-Collaboration Tools
+    },    // Meta-Collaboration Tools (Sticky Note Style)
     {
       type: 'task',
       label: 'Task',
-      className: 'bg-violet-500 border-violet-600 text-white hover:bg-violet-600',
-      icon: '⚡'
+      className: 'bg-pink-300 border-pink-400 text-black hover:bg-pink-400',
+      icon: '✔️'
     },
     {
       type: 'note',
       label: 'Note',
-      className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
-      icon: '📝'
+      className: 'bg-yellow-300 border-yellow-400 text-black hover:bg-yellow-400',
+      icon: '🖊️'
     },
   ];const handleClearAll = () => {
     if (nodes.length > 0 || connections.length > 0) {

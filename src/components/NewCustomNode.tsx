@@ -13,7 +13,49 @@ const NODE_Z_INDEX = {
   ELEVATED: 90,    // Active interaction (drag, panel open)
 } as const;
 
-type NodeZIndex = typeof NODE_Z_INDEX[keyof typeof NODE_Z_INDEX];
+type NodeZIndex = number;
+
+// Z-INDEX LOGIC - Copilot 1
+// Dynamic z-index calculation function: max(existing_z_indexes) + 1
+const calculateDynamicZIndex = (baseZIndex: number, isSelected: boolean): number => {
+  if (!isSelected) {
+    return baseZIndex;
+  }
+  
+  // For selected nodes, use dynamic calculation: max(existing_z_indexes) + 1
+  try {
+    // Get all existing z-indexes from node elements in the DOM
+    const existingZIndexes: number[] = [];
+    
+    // Query all node elements and extract their z-index values
+    const nodeElements = document.querySelectorAll('[data-node-type]');
+    nodeElements.forEach((element) => {
+      const style = window.getComputedStyle(element);
+      const zIndex = parseInt(style.zIndex, 10);
+      if (!isNaN(zIndex) && zIndex > 0) {
+        existingZIndexes.push(zIndex);
+      }
+    });
+    
+    // Add base z-index values to ensure we have minimums
+    existingZIndexes.push(
+      NODE_Z_INDEX.INACTIVE,
+      NODE_Z_INDEX.HOVER, 
+      NODE_Z_INDEX.SELECTED,
+      NODE_Z_INDEX.ELEVATED
+    );
+    
+    // Calculate max + 1
+    const maxZIndex = Math.max(...existingZIndexes);
+    const dynamicZIndex = maxZIndex + 1;
+    
+    console.log(`🎯 Dynamic z-index calculation for selected node: ${dynamicZIndex} (max: ${maxZIndex})`);
+    return dynamicZIndex;
+  } catch (error) {
+    console.warn('Failed to calculate dynamic z-index, falling back to base value:', error);
+    return baseZIndex;
+  }
+};
 
 // Professional card-style node component
 const NewCustomNode = ({ 
@@ -26,46 +68,55 @@ const NewCustomNode = ({
   selected: boolean 
 }) => {  const { deleteNode } = useNodeStore();
   const panelStore = usePanelStore();
-
   // Z-INDEX LOGIC - Copilot 1
   // Dynamic z-index state management
   const [nodeZIndex, setNodeZIndex] = React.useState<NodeZIndex>(NODE_Z_INDEX.INACTIVE);
+  const [nodeState, setNodeState] = React.useState<'inactive' | 'hover' | 'selected' | 'elevated'>('inactive');
   const [isFocused, setIsFocused] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
-  const [isToggling, setIsToggling] = React.useState(false);
-
-  // Z-INDEX LOGIC - Copilot 1
-  // Update z-index based on interaction state
+  const [isToggling, setIsToggling] = React.useState(false);  // Z-INDEX LOGIC - Copilot 1
+  // Update z-index based on interaction state with dynamic calculation
   React.useEffect(() => {
     const hasOpenPanels = panelStore.getNodePanels(id).length > 0;
     
     if (hasOpenPanels) {
-      setNodeZIndex(NODE_Z_INDEX.ELEVATED);
+      // For elevated state, use dynamic calculation
+      const dynamicZIndex = calculateDynamicZIndex(NODE_Z_INDEX.ELEVATED, true);
+      setNodeZIndex(dynamicZIndex);
+      setNodeState('elevated');
     } else if (selected) {
-      setNodeZIndex(NODE_Z_INDEX.SELECTED);
+      // For selected state, use dynamic calculation: max(existing_z_indexes) + 1
+      const dynamicZIndex = calculateDynamicZIndex(NODE_Z_INDEX.SELECTED, true);
+      setNodeZIndex(dynamicZIndex);
+      setNodeState('selected');
     } else if (isHovered || isFocused) {
       setNodeZIndex(NODE_Z_INDEX.HOVER);
+      setNodeState('hover');
     } else {
       setNodeZIndex(NODE_Z_INDEX.INACTIVE);
+      setNodeState('inactive');
     }
-  }, [id, selected, isHovered, isFocused, panelStore]);  // NODE TYPES - Copilot 2
+  }, [id, selected, isHovered, isFocused, panelStore]);
+
+  // Z-INDEX LOGIC - Copilot 1
+  // Selection state synchronization - ensure proper reset when deselected
+  React.useEffect(() => {
+    if (!selected && nodeState === 'selected') {
+      // Force reset to inactive state when deselected
+      console.log(`🔄 Node ${id} deselected, resetting to inactive state`);
+      setNodeZIndex(NODE_Z_INDEX.INACTIVE);
+      setNodeState('inactive');
+    }
+  }, [selected, nodeState, id]);// NODE TYPES - Copilot 2
   // 12-Node Universal System configurations with icons and colors
   // Colors synchronized with Toolbar.tsx for consistency across all states
-  const nodeTypeConfig = {
-    // Strategic Planning Nodes
+  const nodeTypeConfig = {    // Strategic Planning Nodes
     'usecase': { 
       icon: '🎯', 
       label: 'Use Case',
       bgColor: '#1e1e2f',
       borderColor: '#4d7c0f', // Matches bg-lime-700 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    'task': { 
-      icon: '⚡', 
-      label: 'Task',
-      bgColor: '#1e1e2f',
-      borderColor: '#7c3aed', // Matches bg-violet-500 from Toolbar
       textColor: '#FFFFFF'
     },
     'expectation': { 
@@ -112,13 +163,12 @@ const NewCustomNode = ({
       label: 'Process',
       bgColor: '#1e1e2f',
       borderColor: '#a855f7', // Matches bg-purple-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
+      textColor: '#FFFFFF'    },
     'storage': { 
       icon: '💾', 
       label: 'Storage',
       bgColor: '#1e1e2f',
-      borderColor: '#eab308', // Matches bg-yellow-500 from Toolbar
+      borderColor: '#6b7280', // Matches bg-gray-500 from Toolbar
       textColor: '#FFFFFF'
     },
     
@@ -136,15 +186,20 @@ const NewCustomNode = ({
       bgColor: '#1e1e2f',
       borderColor: '#06b6d4', // Matches bg-cyan-500 from Toolbar
       textColor: '#FFFFFF'
+    },    // Meta-Collaboration Tools Nodes (Sticky Note Style)
+    'task': { 
+      icon: '✔️', 
+      label: 'Task',
+      bgColor: '#f9a8d4', // Bright pastel rose gold background
+      borderColor: '#ec4899', // Darker pink border
+      textColor: '#000000' // Pure black text
     },
-    
-    // Meta-Collaboration Tools Nodes
     'note': { 
-      icon: '📝', 
+      icon: '🖊️', 
       label: 'Note',
-      bgColor: '#1e1e2f',
-      borderColor: '#6b7280', // Matches bg-gray-500 from Toolbar
-      textColor: '#FFFFFF'
+      bgColor: '#fde047', // Bright pastel yellow background
+      borderColor: '#eab308', // Darker yellow border
+      textColor: '#000000' // Pure black text
     },
   };
   const config = nodeTypeConfig[data.nodeType] || nodeTypeConfig['note'];
@@ -274,15 +329,14 @@ const NewCustomNode = ({
         transition-all duration-200 hover:bg-opacity-90 cursor-pointer
         relative flex flex-col
         node-uniform-size node-grid-aligned
-        node-${data.nodeType}
-        ${selectedStyle}
+        node-${data.nodeType}        ${selectedStyle}
         node-interactive
-        ${(isHovered || isFocused) && nodeZIndex !== NODE_Z_INDEX.ELEVATED ? 'node-hover-effect' : ''}
-        ${nodeZIndex === NODE_Z_INDEX.SELECTED ? 'node-selected-effect' : ''}
-        ${nodeZIndex === NODE_Z_INDEX.ELEVATED ? 'node-elevated-effect' : ''}
-        ${(isHovered || isFocused) && nodeZIndex === NODE_Z_INDEX.ELEVATED ? 'node-elevated-hover-effect' : ''}
+        ${(isHovered || isFocused) && nodeState !== 'elevated' ? 'node-hover-effect' : ''}
+        ${nodeState === 'selected' ? 'node-selected-effect' : ''}
+        ${nodeState === 'elevated' ? 'node-elevated-effect' : ''}
+        ${(isHovered || isFocused) && nodeState === 'elevated' ? 'node-elevated-hover-effect' : ''}
         ${isFocused ? 'node-focus-effect' : ''}
-      `}      style={{
+      `}style={{
         ...nodeStyle,
         zIndex: nodeZIndex, // Apply dynamic z-index
         '--node-border-color': config.borderColor, // CSS custom property for dynamic border color
@@ -457,20 +511,25 @@ const NewCustomNode = ({
           pointerEvents: 'none',
           zIndex: 5
         }}
-      />
-
-      {/* Node Header - Type and Delete Button */}
+      />      {/* Node Header - Type and Delete Button */}
       <div className="flex justify-between items-start mb-2">
         {/* Node Type Label */}
-        <div className="flex items-center gap-1 text-xs opacity-75">
+        <div className={`flex items-center gap-1 text-xs ${
+          data.nodeType === 'task' || data.nodeType === 'note' 
+            ? 'opacity-90 font-semibold' // Sticky notes: stronger font weight, higher opacity
+            : 'opacity-75 font-medium'   // Regular nodes: original styling
+        }`}>
           <span>{config.icon}</span>
-          <span className="uppercase font-medium">{config.label}</span>
-        </div>
-        
+          <span className="uppercase">{config.label}</span>
+        </div>        
         {/* Delete Button */}
         <button
           onClick={handleDeleteClick}
-          className="text-xs opacity-60 hover:opacity-100 transition-opacity duration-200 hover:text-red-400"
+          className={`text-xs transition-opacity duration-200 hover:text-red-400 ${
+            data.nodeType === 'task' || data.nodeType === 'note'
+              ? 'opacity-70 hover:opacity-100' // Sticky notes: higher opacity for visibility
+              : 'opacity-60 hover:opacity-100' // Regular nodes: original styling
+          }`}
           title="Delete Node"
         >
           ✕        </button>

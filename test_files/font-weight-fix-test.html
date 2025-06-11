@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Weight Fix - Sticky Notes</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .comparison-container {
+            display: grid;
+            gap: 20px;
+            max-width: 800px;
+        }
+        
+        .section {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #4b5563;
+        }
+        
+        .section h3 {
+            color: #60a5fa;
+            margin: 0 0 15px 0;
+        }
+        
+        .node-sample {
+            width: 200px;
+            height: 160px;
+            border-radius: 8px;
+            border: 2px solid;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+        }
+        
+        .node-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .node-type-label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        
+        /* Original styling (regular nodes) */
+        .regular-font {
+            font-weight: 500; /* font-medium */
+            opacity: 0.75;
+        }
+        
+        /* New styling (sticky notes) */
+        .sticky-font {
+            font-weight: 600; /* font-semibold */
+            opacity: 0.9;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        
+        h1 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            background: #374151;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #fbbf24;
+        }
+        
+        .fix-info {
+            background: #059669;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Font Weight Fix for Sticky Notes</h1>
+    
+    <div class="description">
+        <strong>Issue:</strong> Black text on bright backgrounds (task/note nodes) appeared thinner than white text on dark backgrounds.
+        <br><br>
+        <strong>Root Cause:</strong> 
+        <ul>
+            <li>Black text appears optically thinner than white text</li>
+            <li>75% opacity made it even lighter</li>
+            <li>Bright backgrounds reduced apparent font weight</li>
+        </ul>
+        
+        <div class="fix-info">
+            <strong>✅ Fix Applied:</strong><br>
+            • Sticky notes (task/note): <code>font-semibold</code> + <code>opacity-90</code><br>
+            • Regular nodes: <code>font-medium</code> + <code>opacity-75</code> (unchanged)
+        </div>
+    </div>
+
+    <div class="comparison-container">
+        <!-- Before/After Comparison -->
+        <div class="section">
+            <h3>📝 Font Weight Comparison</h3>
+            <div class="grid">
+                <!-- Regular Node (unchanged) -->
+                <div class="node-sample" style="background-color: #1e1e2f; border-color: #a855f7; color: white;">
+                    <div class="node-header">
+                        <div class="node-type-label regular-font">
+                            <span>⚙️</span>
+                            <span>PROCESS</span>
+                        </div>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: center;">
+                        <div style="font-weight: bold;">Regular Node</div>
+                    </div>
+                    <div style="font-size: 11px; opacity: 0.7;">font-medium + opacity-75</div>
+                </div>
+                
+                <!-- Sticky Note (fixed) -->
+                <div class="node-sample" style="background-color: #fde047; border-color: #eab308; color: black;">
+                    <div class="node-header">
+                        <div class="node-type-label sticky-font">
+                            <span>📝</span>
+                            <span>NOTE</span>
+                        </div>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: center;">
+                        <div style="font-weight: bold;">Sticky Note</div>
+                    </div>
+                    <div style="font-size: 11px; opacity: 0.7;">font-semibold + opacity-90</div>
+                </div>
+                
+                <!-- Task Node (fixed) -->
+                <div class="node-sample" style="background-color: #f9a8d4; border-color: #ec4899; color: black;">
+                    <div class="node-header">
+                        <div class="node-type-label sticky-font">
+                            <span>⚡</span>
+                            <span>TASK</span>
+                        </div>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: center;">
+                        <div style="font-weight: bold;">Task Node</div>
+                    </div>
+                    <div style="font-size: 11px; opacity: 0.7;">font-semibold + opacity-90</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Details -->
+        <div class="section">
+            <h3>🎯 Technical Implementation</h3>
+            <div style="font-family: monospace; background: #1f2937; padding: 15px; border-radius: 6px; font-size: 13px;">
+                <div style="color: #10b981; margin-bottom: 10px;">// Conditional styling based on node type</div>
+                <div style="color: #fbbf24;">className={`flex items-center gap-1 text-xs ${</div>
+                <div style="margin-left: 20px;">
+                    <div style="color: #f97316;">data.nodeType === 'task' || data.nodeType === 'note'</div>
+                    <div style="color: #60a5fa;">? 'opacity-90 font-semibold' // Sticky notes</div>
+                    <div style="color: #60a5fa;">: 'opacity-75 font-medium'   // Regular nodes</div>
+                </div>
+                <div style="color: #fbbf24;">}`}</div>
+            </div>
+        </div>
+
+        <!-- Visual Comparison -->
+        <div class="section">
+            <h3>👀 Visual Impact</h3>
+            <div style="display: flex; gap: 30px; align-items: center;">
+                <div>
+                    <h4 style="color: #ef4444; margin-bottom: 10px;">❌ Before (Too Light)</h4>
+                    <div style="background: #fde047; color: black; padding: 10px; border-radius: 6px;">
+                        <div style="font-size: 12px; font-weight: 500; opacity: 0.75; text-transform: uppercase;">
+                            📝 NOTE
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="font-size: 24px;">→</div>
+                
+                <div>
+                    <h4 style="color: #10b981; margin-bottom: 10px;">✅ After (Perfect)</h4>
+                    <div style="background: #fde047; color: black; padding: 10px; border-radius: 6px;">
+                        <div style="font-size: 12px; font-weight: 600; opacity: 0.9; text-transform: uppercase;">
+                            📝 NOTE
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="description" style="margin-top: 30px; border-left-color: #10b981;">
+        <strong>✅ Font Weight Fix Complete!</strong>
+        <br><br>
+        The node type labels on task and note nodes should now appear with the same visual weight as regular nodes, despite the different background colors. The fix is conditional so regular nodes remain unchanged.
+    </div>
+</body>
+</html>

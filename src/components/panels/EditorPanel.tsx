@@ -67,8 +67,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${node.title}"?`)) {
       deleteNode(nodeId);
-    }  };
-  // Get node type info
+    }  };  // Get node type info
   const nodeTypeConfig = {
     'usecase': { icon: '🎯', label: 'Use Case' },
     'presentation': { icon: '📽️', label: 'Presentation' },
@@ -80,8 +79,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
     'resource': { icon: '📎', label: 'Resource' },
     'knowledge': { icon: '🧠', label: 'Knowledge' },
     'storage': { icon: '💾', label: 'Storage' },
-    'task': { icon: '⚡', label: 'Task' },
-    'note': { icon: '📝', label: 'Note' }
+    'task': { icon: '✔️', label: 'Task' },
+    'note': { icon: '🖊️', label: 'Note' }
   };
 
   const config = nodeTypeConfig[node.type] || nodeTypeConfig['note'];

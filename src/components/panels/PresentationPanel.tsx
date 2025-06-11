@@ -235,9 +235,8 @@ export const PresentationPanel: React.FC = () => {
               <div
                 key={node.id}
                 className="flex items-center gap-2 p-2 bg-surface-secondary rounded border border-surface-border"
-              >
-                <span className="text-sm">                  {node.type === 'presentation' && '📽️'}
-                  {node.type === 'note' && '📝'}
+              >                <span className="text-sm">                  {node.type === 'presentation' && '📽️'}
+                  {node.type === 'note' && '🖊️'}
                   {node.type === 'usecase' && '🎯'}
                   {node.type === 'screen' && '📱'}
                 </span>
