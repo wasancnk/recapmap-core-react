@@ -12,11 +12,10 @@ export const PresentationPanel: React.FC = () => {
   const { nodes } = useNodeStore();
 
   const { isPresentationMode, presentationSettings } = ui;
-
   // Get presentation nodes (nodes that can be used in presentations)
   const presentationNodes = nodes.filter(node => 
     node.type === 'presentation' || 
-    node.type === 'concept' ||
+    node.type === 'note' ||
     node.type === 'usecase' ||
     node.type === 'screen'
   );
@@ -237,9 +236,8 @@ export const PresentationPanel: React.FC = () => {
                 key={node.id}
                 className="flex items-center gap-2 p-2 bg-surface-secondary rounded border border-surface-border"
               >
-                <span className="text-sm">
-                  {node.type === 'presentation' && '📽️'}
-                  {node.type === 'concept' && '💡'}
+                <span className="text-sm">                  {node.type === 'presentation' && '📽️'}
+                  {node.type === 'note' && '📝'}
                   {node.type === 'usecase' && '🎯'}
                   {node.type === 'screen' && '📱'}
                 </span>
@@ -258,7 +256,7 @@ export const PresentationPanel: React.FC = () => {
               <div className="text-xs text-text-muted text-center py-4">
                 No presentation-ready nodes found.
                 <br />
-                Create some Presentation, Concept, Use Case, or Screen nodes.
+                Create some Presentation, Note, Use Case, or Screen nodes.
               </div>
             )}
           </div>

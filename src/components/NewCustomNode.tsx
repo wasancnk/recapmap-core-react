@@ -4,6 +4,17 @@ import { useNodeStore } from '../stores/nodeStore';
 import { usePanelStore } from '../stores/panelStore';
 import type { NodeType } from '../types';
 
+// Z-INDEX LOGIC - Copilot 1
+// Dynamic z-index constants for node layering
+const NODE_Z_INDEX = {
+  INACTIVE: 10,    // Default state
+  HOVER: 50,       // Mouse hover
+  SELECTED: 75,    // Selected state
+  ELEVATED: 90,    // Active interaction (drag, panel open)
+} as const;
+
+type NodeZIndex = typeof NODE_Z_INDEX[keyof typeof NODE_Z_INDEX];
+
 // Professional card-style node component
 const NewCustomNode = ({ 
   id, 
@@ -14,82 +25,141 @@ const NewCustomNode = ({
   data: { label: string; description?: string; nodeType: NodeType }; 
   selected: boolean 
 }) => {  const { deleteNode } = useNodeStore();
-  const panelStore = usePanelStore();  const [isHovered, setIsHovered] = React.useState(false);
+  const panelStore = usePanelStore();
+
+  // Z-INDEX LOGIC - Copilot 1
+  // Dynamic z-index state management
+  const [nodeZIndex, setNodeZIndex] = React.useState<NodeZIndex>(NODE_Z_INDEX.INACTIVE);
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
   const [connectingFromHandle, setConnectingFromHandle] = React.useState<string | null>(null);
   const [isToggling, setIsToggling] = React.useState(false);
 
-  // Node type configurations with icons and colors
-  const nodeTypeConfig = {    'usecase': { 
+  // Z-INDEX LOGIC - Copilot 1
+  // Update z-index based on interaction state
+  React.useEffect(() => {
+    const hasOpenPanels = panelStore.getNodePanels(id).length > 0;
+    
+    if (hasOpenPanels) {
+      setNodeZIndex(NODE_Z_INDEX.ELEVATED);
+    } else if (selected) {
+      setNodeZIndex(NODE_Z_INDEX.SELECTED);
+    } else if (isHovered || isFocused) {
+      setNodeZIndex(NODE_Z_INDEX.HOVER);
+    } else {
+      setNodeZIndex(NODE_Z_INDEX.INACTIVE);
+    }
+  }, [id, selected, isHovered, isFocused, panelStore]);  // NODE TYPES - Copilot 2
+  // 12-Node Universal System configurations with icons and colors
+  // Colors synchronized with Toolbar.tsx for consistency across all states
+  const nodeTypeConfig = {
+    // Strategic Planning Nodes
+    'usecase': { 
       icon: '🎯', 
       label: 'Use Case',
       bgColor: '#1e1e2f',
-      borderColor: '#4d7c0f', // Darker green-lime
+      borderColor: '#4d7c0f', // Matches bg-lime-700 from Toolbar
+      textColor: '#FFFFFF'
+    },
+    'task': { 
+      icon: '⚡', 
+      label: 'Task',
+      bgColor: '#1e1e2f',
+      borderColor: '#7c3aed', // Matches bg-violet-500 from Toolbar
+      textColor: '#FFFFFF'
+    },
+    'expectation': { 
+      icon: '🎯', 
+      label: 'Expectation',
+      bgColor: '#1e1e2f',
+      borderColor: '#3b82f6', // Matches bg-blue-500 from Toolbar
+      textColor: '#FFFFFF'
+    },
+    'outcome': { 
+      icon: '✅', 
+      label: 'Outcome',
+      bgColor: '#1e1e2f',
+      borderColor: '#10b981', // Matches bg-emerald-500 from Toolbar
+      textColor: '#FFFFFF'
+    },
+    
+    // Human-Centered Design Nodes
+    'persona': { 
+      icon: '👤', 
+      label: 'Persona',
+      bgColor: '#1e1e2f',
+      borderColor: '#f97316', // Matches bg-orange-500 from Toolbar
       textColor: '#FFFFFF'
     },
     'screen': { 
       icon: '📱', 
       label: 'Screen',
       bgColor: '#1e1e2f',
-      borderColor: '#10B981', // Green
+      borderColor: '#10b981', // Matches bg-green-500 from Toolbar
       textColor: '#FFFFFF'
     },
-    'user': { 
-      icon: '👤', 
-      label: 'User',
+    'presentation': { 
+      icon: '📽️', 
+      label: 'Presentation',
       bgColor: '#1e1e2f',
-      borderColor: '#F59E0B', // Orange
+      borderColor: '#4f46e5', // Matches bg-indigo-600 from Toolbar
       textColor: '#FFFFFF'
     },
+    
+    // Business Workflow Nodes
     'process': { 
       icon: '⚙️', 
       label: 'Process',
       bgColor: '#1e1e2f',
-      borderColor: '#8B5CF6', // Purple
+      borderColor: '#a855f7', // Matches bg-purple-500 from Toolbar
       textColor: '#FFFFFF'
     },
     'storage': { 
       icon: '💾', 
       label: 'Storage',
       bgColor: '#1e1e2f',
-      borderColor: '#F59E0B', // Yellow
+      borderColor: '#eab308', // Matches bg-yellow-500 from Toolbar
       textColor: '#FFFFFF'
     },
-    'controller': { 
-      icon: '🎮', 
-      label: 'Controller',
-      bgColor: '#1e1e2f',
-      borderColor: '#EF4444', // Red
-      textColor: '#FFFFFF'
-    },
-    'error': { 
-      icon: '⚠️', 
-      label: 'Error',
-      bgColor: '#1e1e2f',
-      borderColor: '#6B7280', // Gray
-      textColor: '#FFFFFF'    },
-    'concept': { 
-      icon: '💡', 
-      label: 'Concept',
-      bgColor: '#1e1e2f',
-      borderColor: '#06B6D4', // Cyan
-      textColor: '#FFFFFF'    },    'presentation': { 
-      icon: '📽️', 
-      label: 'Presentation',
-      bgColor: '#1e1e2f',
-      borderColor: '#4F46E5', // Darker/richer Indigo
-      textColor: '#FFFFFF'
-    },
-    'attachment': { 
+    
+    // Information & Assets Nodes
+    'resource': { 
       icon: '📎', 
-      label: 'Attachment',
+      label: 'Resource',
       bgColor: '#1e1e2f',
-      borderColor: '#EC4899', // Pink
+      borderColor: '#ec4899', // Matches bg-pink-500 from Toolbar
+      textColor: '#FFFFFF'
+    },
+    'knowledge': { 
+      icon: '🧠', 
+      label: 'Knowledge',
+      bgColor: '#1e1e2f',
+      borderColor: '#06b6d4', // Matches bg-cyan-500 from Toolbar
+      textColor: '#FFFFFF'
+    },
+    
+    // Meta-Collaboration Tools Nodes
+    'note': { 
+      icon: '📝', 
+      label: 'Note',
+      bgColor: '#1e1e2f',
+      borderColor: '#6b7280', // Matches bg-gray-500 from Toolbar
       textColor: '#FFFFFF'
     },
   };
-
-  const config = nodeTypeConfig[data.nodeType] || nodeTypeConfig['usecase'];
-  const selectedStyle = selected ? 'ring-2 ring-white shadow-glow' : '';  const handleDoubleClick = (e: React.MouseEvent) => {
+  const config = nodeTypeConfig[data.nodeType] || nodeTypeConfig['note'];
+  
+  // Convert hex border color to rgba for glow effects
+  const hexToRgba = (hex: string, alpha: number = 0.6) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+  
+  // Dynamic glow color based on node's border color
+  const glowColor = hexToRgba(config.borderColor, 0.6);
+  const selectedStyle = selected ? 'ring-2 ring-white' : '';const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Toggle editor panel on double-click
     if (panelStore.isPanelOpen(id, 'editor')) {
@@ -103,13 +173,26 @@ const NewCustomNode = ({
     e.stopPropagation();
     e.preventDefault();
     deleteNode(id);
-  };  const handleMouseEnter = () => {
+  };  // Z-INDEX LOGIC - Copilot 1 
+  // Enhanced mouse event handlers with z-index updates
+  const handleMouseEnter = React.useCallback(() => {
     setIsHovered(true);
-  };
-  const handleMouseLeave = () => {
+  }, []);
+
+  const handleMouseLeave = React.useCallback(() => {
     setIsHovered(false);
     setConnectingFromHandle(null);
-  };  // Toggle functions for panels
+  }, []);
+
+  // Z-INDEX LOGIC - Copilot 1
+  // Focus handlers for keyboard navigation
+  const handleFocus = React.useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleBlur = React.useCallback(() => {
+    setIsFocused(false);
+  }, []);// Toggle functions for panels
   const toggleSummaryPanel = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -158,8 +241,7 @@ const NewCustomNode = ({
     setTimeout(() => setIsToggling(false), 100);
   }, [id, panelStore, isToggling]);
   // Show connectors when hovering or when connecting
-  const showConnectors = isHovered || connectingFromHandle || selected;
-  // Special styling for anchor nodes (presentation and usecase) with stripe patterns
+  const showConnectors = isHovered || connectingFromHandle || selected;  // Special styling for anchor nodes (presentation and usecase) with stripe patterns
   const nodeStyle = data.nodeType === 'presentation' ? {
     backgroundColor: config.bgColor,
     borderColor: config.borderColor,
@@ -168,7 +250,8 @@ const NewCustomNode = ({
     height: '160px', 
     padding: '12px',
     backgroundImage: 'linear-gradient(45deg, #4f46e5 25%, #6366f1 25%, #6366f1 50%, #4f46e5 50%, #4f46e5 75%, #6366f1 75%)',
-    backgroundSize: '8px 8px'  } : data.nodeType === 'usecase' ? {
+    backgroundSize: '8px 8px'
+  } : data.nodeType === 'usecase' ? {
     backgroundColor: config.bgColor,
     borderColor: config.borderColor,
     color: config.textColor,
@@ -184,8 +267,7 @@ const NewCustomNode = ({
     width: '200px',
     height: '160px',
     padding: '12px'
-  };
-  return (
+  };return (
     <div 
       className={`
         rounded-lg border-2 
@@ -194,14 +276,27 @@ const NewCustomNode = ({
         node-uniform-size node-grid-aligned
         node-${data.nodeType}
         ${selectedStyle}
-      `}
-        style={nodeStyle}
-        onDoubleClick={handleDoubleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        title={`${data.label}${data.description ? ` - ${data.description}` : ''}`}
-        data-node-type={data.nodeType}
-      >
+        node-interactive
+        ${(isHovered || isFocused) && nodeZIndex !== NODE_Z_INDEX.ELEVATED ? 'node-hover-effect' : ''}
+        ${nodeZIndex === NODE_Z_INDEX.SELECTED ? 'node-selected-effect' : ''}
+        ${nodeZIndex === NODE_Z_INDEX.ELEVATED ? 'node-elevated-effect' : ''}
+        ${(isHovered || isFocused) && nodeZIndex === NODE_Z_INDEX.ELEVATED ? 'node-elevated-hover-effect' : ''}
+        ${isFocused ? 'node-focus-effect' : ''}
+      `}      style={{
+        ...nodeStyle,
+        zIndex: nodeZIndex, // Apply dynamic z-index
+        '--node-border-color': config.borderColor, // CSS custom property for dynamic border color
+        '--node-glow-color': glowColor, // CSS custom property for dynamic glow color
+      } as React.CSSProperties & { [key: string]: string | number }}
+      onDoubleClick={handleDoubleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      tabIndex={0}
+      title={`${data.label}${data.description ? ` - ${data.description}` : ''}`}
+      data-node-type={data.nodeType}
+    >
       {/* Connection Handles - All positions */}      {/* TOP Handles */}
       <Handle
         type="source"

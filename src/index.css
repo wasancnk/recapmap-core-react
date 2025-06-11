@@ -150,20 +150,39 @@
       calc(round(var(--node-y) / 20px) * 20px)
     );
   }
-
-  /* Node Type Specific Styles */
+  /* Node Type Specific Styles - 12 Node Universal System */
+  
+  /* Strategic Planning Nodes */
   .node-usecase {
     @apply bg-nodes-usecase-500 border-nodes-usecase-600 text-white;
+  }
+
+  .node-task {
+    @apply bg-nodes-task-500 border-nodes-task-600 text-white;
+  }
+
+  .node-expectation {
+    @apply bg-nodes-expectation-500 border-nodes-expectation-600 text-white;
+  }
+
+  .node-outcome {
+    @apply bg-nodes-outcome-500 border-nodes-outcome-600 text-white;
+  }
+
+  /* Human-Centered Design Nodes */
+  .node-persona {
+    @apply bg-nodes-persona-500 border-nodes-persona-600 text-white;
   }
 
   .node-screen {
     @apply bg-nodes-screen-500 border-nodes-screen-600 text-white;
   }
 
-  .node-user {
-    @apply bg-nodes-user-500 border-nodes-user-600 text-white;
+  .node-presentation {
+    @apply bg-nodes-presentation-500 border-nodes-presentation-600 text-white;
   }
 
+  /* Business Workflow Nodes */
   .node-process {
     @apply bg-nodes-process-500 border-nodes-process-600 text-white;
   }
@@ -172,21 +191,18 @@
     @apply bg-nodes-storage-500 border-nodes-storage-600 text-black;
   }
 
-  .node-controller {
-    @apply bg-nodes-controller-500 border-nodes-controller-600 text-white;
-  }
-  .node-error {
-    @apply bg-nodes-error-500 border-nodes-error-600 text-white;
-  }  .node-presentation {
-    @apply bg-nodes-presentation-500 border-nodes-presentation-600 text-white;
+  /* Information & Assets Nodes */
+  .node-resource {
+    @apply bg-nodes-resource-500 border-nodes-resource-600 text-white;
   }
 
-  .node-concept {
-    @apply bg-nodes-concept-500 border-nodes-concept-600 text-white;
+  .node-knowledge {
+    @apply bg-nodes-knowledge-500 border-nodes-knowledge-600 text-white;
   }
 
-  .node-attachment {
-    @apply bg-nodes-attachment-500 border-nodes-attachment-600 text-white;
+  /* Meta-Collaboration Tools Nodes */
+  .node-note {
+    @apply bg-nodes-note-500 border-nodes-note-600 text-white;
   }
 
   /* Panel Base Styles */
@@ -313,6 +329,46 @@
   .z-panel-elevated { z-index: 110; }
   .z-modal { z-index: 1000; }
   .z-tooltip { z-index: 1010; }
+
+  /* Z-Index & Interaction Styles - Copilot 1 */
+  /* Node z-index utilities for dynamic layering */
+  .z-node-inactive { z-index: 10; }
+  .z-node-active { z-index: 50; }
+  .z-node-selected { z-index: 75; }
+  .z-node-elevated { z-index: 90; }
+  
+  /* Interactive state transitions for nodes */
+  .node-interactive {
+    transition: all 0.2s ease;
+    position: relative;
+  }
+    .node-hover-effect {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .node-selected-effect {
+    transform: scale(1.01);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 
+                0 0 20px rgba(255, 255, 255, 0.3);
+  }
+    .node-elevated-effect {
+    transform: scale(1.03);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 3px rgba(99, 102, 241, 0.6);
+  }
+  
+  .node-elevated-hover-effect {
+    transform: scale(1.05);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.5),
+                0 0 0 3px rgba(99, 102, 241, 0.8),
+                0 0 30px rgba(99, 102, 241, 0.4);
+  }
+  
+  .node-focus-effect {
+    outline: 2px solid rgba(99, 102, 241, 0.6);
+    outline-offset: 2px;
+  }
 
   /* Node handle positions */
   .handle-input {
@@ -566,8 +622,64 @@
     z-index: 100 !important;
     margin: 12px !important;
   }
+  /* Dynamic Z-Index Visual Effects - DZINDEX_001 */
+  /* These classes use CSS custom properties to match each node's border color */
+  
+  /* Hover Effect - Subtle scale and shadow */
+  .node-hover-effect {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+  }
+  
+  /* Selected Effect - Slight scale with dynamic color glow */
+  .node-selected-effect {
+    transform: scale(1.01);
+    box-shadow: 
+      0 0 20px var(--node-glow-color, rgba(255, 255, 255, 0.6)),
+      0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+  }
+  
+  /* Elevated Effect - Larger scale with dynamic border glow */
+  .node-elevated-effect {
+    transform: scale(1.03);
+    box-shadow: 
+      0 0 25px var(--node-glow-color, rgba(99, 102, 241, 0.8)),
+      0 0 40px var(--node-glow-color, rgba(99, 102, 241, 0.4)),
+      0 12px 30px rgba(0, 0, 0, 0.4);
+    outline: 2px solid var(--node-border-color, #6366f1);
+    outline-offset: 2px;
+    transition: all 0.2s ease;
+  }
+  
+  /* Enhanced hover effect for elevated nodes */
+  .node-elevated-hover-effect {
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 30px var(--node-glow-color, rgba(99, 102, 241, 0.9)),
+      0 0 50px var(--node-glow-color, rgba(99, 102, 241, 0.5)),
+      0 15px 35px rgba(0, 0, 0, 0.5);
+    outline: 3px solid var(--node-border-color, #6366f1);
+    outline-offset: 3px;
+    transition: all 0.2s ease;
+  }
+  
+  /* Focus Effect - Accessibility outline with dynamic color */
+  .node-focus-effect {
+    outline: 2px solid var(--node-border-color, #6366f1);
+    outline-offset: 2px;
+    box-shadow: 
+      0 0 15px var(--node-glow-color, rgba(99, 102, 241, 0.6));
+  }
+  
+  /* Z-Index Utility Classes */
+  .z-node-inactive { z-index: 10; }
+  .z-node-hover { z-index: 50; }
+  .z-node-selected { z-index: 75; }
+  .z-node-elevated { z-index: 90; }
 
-  /* Node Selection Glow Effect */
+  /* Legacy Node Selection Glow Effect (deprecated - use dynamic effects above) */
   .shadow-glow {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   }

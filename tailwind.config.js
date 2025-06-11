@@ -6,17 +6,52 @@ export default {
   ],
   darkMode: 'class',
   theme: {
-    extend: {
-      // 8-Node System Color Palette
+    extend: {      // 12-Node Universal System Color Palette
       colors: {
-        // Node Type Colors
-        nodes: {          usecase: {
+        // Node Type Colors - 12 Node Universal System
+        nodes: {
+          // Strategic Planning Nodes
+          usecase: {
             50: '#f7fee7',
             100: '#ecfccb', 
             500: '#4d7c0f',  // Darker green-lime - better contrast
             600: '#365314',  // Darker green for borders
             700: '#1a2e05',  // Very dark green for hover states
             900: '#0d1502'
+          },
+          task: {
+            50: '#fff7ed',
+            100: '#ffedd5',
+            500: '#ea580c',  // Primary Orange-Red
+            600: '#dc2626',
+            700: '#b91c1c',
+            900: '#7f1d1d'
+          },
+          expectation: {
+            50: '#fefce8',
+            100: '#fef3c7',
+            500: '#f59e0b',  // Primary Orange
+            600: '#d97706',
+            700: '#b45309',
+            900: '#78350f'
+          },
+          outcome: {
+            50: '#f0f9ff',
+            100: '#e0f2fe',
+            500: '#0ea5e9',  // Primary Sky Blue
+            600: '#0284c7',
+            700: '#0369a1',
+            900: '#0c4a6e'
+          },
+          
+          // Human-Centered Design Nodes
+          persona: {
+            50: '#fefce8',
+            100: '#fef3c7',
+            500: '#f59e0b',  // Primary Orange (unchanged from user)
+            600: '#d97706',
+            700: '#b45309',
+            900: '#78350f'
           },
           screen: {
             50: '#ecfdf5',
@@ -26,14 +61,16 @@ export default {
             700: '#047857',
             900: '#064e3b'
           },
-          user: {
-            50: '#fefce8',
-            100: '#fef3c7',
-            500: '#f59e0b',  // Primary Orange
-            600: '#d97706',
-            700: '#b45309',
-            900: '#78350f'
+          presentation: {
+            50: '#eef2ff',
+            100: '#e0e7ff',
+            500: '#4f46e5',  // Darker/richer Indigo
+            600: '#4338ca',  // Even darker for borders
+            700: '#3730a3',  // Darkest for hover states
+            900: '#312e81'
           },
+          
+          // Business Workflow Nodes
           process: {
             50: '#f5f3ff',
             100: '#ede9fe',
@@ -50,43 +87,33 @@ export default {
             700: '#a16207',
             900: '#713f12'
           },
-          controller: {
-            50: '#fef2f2',
-            100: '#fee2e2',
-            500: '#ef4444',  // Primary Red
-            600: '#dc2626',
-            700: '#b91c1c',
-            900: '#7f1d1d'
-          },          error: {
+          
+          // Information & Assets Nodes  
+          resource: {
+            50: '#fdf2f8',
+            100: '#fce7f3',
+            500: '#ec4899',  // Primary Pink (unchanged from attachment)
+            600: '#db2777',
+            700: '#be185d',
+            900: '#831843'
+          },
+          knowledge: {
             50: '#f8fafc',
             100: '#f1f5f9',
             500: '#6b7280',  // Primary Gray
             600: '#4b5563',
             700: '#374151',
             900: '#111827'
-          },          presentation: {
-            50: '#eef2ff',
-            100: '#e0e7ff',
-            500: '#4f46e5',  // Darker/richer Indigo
-            600: '#4338ca',  // Even darker for borders
-            700: '#3730a3',  // Darkest for hover states
-            900: '#312e81'
           },
-          concept: {
+          
+          // Meta-Collaboration Tools Nodes
+          note: {
             50: '#ecfeff',
             100: '#cffafe',
-            500: '#06b6d4',  // Primary Cyan
+            500: '#06b6d4',  // Primary Cyan (unchanged from concept)
             600: '#0891b2',
             700: '#0e7490',
             900: '#164e63'
-          },
-          attachment: {
-            50: '#fdf2f8',
-            100: '#fce7f3',
-            500: '#ec4899',  // Primary Pink
-            600: '#db2777',
-            700: '#be185d',
-            900: '#831843'
           }
         },
         

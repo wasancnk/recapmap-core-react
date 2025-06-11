@@ -310,108 +310,29 @@ const storageProperties: PropertyDefinition[] = [
   }
 ]
 
-// Controller Node Property Schema
-const controllerProperties: PropertyDefinition[] = [
-  {
-    name: 'controllerName',
-    type: 'string',
-    required: true,
-    label: 'Controller Name',
-    description: 'Decision point identifier',
-    placeholder: 'user_access_gate',
-    validation: {
-      pattern: '^[a-z][a-z0-9_]*$',
-      minLength: 3,
-      maxLength: 50,
-    }
-  },
-  {
-    name: 'controlType',
-    type: 'enum',
-    required: true,
-    label: 'Control Type',
-    description: 'Logic pattern type',
-    enumOptions: [
-      { value: 'condition', label: 'If/Then/Else' },
-      { value: 'loop', label: 'Loop/Iteration' },
-      { value: 'switch', label: 'Switch/Case' },
-      { value: 'parallel', label: 'Parallel Processing' },
-      { value: 'gateway', label: 'Gateway/Router' },
-      { value: 'merge', label: 'Merge/Join' }
-    ]
-  },
-  {
-    name: 'parallelProcessing',
-    type: 'boolean',
-    required: true,
-    label: 'Parallel Processing',
-    description: 'Can handle multiple paths simultaneously',
-    defaultValue: false
-  }
-]
-
-// Error Node Property Schema
-const errorProperties: PropertyDefinition[] = [
-  {
-    name: 'errorType',
-    type: 'enum',
-    required: true,
-    label: 'Error Type',
-    description: 'Error classification category',
-    enumOptions: [
-      { value: 'validation', label: 'Validation Error' },
-      { value: 'system', label: 'System Error' },
-      { value: 'network', label: 'Network Error' },
-      { value: 'business_rule', label: 'Business Rule Violation' },
-      { value: 'security', label: 'Security Error' },
-      { value: 'data_integrity', label: 'Data Integrity Error' }
-    ]
-  },
-  {
-    name: 'severity',
-    type: 'enum',
-    required: true,
-    label: 'Severity Level',
-    description: 'Impact assessment',
-    enumOptions: [
-      { value: 'low', label: 'Low (Informational)' },
-      { value: 'medium', label: 'Medium (Warning)' },
-      { value: 'high', label: 'High (Error)' },
-      { value: 'critical', label: 'Critical (System Down)' }
-    ]
-  },
-  {
-    name: 'retryStrategy',
-    type: 'enum',
-    required: true,
-    label: 'Retry Strategy',
-    description: 'Automatic recovery approach',
-    enumOptions: [
-      { value: 'none', label: 'No Retry' },
-      { value: 'fixed_delay', label: 'Fixed Delay' },
-      { value: 'exponential_backoff', label: 'Exponential Backoff' },
-      { value: 'circuit_breaker', label: 'Circuit Breaker' }
-    ]
-  },
-  {
-    name: 'userNotification',
-    type: 'string',
-    required: true,
-    label: 'User Message',
-    description: 'User-friendly error message',
-    placeholder: 'Please check your input and try again.'
-  }
-]
-
-// Complete Property Schema Registry
+// Complete Property Schema Registry - 12-Node Universal System
 export const nodePropertySchema: NodePropertySchema = {
+  // Strategic Planning Nodes
   usecase: useCaseProperties,
+  task: [], // TODO: Add task-specific property definitions
+  expectation: [], // TODO: Add expectation-specific property definitions
+  outcome: [], // TODO: Add outcome-specific property definitions,
+  
+  // Human-Centered Design Nodes
+  persona: userProperties, // Reuse existing user properties for persona
   screen: screenProperties,
-  user: userProperties,
+  presentation: [], // TODO: Add presentation-specific property definitions
+  
+  // Business Workflow Nodes
   process: processProperties,
   storage: storageProperties,
-  controller: controllerProperties,
-  error: errorProperties,
+  
+  // Information & Assets Nodes
+  resource: [], // TODO: Add resource-specific property definitions (renamed from attachment)
+  knowledge: [], // TODO: Add knowledge-specific property definitions
+  
+  // Meta-Collaboration Tools Nodes
+  note: [], // TODO: Add note-specific property definitions
 }
 
 // Property validation functions

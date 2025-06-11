@@ -36,20 +36,25 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('application/reactflow', nodeType);
     e.dataTransfer.setData('application/nodeType', nodeType);
-    e.dataTransfer.effectAllowed = 'move';
-      // Create a custom drag image with the node type info
+    e.dataTransfer.effectAllowed = 'move';      // Create a custom drag image with the node type info
     const dragImage = document.createElement('div');
     dragImage.style.position = 'absolute';
-    dragImage.style.top = '-1000px';    dragImage.style.background = className.includes('bg-lime') ? '#4d7c0f' :
+    dragImage.style.top = '-1000px';
+    
+    // Map button className to drag image background color (synchronized with button colors)
+    dragImage.style.background = className.includes('bg-lime') ? '#4d7c0f' :
                                 className.includes('bg-blue') ? '#3B82F6' : 
                                 className.includes('bg-green') ? '#10B981' :
+                                className.includes('bg-emerald') ? '#10B981' :
                                 className.includes('bg-orange') ? '#F97316' :
                                 className.includes('bg-purple') ? '#8B5CF6' :
+                                className.includes('bg-violet') ? '#7c3aed' :
                                 className.includes('bg-yellow') ? '#EAB308' :
                                 className.includes('bg-red') ? '#EF4444' :
                                 className.includes('bg-gray') ? '#6B7280' : 
                                 className.includes('bg-indigo') ? '#4F46E5' :
-                                className.includes('bg-cyan') ? '#06B6D4' : '#EC4899';
+                                className.includes('bg-cyan') ? '#06B6D4' : 
+                                className.includes('bg-pink') ? '#EC4899' : '#6B7280';
     dragImage.style.color = 'white';
     dragImage.style.padding = '8px 12px';
     dragImage.style.borderRadius = '8px';
@@ -173,17 +178,31 @@ export const Toolbar: React.FC = () => {
   const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
     initialPosition,
   });
-
   const nodeTypes: Array<{
     type: NodeType;
     label: string;
     className: string;
     icon: string;
-  }> = [    {
+  }> = [
+    // Strategic Planning Nodes (Stripe Pattern)
+    {
       type: 'usecase',
       label: 'Use Case',
       className: 'bg-lime-700 border-lime-800 text-white hover:bg-lime-800 usecase-stripes',
       icon: '🎯'
+    },
+    {
+      type: 'presentation',
+      label: 'Presentation',
+      className: 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 presentation-stripes',
+      icon: '📽️'
+    },
+    // Human-Centered Design
+    {
+      type: 'persona',
+      label: 'Persona',
+      className: 'bg-orange-500 border-orange-600 text-white hover:bg-orange-600',
+      icon: '👤'
     },
     {
       type: 'screen',
@@ -191,12 +210,7 @@ export const Toolbar: React.FC = () => {
       className: 'bg-green-500 border-green-600 text-white hover:bg-green-600',
       icon: '📱'
     },
-    {
-      type: 'user',
-      label: 'User',
-      className: 'bg-orange-500 border-orange-600 text-white hover:bg-orange-600',
-      icon: '👤'
-    },
+    // Business Workflow
     {
       type: 'process',
       label: 'Process',
@@ -204,32 +218,48 @@ export const Toolbar: React.FC = () => {
       icon: '⚙️'
     },
     {
+      type: 'expectation',
+      label: 'Expectation',
+      className: 'bg-blue-500 border-blue-600 text-white hover:bg-blue-600',
+      icon: '🎯'
+    },
+    {
+      type: 'outcome',
+      label: 'Outcome',
+      className: 'bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600',
+      icon: '✅'
+    },
+    // Information & Assets
+    {
+      type: 'resource',
+      label: 'Resource',
+      className: 'bg-pink-500 border-pink-600 text-white hover:bg-pink-600',
+      icon: '📎'
+    },
+    {
+      type: 'knowledge',
+      label: 'Knowledge',
+      className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
+      icon: '🧠'
+    },
+    {
       type: 'storage',
       label: 'Storage',
       className: 'bg-yellow-500 border-yellow-600 text-black hover:bg-yellow-600',
       icon: '💾'
-    },    {
-      type: 'controller',
-      label: 'Controller',
-      className: 'bg-red-500 border-red-600 text-white hover:bg-red-600',
-      icon: '🎮'
+    },
+    // Meta-Collaboration Tools
+    {
+      type: 'task',
+      label: 'Task',
+      className: 'bg-violet-500 border-violet-600 text-white hover:bg-violet-600',
+      icon: '⚡'
     },
     {
-      type: 'concept',
-      label: 'Concept',
-      className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
-      icon: '💡'
-    },{
-      type: 'presentation',
-      label: 'Presentation',
-      className: 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 presentation-stripes',
-      icon: '📽️'
-    },
-    {
-      type: 'attachment',
-      label: 'Attachment',
-      className: 'bg-pink-500 border-pink-600 text-white hover:bg-pink-600',
-      icon: '📎'
+      type: 'note',
+      label: 'Note',
+      className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
+      icon: '📝'
     },
   ];const handleClearAll = () => {
     if (nodes.length > 0 || connections.length > 0) {

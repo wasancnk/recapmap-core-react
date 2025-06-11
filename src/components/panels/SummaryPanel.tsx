@@ -34,20 +34,23 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({ nodeId }) => {
       minute: '2-digit'
     });
   };
-
   // Get node type configuration for icon
   const nodeTypeConfig = {
-    'usecase': { icon: '🎯', label: 'Use Case' },    'screen': { icon: '📱', label: 'Screen' },
-    'user': { icon: '👤', label: 'User' },
-    'process': { icon: '⚙️', label: 'Process' },
-    'storage': { icon: '💾', label: 'Storage' },    'controller': { icon: '🎮', label: 'Controller' },
-    'error': { icon: '⚠️', label: 'Error' },
-    'concept': { icon: '💡', label: 'Concept' },
+    'usecase': { icon: '🎯', label: 'Use Case' },
     'presentation': { icon: '📽️', label: 'Presentation' },
-    'attachment': { icon: '📎', label: 'Attachment' }
+    'persona': { icon: '👤', label: 'Persona' },
+    'screen': { icon: '📱', label: 'Screen' },
+    'process': { icon: '⚙️', label: 'Process' },
+    'expectation': { icon: '🎯', label: 'Expectation' },
+    'outcome': { icon: '✅', label: 'Outcome' },
+    'resource': { icon: '📎', label: 'Resource' },
+    'knowledge': { icon: '🧠', label: 'Knowledge' },
+    'storage': { icon: '💾', label: 'Storage' },
+    'task': { icon: '⚡', label: 'Task' },
+    'note': { icon: '📝', label: 'Note' }
   };
 
-  const config = nodeTypeConfig[node.type] || nodeTypeConfig['concept'];
+  const config = nodeTypeConfig[node.type] || nodeTypeConfig['note'];
     return (
     <div className="p-4 h-full overflow-y-auto scrollbar-dark">
       {/* Node Header with Type */}

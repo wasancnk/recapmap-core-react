@@ -59,122 +59,6 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         assumptions: [],
       }
     
-    case 'screen':
-      return {
-        ...baseNode,
-        type: 'screen',
-        // UI Context
-        screenType: 'dashboard',
-        layoutType: 'responsive',
-        responsive: true,
-        accessibility: true,
-        // Component Structure
-        components: [],
-        navigationFlow: [],
-        dataBindings: [],
-        validationRules: [],
-        wireframeUrl: undefined,
-      }
-    
-    case 'user':
-      return {
-        ...baseNode,
-        type: 'user',
-        // Actor Definition
-        role: '',
-        userType: 'standard_user',
-        permissions: [],
-        accessLevel: 'user',
-        // Behavioral Context
-        workflow: [],
-        goals: [],
-        painPoints: [],
-        expertise: 'intermediate',
-        // Security Context
-        authenticationMethod: 'password',
-        dataAccess: [],
-      }
-    
-    case 'process':
-      return {
-        ...baseNode,
-        type: 'process',
-        // Capability Definition
-        capabilityName: baseNode.title,
-        processType: 'computation',
-        automationLevel: 'semi_automated',
-        // Input/Output Specification
-        inputParameters: [],
-        outputParameters: [],
-        // Technical Context
-        tools: [],
-        externalDependencies: [],
-        errorConditions: [],
-        // Performance Requirements
-        sla: undefined,
-        throughputRequirements: undefined,
-        scalingConsiderations: undefined,
-      }
-    
-    case 'storage':
-      return {
-        ...baseNode,
-        type: 'storage',
-        // Storage Definition
-        storageName: baseNode.title,
-        storageType: 'database',
-        technology: '',
-        // Data Structure
-        dataSchema: [],
-        indexingStrategy: [],
-        // Access Patterns
-        accessPattern: 'balanced',
-        queryPatterns: [],
-        // Operational Requirements
-        backupRequirements: '',
-        retentionPolicy: '',
-        scalingStrategy: '',
-        securityClassification: 'internal',
-      }
-    
-    case 'controller':
-      return {
-        ...baseNode,
-        type: 'controller',
-        // Decision Logic
-        controllerName: baseNode.title,
-        controlType: 'condition',
-        businessRules: [],
-        // Logic Definition
-        conditions: [],
-        // Routing Logic
-        routingRules: [],
-        defaultPath: undefined,
-        // Performance
-        timeoutSettings: undefined,
-        parallelProcessing: false,
-      }
-    
-    case 'error':
-      return {
-        ...baseNode,
-        type: 'error',
-        // Error Classification
-        errorType: 'validation',
-        severity: 'medium',
-        // Detection & Handling
-        detectionConditions: [],
-        fallbackAction: 'show_error_message',
-        retryStrategy: 'none',
-        maxRetries: undefined,
-        // User Experience
-        userNotification: 'An error occurred. Please try again.',
-        escalationRules: [],
-        // Logging & Monitoring
-        loggingRequirements: [],
-        alertingThreshold: undefined,
-        recoveryProcedure: undefined,      }
-    
     case 'presentation':
       return {
         ...baseNode,
@@ -198,39 +82,122 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         // Layout Configuration
         layout: 'title',
         showPageNumber: true,
-        showTimestamp: false,        // Navigation
+        showTimestamp: false,
+        // Navigation
         navigationHints: []
-      };
+      }
     
-    case 'concept':
+    case 'persona':
       return {
         ...baseNode,
-        type: 'concept',
-        // Concept Definition
-        conceptName: baseNode.title,
-        conceptType: 'definition',
-        // Content Structure
-        definition: baseNode.description || '',
-        examples: [],
-        counterExamples: [],
-        // Relationships
-        relatedConcepts: [],
-        prerequisites: [],
+        type: 'persona',
+        // Actor Definition
+        role: '',
+        personaType: 'standard_user',
+        permissions: [],
+        accessLevel: 'user',
+        // Behavioral Context
+        workflow: [],
+        goals: [],
+        painPoints: [],
+        expertise: 'intermediate',
+        // Security Context
+        authenticationMethod: 'password',
+        dataAccess: [],
+      }
+    
+    case 'screen':
+      return {
+        ...baseNode,
+        type: 'screen',
+        // UI Context
+        screenType: 'dashboard',
+        layoutType: 'responsive',
+        responsive: true,
+        accessibility: true,
+        // Component Structure
+        components: [],
+        navigationFlow: [],
+        dataBindings: [],
+        validationRules: [],
+        wireframeUrl: undefined,
+      }
+    
+    case 'process':
+      return {
+        ...baseNode,
+        type: 'process',
+        // Capability Definition
+        capabilityName: baseNode.title,
+        processType: 'computation',
+        automationLevel: 'semi_automated',
+        // Input/Output Specification
+        inputParameters: [],
+        outputParameters: [],
+        // Technical Context
+        tools: [],
+        externalDependencies: [],
+        errorConditions: [],
+        // Performance Requirements
+        sla: undefined,
+        throughputRequirements: undefined,
+        scalingConsiderations: undefined,
+      }
+    
+    case 'expectation':
+      return {
+        ...baseNode,
+        type: 'expectation',
+        // Expectation Definition
+        expectationName: baseNode.title,
+        expectationType: 'delivery',
+        // Specification
+        criteria: [],
+        measurementMethod: '',
+        successThreshold: '',
         // Context
-        domain: '',
-        complexity: 'basic',
-        tags: [],        // Documentation
-        references: [],
-        notes: ''
-      };
-
-    case 'attachment':
+        stakeholder: '',
+        businessValue: '',
+        riskLevel: 'medium',
+        // Validation
+        validationSteps: [],
+        testingApproach: undefined,
+        // Timeline
+        expectedDate: undefined,
+        reviewDate: undefined,
+      }
+    
+    case 'outcome':
       return {
         ...baseNode,
-        type: 'attachment',
-        // Attachment Core Properties
-        attachmentName: baseNode.title,
-        attachmentType: 'file',
+        type: 'outcome',
+        // Outcome Definition
+        outcomeName: baseNode.title,
+        outcomeType: 'delivery',
+        status: 'achieved',
+        // Results
+        actualResults: [],
+        measuredValue: '',
+        variance: undefined,
+        // Analysis
+        successFactors: [],
+        challenges: [],
+        lessonsLearned: [],
+        // References
+        relatedExpectation: undefined,
+        evidence: [],
+        // Timeline
+        achievedDate: undefined,
+        reviewedDate: undefined,
+      }
+    
+    case 'resource':
+      return {
+        ...baseNode,
+        type: 'resource',
+        // Resource Core Properties
+        resourceName: baseNode.title,
+        resourceType: 'file',
         // File/Resource Information
         fileName: undefined,
         fileSize: undefined,
@@ -250,10 +217,115 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         permissions: [],
         // Integration
         sourceSystem: undefined,
-        lastSyncedAt: undefined,        // Organization
+        lastSyncedAt: undefined,
+        // Organization
         folderPath: undefined,
         relatedNodes: []
-      };
+      }
+    
+    case 'knowledge':
+      return {
+        ...baseNode,
+        type: 'knowledge',
+        // Knowledge Definition
+        knowledgeName: baseNode.title,
+        knowledgeType: 'fact',
+        domain: '',
+        // Content Structure
+        definition: baseNode.description || '',
+        examples: [],
+        applications: [],
+        // Relationships
+        prerequisites: [],
+        relatedKnowledge: [],
+        derivedFrom: [],
+        // Quality & Validation
+        confidence: 'medium',
+        sources: [],
+        lastValidated: undefined,
+        // Context
+        complexity: 'basic',
+        applicability: [],
+        limitations: [],
+        // Organization
+        keywords: [],
+        category: '',
+      }
+    
+    case 'storage':
+      return {
+        ...baseNode,
+        type: 'storage',
+        // Storage Definition
+        storageName: baseNode.title,
+        storageType: 'database',
+        technology: '',
+        // Data Structure
+        dataSchema: [],
+        indexingStrategy: [],
+        // Access Patterns
+        accessPattern: 'balanced',
+        queryPatterns: [],
+        // Operational Requirements
+        backupRequirements: '',
+        retentionPolicy: '',
+        scalingStrategy: '',
+        securityClassification: 'internal',
+      }
+    
+    case 'task':
+      return {
+        ...baseNode,
+        type: 'task',
+        // Task Definition
+        taskName: baseNode.title,
+        taskType: 'feature',
+        priority: 'medium',
+        status: 'todo',
+        // Assignment & Coordination
+        assignedTo: [],
+        assignedAgents: [],
+        estimatedEffort: '',
+        actualEffort: undefined,
+        // Task Context
+        acceptanceCriteria: [],
+        dependencies: [],
+        blockers: [],
+        // Collaboration
+        collaborators: [],
+        reviewers: [],
+        // Timeline
+        dueDate: undefined,
+        startDate: undefined,
+        completedDate: undefined,
+      }
+    
+    case 'note':
+      return {
+        ...baseNode,
+        type: 'note',
+        // Note Definition
+        noteType: 'idea',
+        // Content
+        content: baseNode.description || '',
+        summary: undefined,
+        // Context
+        author: 'User',
+        audience: [],
+        tags: [],
+        // Organization
+        category: '',
+        importance: 'medium',
+        // References
+        relatedNodes: [],
+        sourceUrl: undefined,
+        // Collaboration
+        shared: false,
+        editable: true,
+        // Timeline
+        reviewDate: undefined,
+        archiveDate: undefined,
+      }
     
     default:
       return baseNode as RecapMapNode
@@ -268,19 +340,33 @@ const useNodeStore = create<NodeStore>()(
         // Initial state
         nodes: [],
         connections: [],
-        selectedNodeIds: [],
-
-        // Node Management Actions
+        selectedNodeIds: [],        // Node Management Actions
         addNode: (type: NodeType, position: { x: number; y: number }) => {
           const id = uuidv4()
           const now = new Date().toISOString()
+          
+          // Proper node type labels for consistent titles
+          const nodeLabels: Record<NodeType, string> = {
+            'usecase': 'Use Case',
+            'task': 'Task', 
+            'expectation': 'Expectation',
+            'outcome': 'Outcome',
+            'persona': 'Persona',
+            'screen': 'Screen',
+            'presentation': 'Presentation',
+            'process': 'Process',
+            'storage': 'Storage',
+            'resource': 'Resource',
+            'knowledge': 'Knowledge',
+            'note': 'Note'
+          }
           
           // Create base node structure
           const baseNode = {
             id,
             type,
             position,
-            title: `New ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+            title: `New ${nodeLabels[type]}`,
             description: '',
             metadata: {},
             connections: { inputs: [], outputs: [] },

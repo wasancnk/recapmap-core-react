@@ -29,17 +29,26 @@ interface BaseNode {
 }
 ```
 
-### 8-Node System Types
+### 12-Node Universal System Types
 ```typescript
 type NodeType = 
+  // Strategic Planning
   | 'usecase'     // Business requirements, user stories
+  | 'task'        // Actionable work items and deliverables
+  | 'expectation' // Expected outcomes and success criteria
+  | 'outcome'     // Actual results and achievements
+  // Human-Centered Design
+  | 'persona'     // User roles, personas, actors (renamed from 'user')
   | 'screen'      // UI screens, interfaces, views  
-  | 'user'        // User roles, personas, actors
+  | 'presentation'// Presentation slides and demo materials
+  // Business Workflow
   | 'process'     // Business processes, tools, systems
   | 'storage'     // Databases, files, data stores
-  | 'controller'  // Decision points, flow control
-  | 'error'       // Error handling, rejection flows
-  | 'base'        // Abstract base (for templates)
+  // Information & Assets
+  | 'resource'    // Files, documents, external resources (renamed from 'attachment')
+  | 'knowledge'   // Knowledge base and learning materials
+  // Meta-Collaboration Tools
+  | 'note'        // General notes and comments
 ```
 
 ### Specialized Node Interfaces

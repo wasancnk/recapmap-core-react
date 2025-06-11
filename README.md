@@ -44,11 +44,34 @@ A React + TypeScript + Vite application implementing the collaboration operating
 - **AI-Powered Insights**: Intelligent suggestions for optimal collaboration patterns
 
 ### Technical Features
-- **12-Node Architecture**: Comprehensive node types (Use Case, Screen, Persona, Process, Resource, Storage, Task, Expectation, Outcome, Note, Presentation, Knowledge)
+- **12-Node Universal System**: Complete collaboration vocabulary organized in logical groups
 - **Interactive Canvas**: Drag-and-drop interface with smart grid snapping
 - **Dark Theme**: Developer-optimized visual design with accessibility compliance
 - **Export Capabilities**: YAML and visual export formats
 - **Real-time Collaboration**: Zustand-powered state management for instant feedback
+
+#### Node Architecture Overview
+**Strategic Planning Nodes** (Stripe Pattern):
+- **Use Case** - Core functionality requirements and scenarios
+- **Presentation** - Communication and stakeholder presentations
+
+**Human-Centered Design**:
+- **Persona** - User archetypes and human stakeholders  
+- **Screen** - User interfaces and interaction points
+
+**Business Workflow**:
+- **Process** - Business logic and operational workflows
+- **Expectation** - What we expect to achieve or receive
+- **Outcome** - What was actually achieved or delivered
+
+**Information & Assets**:
+- **Resource** - Files, documents, and digital assets
+- **Knowledge** - Structured information and insights
+- **Storage** - Technical data storage and repositories
+
+**Meta-Collaboration Tools**:
+- **Task** - Instant work coordination (AI agents, team assignments)
+- **Note** - General documentation and annotations
 
 ## 🚀 Quick Start
 
@@ -157,7 +180,7 @@ When asked to document anything about this project:
 ### Design & Visualization
 - **React Flow** - Node-based diagram library
 - **Custom Design System** - Dark theme with accessibility focus
-- **Professional Color Palette** - 12-node semantic color coding
+- **Semantic Color System** - 12-node logical grouping with visual hierarchy
 
 ## 🎨 Design Philosophy
 
@@ -166,8 +189,19 @@ RecapMap embodies a **collaboration-first design approach**:
 ### Universal Mental Models
 - **Node-Based Thinking** - Everything is connected, just like human thought
 - **Visual Relationships** - Immediate understanding of complex collaborations
-- **Semantic Clarity** - Each element has clear meaning and purpose
+- **Semantic Clarity** - Each node type has specific meaning and purpose
 - **AI-Human Symbiosis** - Designed for both human intuition and AI precision
+
+#### Node System Philosophy
+The 12-node architecture reflects the complete spectrum of collaborative work:
+
+**Strategic Layer** - Use Case and Presentation nodes establish vision and communication
+**Human Layer** - Persona and Screen nodes center design around people and interactions  
+**Execution Layer** - Process, Expectation, and Outcome nodes manage workflow and results
+**Information Layer** - Resource, Knowledge, and Storage nodes handle all data and assets
+**Coordination Layer** - Task and Note nodes enable real-time collaboration management
+
+This creates a **universal collaboration vocabulary** that scales from individual projects to enterprise-wide coordination.
 
 ### Experience Principles
 - **Reduce Cognitive Load** - One platform instead of context-switching chaos

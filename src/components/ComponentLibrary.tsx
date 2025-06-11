@@ -302,23 +302,27 @@ const { currentProject, saveProject } = useProjectStore();`}
         )}
 
         {activeTab === 'nodes' && (
-          <div>
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-text-primary mb-4">8-Node System Architecture</h2>
+          <div>            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-text-primary mb-4">12-Node System Architecture</h2>
               <p className="text-text-secondary">
-                RecapMap uses an 8-node system for comprehensive business modeling. Each node type has specific colors, icons, and purposes.
+                RecapMap uses a 12-node system for comprehensive business modeling. Each node type has specific colors, icons, and purposes.
               </p>
-            </div>            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {[
                 { type: 'usecase', name: 'Use Case', color: 'bg-lime-700 border-lime-800 usecase-stripes', icon: '🎯', desc: 'Business requirements and user stories' },
-                { type: 'screen', name: 'Screen', color: 'bg-green-500 border-green-600', icon: '📱', desc: 'UI screens, interfaces, and views' },                { type: 'user', name: 'User', color: 'bg-orange-500 border-orange-600', icon: '👤', desc: 'User roles, personas, and actors' },
-                { type: 'process', name: 'Process', color: 'bg-purple-500 border-purple-600', icon: '⚙️', desc: 'Business processes and tools' },
-                { type: 'storage', name: 'Storage', color: 'bg-yellow-500 border-yellow-600 text-black', icon: '💾', desc: 'Databases, files, and data stores' },
-                { type: 'controller', name: 'Controller', color: 'bg-red-500 border-red-600', icon: '🎮', desc: 'Decision points and flow control' },
-                { type: 'error', name: 'Error', color: 'bg-gray-500 border-gray-600', icon: '⚠️', desc: 'Error handling and rejection flows' },
                 { type: 'presentation', name: 'Presentation', color: 'bg-indigo-600 border-indigo-700 presentation-stripes', icon: '📽️', desc: 'Keynote-style presentation slides with enhanced visual distinction' },
-                { type: 'concept', name: 'Concept', color: 'bg-cyan-500 border-cyan-600', icon: '💡', desc: 'Core concepts and definitions' },
-                { type: 'attachment', name: 'Attachment', color: 'bg-pink-500 border-pink-600', icon: '📎', desc: 'Files, documents, and resources' },
+                { type: 'persona', name: 'Persona', color: 'bg-orange-500 border-orange-600', icon: '👤', desc: 'User roles, personas, and actors' },
+                { type: 'screen', name: 'Screen', color: 'bg-green-500 border-green-600', icon: '📱', desc: 'UI screens, interfaces, and views' },
+                { type: 'process', name: 'Process', color: 'bg-purple-500 border-purple-600', icon: '⚙️', desc: 'Business processes and workflows' },
+                { type: 'expectation', name: 'Expectation', color: 'bg-blue-500 border-blue-600', icon: '🎯', desc: 'Goals, targets, and expected outcomes' },
+                { type: 'outcome', name: 'Outcome', color: 'bg-green-600 border-green-700', icon: '✅', desc: 'Results, deliverables, and achievements' },
+                { type: 'resource', name: 'Resource', color: 'bg-pink-500 border-pink-600', icon: '📎', desc: 'Files, documents, and resources' },
+                { type: 'knowledge', name: 'Knowledge', color: 'bg-cyan-500 border-cyan-600', icon: '🧠', desc: 'Knowledge bases, documentation, and insights' },
+                { type: 'storage', name: 'Storage', color: 'bg-yellow-500 border-yellow-600 text-black', icon: '💾', desc: 'Databases, files, and data stores' },
+                { type: 'task', name: 'Task', color: 'bg-red-500 border-red-600', icon: '⚡', desc: 'Work items, assignments, and action items' },
+                { type: 'note', name: 'Note', color: 'bg-gray-500 border-gray-600', icon: '📝', desc: 'General notes, annotations, and documentation' },
               ].map((node) => (
                 <div key={node.type} className="bg-surface-primary border border-surface-border rounded-lg p-4">
                   <div className={`${node.color} text-white px-4 py-3 rounded-lg border-2 mb-3 text-center`}>

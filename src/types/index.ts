@@ -21,18 +21,20 @@ export interface BaseNode {
   updatedAt: string
 }
 
-// 10-Node System Types - Following Apple's Design Philosophy of Elegant Simplicity
+// 12-Node System Types - Following Apple's Design Philosophy of Elegant Simplicity
 export type NodeType = 
-  | 'usecase'     // Business requirements, user stories
-  | 'screen'      // UI screens, interfaces, views  
-  | 'user'        // User roles, personas, actors
-  | 'process'     // Business processes, tools, systems
-  | 'storage'     // Databases, files, data stores
-  | 'controller'  // Decision points, flow control
-  | 'error'       // Error handling, rejection flows
-  | 'presentation'// Presentation page for keynote-style presentations
-  | 'concept'     // General concepts, abstract ideas, definitions
-  | 'attachment'  // Files, images, links, resources, documents
+  | 'usecase'      // Business requirements, user stories
+  | 'presentation' // Presentation page for keynote-style presentations
+  | 'persona'      // User roles, personas, actors (renamed from 'user')
+  | 'screen'       // UI screens, interfaces, views  
+  | 'process'      // Business processes, tools, systems
+  | 'expectation'  // What we expect to achieve or receive (new)
+  | 'outcome'      // What was actually achieved or delivered (new)
+  | 'resource'     // Files, images, links, resources, documents (renamed from 'attachment')
+  | 'knowledge'    // Structured information and insights (new)
+  | 'storage'      // Databases, files, data stores
+  | 'task'         // Instant work coordination (AI agents, team assignments) (new)
+  | 'note'         // General documentation and annotations (new)
 
 // Specific Node Type Interfaces with Enhanced Properties
 
@@ -71,11 +73,11 @@ export interface ScreenNode extends BaseNode {
   wireframeUrl?: string
 }
 
-export interface UserNode extends BaseNode {
-  type: 'user'
+export interface PersonaNode extends BaseNode {
+  type: 'persona'
   // Actor Definition
   role: string
-  userType: 'admin' | 'power_user' | 'standard_user' | 'guest' | 'system'
+  personaType: 'admin' | 'power_user' | 'standard_user' | 'guest' | 'system'
   permissions: string[]
   accessLevel: 'admin' | 'manager' | 'user' | 'read_only'
   // Behavioral Context
@@ -141,51 +143,6 @@ export interface StorageNode extends BaseNode {
   securityClassification: 'public' | 'internal' | 'confidential' | 'restricted'
 }
 
-export interface ControllerNode extends BaseNode {
-  type: 'controller'
-  // Decision Logic
-  controllerName: string
-  controlType: 'condition' | 'loop' | 'switch' | 'parallel' | 'gateway' | 'merge'
-  businessRules: string[]
-  // Logic Definition
-  conditions: Array<{
-    name: string
-    condition: string
-    outcome: string
-    priority?: number
-    target?: string
-  }>
-  // Routing Logic
-  routingRules: Array<{
-    source: string
-    condition: string
-    destination: string
-  }>
-  defaultPath?: string
-  // Performance
-  timeoutSettings?: string
-  parallelProcessing: boolean
-}
-
-export interface ErrorNode extends BaseNode {
-  type: 'error'
-  // Error Classification
-  errorType: 'validation' | 'system' | 'network' | 'business_rule' | 'security' | 'data_integrity'
-  severity: 'low' | 'medium' | 'high' | 'critical'
-  // Detection & Handling
-  detectionConditions: string[]
-  fallbackAction: string
-  retryStrategy: 'none' | 'fixed_delay' | 'exponential_backoff' | 'circuit_breaker'
-  maxRetries?: number
-  // User Experience
-  userNotification: string
-  escalationRules: string[]
-  // Logging & Monitoring
-  loggingRequirements: string[]
-  alertingThreshold?: string
-  recoveryProcedure?: string
-}
-
 export interface PresentationNode extends BaseNode {
   type: 'presentation'
   // Presentation Structure
@@ -212,32 +169,13 @@ export interface PresentationNode extends BaseNode {
   navigationHints: string[]
 }
 
-export interface ConceptNode extends BaseNode {
-  type: 'concept'
-  // Concept Definition
-  conceptName: string
-  conceptType: 'definition' | 'principle' | 'framework' | 'methodology' | 'best-practice' | 'guideline'
-  // Content Structure
-  definition: string
-  examples: string[]
-  counterExamples?: string[]
-  // Relationships
-  relatedConcepts: string[]
-  prerequisites: string[]
-  // Context
-  domain: string
-  complexity: 'basic' | 'intermediate' | 'advanced' | 'expert'
-  tags: string[]
-  // Documentation
-  references: string[]
-  notes?: string
-}
 
-export interface AttachmentNode extends BaseNode {
-  type: 'attachment'
-  // Attachment Core Properties
-  attachmentName: string
-  attachmentType: 'file' | 'image' | 'link' | 'document' | 'video' | 'audio' | 'code' | 'data'
+
+export interface ResourceNode extends BaseNode {
+  type: 'resource'
+  // Resource Core Properties
+  resourceName: string
+  resourceType: 'file' | 'image' | 'link' | 'document' | 'video' | 'audio' | 'code' | 'data'
   // File/Resource Information
   fileName?: string
   fileSize?: number
@@ -245,7 +183,7 @@ export interface AttachmentNode extends BaseNode {
   url?: string
   filePath?: string
   // Content Management
-  content?: string // For text-based attachments
+  content?: string // For text-based resources
   preview?: string // Preview text or base64 image
   // Metadata
   tags: string[]
@@ -263,18 +201,140 @@ export interface AttachmentNode extends BaseNode {
   relatedNodes: string[]
 }
 
-// Complete 10-Node System Union Type - Following Apple's Design Philosophy
+export interface TaskNode extends BaseNode {
+  type: 'task'
+  // Task Definition
+  taskName: string
+  taskType: 'feature' | 'bug' | 'improvement' | 'research' | 'documentation' | 'review'
+  priority: 'critical' | 'high' | 'medium' | 'low'
+  status: 'todo' | 'in_progress' | 'review' | 'done' | 'blocked'
+  // Assignment & Coordination
+  assignedTo: string[]
+  assignedAgents: string[] // AI agents that can work on this task
+  estimatedEffort: string
+  actualEffort?: string
+  // Task Context
+  acceptanceCriteria: string[]
+  dependencies: string[]
+  blockers: string[]
+  // Collaboration
+  collaborators: string[]
+  reviewers: string[]
+  // Timeline
+  dueDate?: string
+  startDate?: string
+  completedDate?: string
+}
+
+export interface ExpectationNode extends BaseNode {
+  type: 'expectation'
+  // Expectation Definition
+  expectationName: string
+  expectationType: 'delivery' | 'behavior' | 'performance' | 'quality' | 'timeline' | 'outcome'
+  // Specification
+  criteria: string[]
+  measurementMethod: string
+  successThreshold: string
+  // Context
+  stakeholder: string
+  businessValue: string
+  riskLevel: 'low' | 'medium' | 'high' | 'critical'
+  // Validation
+  validationSteps: string[]
+  testingApproach?: string
+  // Timeline
+  expectedDate?: string
+  reviewDate?: string
+}
+
+export interface OutcomeNode extends BaseNode {
+  type: 'outcome'
+  // Outcome Definition
+  outcomeName: string
+  outcomeType: 'delivery' | 'behavior' | 'performance' | 'quality' | 'timeline' | 'impact'
+  status: 'achieved' | 'partially_achieved' | 'not_achieved' | 'exceeded'
+  // Results
+  actualResults: string[]
+  measuredValue: string
+  variance?: string // Difference from expectation
+  // Analysis
+  successFactors: string[]
+  challenges: string[]
+  lessonsLearned: string[]
+  // References
+  relatedExpectation?: string // Link to original expectation
+  evidence: string[]
+  // Timeline
+  achievedDate?: string
+  reviewedDate?: string
+}
+
+export interface NoteNode extends BaseNode {
+  type: 'note'
+  // Note Definition
+  noteType: 'meeting' | 'decision' | 'idea' | 'reminder' | 'observation' | 'question'
+  // Content
+  content: string
+  summary?: string
+  // Context
+  author: string
+  audience: string[]
+  tags: string[]
+  // Organization
+  category: string
+  importance: 'low' | 'medium' | 'high' | 'critical'
+  // References
+  relatedNodes: string[]
+  sourceUrl?: string
+  // Collaboration
+  shared: boolean
+  editable: boolean
+  // Timeline
+  reviewDate?: string
+  archiveDate?: string
+}
+
+export interface KnowledgeNode extends BaseNode {
+  type: 'knowledge'
+  // Knowledge Definition
+  knowledgeName: string
+  knowledgeType: 'fact' | 'process' | 'principle' | 'best_practice' | 'lesson_learned' | 'insight'
+  domain: string
+  // Content Structure
+  definition: string
+  examples: string[]
+  applications: string[]
+  // Relationships
+  prerequisites: string[]
+  relatedKnowledge: string[]
+  derivedFrom: string[]
+  // Quality & Validation
+  confidence: 'low' | 'medium' | 'high' | 'verified'
+  sources: string[]
+  lastValidated?: string
+  // Context
+  complexity: 'basic' | 'intermediate' | 'advanced' | 'expert'
+  applicability: string[]
+  limitations: string[]
+  // Organization
+  keywords: string[]
+  category: string
+}
+
+// Complete 12-Node System Union Type - Following Apple's Design Philosophy
 export type RecapMapNode = 
   | UseCaseNode 
-  | ScreenNode 
-  | UserNode 
-  | ProcessNode 
-  | StorageNode 
-  | ControllerNode 
-  | ErrorNode
   | PresentationNode
-  | ConceptNode
-  | AttachmentNode
+  | PersonaNode 
+  | ScreenNode 
+  | ProcessNode 
+  | ExpectationNode
+  | OutcomeNode
+  | ResourceNode
+  | KnowledgeNode
+  | StorageNode 
+  | TaskNode
+  | NoteNode
 
 // Connection between nodes
 export interface NodeConnection {
@@ -369,15 +429,17 @@ export type Tool =
   | 'select'
   | 'pan'
   | 'usecase'
-  | 'screen'
-  | 'user'
-  | 'process'
-  | 'storage'
-  | 'controller'
-  | 'error'
   | 'presentation'
-  | 'concept'
-  | 'attachment'
+  | 'persona'
+  | 'screen'
+  | 'process'
+  | 'expectation'
+  | 'outcome'
+  | 'resource'
+  | 'knowledge'
+  | 'storage'
+  | 'task'
+  | 'note'
   | 'connect'
 
 export interface Notification {

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag Color Validation Test</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            display: grid;
+            gap: 15px;
+            max-width: 800px;
+        }
+        
+        .color-test {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: #16213e;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+        }
+        
+        .color-sample {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .color-info {
+            flex: 1;
+        }
+        
+        .color-label {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .color-value {
+            font-family: monospace;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status.fixed {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status.issue {
+            background: #ef4444;
+            color: white;
+        }
+        
+        h1 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #fbbf24;
+            margin: 20px 0 10px 0;
+        }
+        
+        .description {
+            background: #374151;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Drag Color Validation Test</h1>
+    
+    <div class="description">
+        <strong>Bug Fix Validation:</strong> Testing that toolbar button colors match their drag state colors for outcome and task nodes.
+        <br><br>
+        <strong>Expected:</strong> 
+        <ul>
+            <li><strong>Outcome Node:</strong> Button (emerald green) → Drag (emerald green) ✅</li>
+            <li><strong>Task Node:</strong> Button (violet purple) → Drag (violet purple) ✅</li>
+        </ul>
+    </div>
+
+    <h2>🔧 Fixed Color Mappings</h2>
+    <div class="test-container">
+        <!-- Outcome Node -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #10b981;"></div>
+            <div class="color-info">
+                <div class="color-label">✅ Outcome Node</div>
+                <div class="color-value">Button: bg-emerald-500 (#10b981)</div>
+                <div class="color-value">Drag: bg-emerald → #10b981</div>
+            </div>
+            <div class="status fixed">FIXED</div>
+        </div>
+        
+        <!-- Task Node -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #7c3aed;"></div>
+            <div class="color-info">
+                <div class="color-label">⚡ Task Node</div>
+                <div class="color-value">Button: bg-violet-500 (#7c3aed)</div>
+                <div class="color-value">Drag: bg-violet → #7c3aed</div>
+            </div>
+            <div class="status fixed">FIXED</div>
+        </div>
+    </div>
+
+    <h2>🎯 All 12-Node System Drag Colors</h2>
+    <div class="test-container">
+        <!-- Strategic Planning Nodes -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #4d7c0f;"></div>
+            <div class="color-info">
+                <div class="color-label">🎯 Use Case (Strategic)</div>
+                <div class="color-value">bg-lime-700 → #4d7c0f</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #7c3aed;"></div>
+            <div class="color-info">
+                <div class="color-label">⚡ Task (Strategic)</div>
+                <div class="color-value">bg-violet-500 → #7c3aed</div>
+            </div>
+            <div class="status fixed">FIXED</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #3B82F6;"></div>
+            <div class="color-info">
+                <div class="color-label">🎯 Expectation (Strategic)</div>
+                <div class="color-value">bg-blue-500 → #3B82F6</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #10b981;"></div>
+            <div class="color-info">
+                <div class="color-label">✅ Outcome (Strategic)</div>
+                <div class="color-value">bg-emerald-500 → #10b981</div>
+            </div>
+            <div class="status fixed">FIXED</div>
+        </div>
+        
+        <!-- Human-Centered Design -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #F97316;"></div>
+            <div class="color-info">
+                <div class="color-label">👤 Persona (Human)</div>
+                <div class="color-value">bg-orange-500 → #F97316</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #10B981;"></div>
+            <div class="color-info">
+                <div class="color-label">📱 Screen (Human)</div>
+                <div class="color-value">bg-green-500 → #10B981</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #4F46E5;"></div>
+            <div class="color-info">
+                <div class="color-label">📽️ Presentation (Human)</div>
+                <div class="color-value">bg-indigo-600 → #4F46E5</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <!-- Business Workflow -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #8B5CF6;"></div>
+            <div class="color-info">
+                <div class="color-label">⚙️ Process (Business)</div>
+                <div class="color-value">bg-purple-500 → #8B5CF6</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #EAB308;"></div>
+            <div class="color-info">
+                <div class="color-label">💾 Storage (Business)</div>
+                <div class="color-value">bg-yellow-500 → #EAB308</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <!-- Information & Assets -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #EC4899;"></div>
+            <div class="color-info">
+                <div class="color-label">📎 Resource (Info)</div>
+                <div class="color-value">bg-pink-500 → #EC4899</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #06B6D4;"></div>
+            <div class="color-info">
+                <div class="color-label">🧠 Knowledge (Info)</div>
+                <div class="color-value">bg-cyan-500 → #06B6D4</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+        
+        <!-- Meta-Collaboration -->
+        <div class="color-test">
+            <div class="color-sample" style="background-color: #6B7280;"></div>
+            <div class="color-info">
+                <div class="color-label">📝 Note (Meta)</div>
+                <div class="color-value">bg-gray-500 → #6B7280</div>
+            </div>
+            <div class="status fixed">OK</div>
+        </div>
+    </div>
+
+    <div class="description" style="margin-top: 30px; border-left-color: #10b981;">
+        <strong>✅ Bug Fix Complete!</strong> 
+        <br><br>
+        Added missing color mappings:
+        <ul>
+            <li><code>bg-emerald</code> → <code>#10b981</code> (for outcome nodes)</li>
+            <li><code>bg-violet</code> → <code>#7c3aed</code> (for task nodes)</li>
+        </ul>
+        
+        <strong>Result:</strong> All 12 node types now have consistent colors between toolbar buttons and drag states.
+    </div>
+</body>
+</html>

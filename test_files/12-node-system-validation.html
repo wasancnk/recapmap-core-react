@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12-Node System Validation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: #f9fafb;
+        }
+        
+        .test-section {
+            background-color: #16213e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #4b5563;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .node-card {
+            background-color: #1f2937;
+            border-radius: 6px;
+            padding: 15px;
+            border-left: 4px solid;
+        }
+        
+        .node-card.usecase { border-left-color: #4d7c0f; }
+        .node-card.task { border-left-color: #ea580c; }
+        .node-card.expectation { border-left-color: #f59e0b; }
+        .node-card.outcome { border-left-color: #0ea5e9; }
+        .node-card.persona { border-left-color: #f59e0b; }
+        .node-card.screen { border-left-color: #10b981; }
+        .node-card.presentation { border-left-color: #4f46e5; }
+        .node-card.process { border-left-color: #8b5cf6; }
+        .node-card.storage { border-left-color: #eab308; }
+        .node-card.resource { border-left-color: #ec4899; }
+        .node-card.knowledge { border-left-color: #6b7280; }
+        .node-card.note { border-left-color: #06b6d4; }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status.success { background-color: #10b981; color: white; }
+        .status.pending { background-color: #f59e0b; color: white; }
+        .status.error { background-color: #ef4444; color: white; }
+        
+        .instructions {
+            background-color: #0f172a;
+            border-radius: 6px;
+            padding: 15px;
+            border: 1px solid #3b82f6;
+            margin-bottom: 20px;
+        }
+        
+        .group-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 RecapMap 12-Node System Validation</h1>
+    
+    <div class="instructions">
+        <h3>📋 Test Instructions</h3>
+        <ol>
+            <li>Open RecapMap application in another browser window/tab</li>
+            <li>For each node type below, try to create it from the toolbar</li>
+            <li>Check that the node appears with correct styling and icon</li>
+            <li>Click on each node to open panels and verify functionality</li>
+            <li>Update the status here manually as you test each node type</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <div class="group-header">🎯 Strategic Planning Nodes</div>
+        <div class="test-grid">
+            <div class="node-card usecase">
+                <h4>🎯 Use Case</h4>
+                <p>High-level business requirements and user scenarios</p>
+                <div class="status pending" id="usecase-status">Pending</div>
+            </div>
+            <div class="node-card task">
+                <h4>⚡ Task</h4>
+                <p>Specific actionable work items and deliverables</p>
+                <div class="status pending" id="task-status">Pending</div>
+            </div>
+            <div class="node-card expectation">
+                <h4>🎯 Expectation</h4>
+                <p>Expected outcomes and success criteria</p>
+                <div class="status pending" id="expectation-status">Pending</div>
+            </div>
+            <div class="node-card outcome">
+                <h4>✅ Outcome</h4>
+                <p>Actual results and achievements</p>
+                <div class="status pending" id="outcome-status">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="group-header">👥 Human-Centered Design Nodes</div>
+        <div class="test-grid">
+            <div class="node-card persona">
+                <h4>👤 Persona</h4>
+                <p>User personas and stakeholder profiles</p>
+                <div class="status pending" id="persona-status">Pending</div>
+            </div>
+            <div class="node-card screen">
+                <h4>📱 Screen</h4>
+                <p>User interface components and screens</p>
+                <div class="status pending" id="screen-status">Pending</div>
+            </div>
+            <div class="node-card presentation">
+                <h4>📽️ Presentation</h4>
+                <p>Presentation slides and demo materials</p>
+                <div class="status pending" id="presentation-status">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="group-header">⚙️ Business Workflow Nodes</div>
+        <div class="test-grid">
+            <div class="node-card process">
+                <h4>⚙️ Process</h4>
+                <p>Business processes and workflow steps</p>
+                <div class="status pending" id="process-status">Pending</div>
+            </div>
+            <div class="node-card storage">
+                <h4>💾 Storage</h4>
+                <p>Data storage and persistence layers</p>
+                <div class="status pending" id="storage-status">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="group-header">📚 Information & Assets Nodes</div>
+        <div class="test-grid">
+            <div class="node-card resource">
+                <h4>📎 Resource</h4>
+                <p>Files, documents, and external resources</p>
+                <div class="status pending" id="resource-status">Pending</div>
+            </div>
+            <div class="node-card knowledge">
+                <h4>🧠 Knowledge</h4>
+                <p>Knowledge base and learning materials</p>
+                <div class="status pending" id="knowledge-status">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="group-header">🔧 Meta-Collaboration Tools Nodes</div>
+        <div class="test-grid">
+            <div class="node-card note">
+                <h4>📝 Note</h4>
+                <p>General notes and comments</p>
+                <div class="status pending" id="note-status">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 Test Summary</h3>
+        <div id="summary">
+            <p><strong>Total Node Types:</strong> 12</p>
+            <p><strong>Tested:</strong> <span id="tested-count">0</span></p>
+            <p><strong>Passed:</strong> <span id="passed-count">0</span></p>
+            <p><strong>Failed:</strong> <span id="failed-count">0</span></p>
+        </div>
+        
+        <h4>Test Actions:</h4>
+        <button onclick="markAllSuccess()">✅ Mark All Success</button>
+        <button onclick="resetTest()">🔄 Reset Test</button>
+    </div>
+
+    <script>
+        const nodeTypes = [
+            'usecase', 'task', 'expectation', 'outcome',
+            'persona', 'screen', 'presentation', 
+            'process', 'storage',
+            'resource', 'knowledge',
+            'note'
+        ];
+
+        function markAllSuccess() {
+            nodeTypes.forEach(type => {
+                const statusEl = document.getElementById(type + '-status');
+                statusEl.textContent = 'Success';
+                statusEl.className = 'status success';
+            });
+            updateSummary();
+        }
+
+        function resetTest() {
+            nodeTypes.forEach(type => {
+                const statusEl = document.getElementById(type + '-status');
+                statusEl.textContent = 'Pending';
+                statusEl.className = 'status pending';
+            });
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const successCount = document.querySelectorAll('.status.success').length;
+            const errorCount = document.querySelectorAll('.status.error').length;
+            const pendingCount = document.querySelectorAll('.status.pending').length;
+            
+            document.getElementById('tested-count').textContent = successCount + errorCount;
+            document.getElementById('passed-count').textContent = successCount;
+            document.getElementById('failed-count').textContent = errorCount;
+        }
+
+        // Add click handlers to toggle status
+        nodeTypes.forEach(type => {
+            const statusEl = document.getElementById(type + '-status');
+            statusEl.addEventListener('click', function() {
+                if (this.className.includes('pending')) {
+                    this.textContent = 'Success';
+                    this.className = 'status success';
+                } else if (this.className.includes('success')) {
+                    this.textContent = 'Error';
+                    this.className = 'status error';
+                } else {
+                    this.textContent = 'Pending';
+                    this.className = 'status pending';
+                }
+                updateSummary();
+            });
+        });
+
+        // Initial summary update
+        updateSummary();
+    </script>
+</body>
+</html>

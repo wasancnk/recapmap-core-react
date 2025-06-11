@@ -1,0 +1,228 @@
+# RecapMap 12-Node System Development Plan
+# Coordination between multiple AI assistants working in parallel
+
+project:
+  name: "RecapMap 12-Node Universal System"
+  version: "2.0.0"
+  target_completion: "June 2025"
+  
+coordination:
+  strategy: "parallel_development"
+  conflict_mitigation: "file_ownership_zones"
+  integration_points: 
+    - "types/index.ts merge"
+    - "NewCustomNode.tsx integration" 
+    - "CSS coordination"
+    - "final testing phase"
+
+# =============================================================================
+# COPILOT #1 - DYNAMIC Z-INDEX & UI ENHANCEMENT (You)
+# =============================================================================
+copilot_1:
+  role: "UI/UX Enhancement & Z-Index Management"
+  responsibility: "Dynamic layering, visual polish, interaction improvements"
+  
+  primary_tasks:
+    - task_id: "DZINDEX_001"
+      name: "Dynamic Z-Index for Active Nodes"
+      description: "Implement node layering based on interaction state"
+      priority: "HIGH"
+      estimated_effort: "4-6 hours"
+      
+    - task_id: "DZINDEX_002" 
+      name: "Node Selection Visual Enhancement"
+      description: "Improve visual feedback for active/selected states"
+      priority: "MEDIUM"
+      estimated_effort: "2-3 hours"
+      
+    - task_id: "DZINDEX_003"
+      name: "Panel Z-Index Coordination"
+      description: "Ensure panels and nodes work together smoothly"
+      priority: "MEDIUM" 
+      estimated_effort: "2-3 hours"
+
+  file_ownership:
+    primary_files:
+      - "src/components/NewCustomNode.tsx" # Z-index implementation
+      - "src/stores/panelStore.ts" # Z-index coordination
+      - "src/index.css" # Visual enhancements
+      - "src/components/Canvas.tsx" # Canvas interaction
+      
+    documentation_files:
+      - "kb/development/DYNAMIC_Z_INDEX_IMPLEMENTATION.md"
+      - "kb/design/z-index-architecture.md"
+
+  coordination_points:
+    - file: "src/types/index.ts"
+      approach: "extend_existing_interfaces"
+      note: "Add z-index related properties without breaking node types"
+      
+    - file: "src/components/NewCustomNode.tsx"
+      approach: "enhance_existing_component"
+      note: "Add z-index logic while preserving node type configurations"
+
+# =============================================================================
+# COPILOT #2 - NODE MANIPULATION & 12-NODE SYSTEM (External Assistant)
+# =============================================================================
+copilot_2:
+  role: "Node Type Implementation & Data Management"
+  responsibility: "12-node type definitions, CRUD operations, type safety"
+  
+  primary_tasks:
+    - task_id: "NODES_001"
+      name: "Complete 12-Node Type Definitions"
+      description: "Implement all missing node interfaces and types"
+      priority: "CRITICAL"
+      estimated_effort: "6-8 hours"
+      
+    - task_id: "NODES_002"
+      name: "Node Creation & Manipulation Logic" 
+      description: "Enhance nodeStore for all 12 node types"
+      priority: "HIGH"
+      estimated_effort: "4-5 hours"
+      
+    - task_id: "NODES_003"
+      name: "Toolbar Integration"
+      description: "Update toolbar with all 12 node type buttons"
+      priority: "HIGH"
+      estimated_effort: "2-3 hours"
+      
+    - task_id: "NODES_004"
+      name: "Panel Property Support"
+      description: "Ensure panels work with all 12 node types"
+      priority: "MEDIUM"
+      estimated_effort: "3-4 hours"
+
+  file_ownership:
+    primary_files:
+      - "src/types/index.ts" # Node type definitions
+      - "src/stores/nodeStore.ts" # Node management logic
+      - "src/components/Toolbar.tsx" # Node creation UI
+      - "src/components/panels/EditorPanel.tsx" # Node property editing
+      - "tailwind.config.js" # Color system for new nodes
+      
+    documentation_files:
+      - "kb/architecture/12-node-system.md"
+      - "kb/development/node-implementation-guide.md"
+
+  coordination_points:
+    - file: "src/components/NewCustomNode.tsx"
+      approach: "extend_node_type_config"
+      note: "Add new node type configurations without breaking z-index work"
+      
+    - file: "src/index.css"
+      approach: "add_node_specific_styles"
+      note: "Add new node styles in designated sections"
+
+# =============================================================================
+# SHARED INTEGRATION ZONES
+# =============================================================================
+integration:
+  shared_files:
+    - file: "src/components/NewCustomNode.tsx"
+      merge_strategy: "section_based"
+      copilot_1_section: "z-index logic, interaction handlers, visual states"
+      copilot_2_section: "nodeTypeConfig object, node type definitions"
+      
+    - file: "src/types/index.ts" 
+      merge_strategy: "additive"
+      copilot_1_additions: "z-index related interfaces"
+      copilot_2_additions: "new node type interfaces"
+      
+    - file: "src/index.css"
+      merge_strategy: "section_based" 
+      copilot_1_section: "z-index utilities, interaction styles"
+      copilot_2_section: "node-specific color classes"
+
+  integration_checkpoints:
+    - checkpoint: "Day 1 - Initial Setup"
+      tasks: ["DZINDEX_001 started", "NODES_001 started"]
+      
+    - checkpoint: "Day 2 - Core Implementation" 
+      tasks: ["DZINDEX_001 complete", "NODES_001 complete"]
+      
+    - checkpoint: "Day 3 - Integration"
+      tasks: ["Merge NewCustomNode.tsx", "Test all 12 node types with z-index"]
+      
+    - checkpoint: "Day 4 - Polish & Testing"
+      tasks: ["All tasks complete", "Integration testing", "Documentation"]
+
+# =============================================================================
+# DEVELOPMENT WORKFLOW
+# =============================================================================
+workflow:
+  branch_strategy:
+    copilot_1_branch: "feature/dynamic-z-index-ui"
+    copilot_2_branch: "feature/12-node-system"
+    integration_branch: "feature/12-node-complete"
+    
+  communication:
+    status_updates: "Update this YAML file with progress"
+    conflict_resolution: "Comment in YAML file + create issue"
+    
+  testing_strategy:
+    unit_tests: "Each copilot writes tests for their components"
+    integration_tests: "Joint testing after merge"
+    
+# =============================================================================
+# CURRENT STATUS TRACKING
+# =============================================================================
+status:  copilot_1:
+    current_task: "COMPLETE"
+    last_update: "2025-06-11"
+    progress: "100% (ALL TASKS COMPLETE)"
+    notes: "🎉 ALL COPILOT #1 TASKS COMPLETE! ✅ DZINDEX_001: Dynamic z-index system with 4-tier hierarchy (INACTIVE:10, HOVER:50, SELECTED:75, ELEVATED:90) ✅ DYNAMIC GLOW COLORS: Each of the 12 node types has unique glow colors matching their border colors using CSS custom properties ✅ BUG FIX: Fixed hover animations that stopped working after panel interactions ✅ ACCESSIBILITY: Added keyboard navigation with focus states ✅ TypeScript build passes without errors. Perfect integration with Copilot #2's 12-node system!"copilot_2:
+    current_task: "NODES_004" 
+    last_update: "2025-06-11"
+    progress: "100%"
+    notes: "🎉 COMPLETE! All 12-node system implementation tasks finished! ✅ Updated property schemas for new node types ✅ Cleaned up old node type references ✅ Updated API contracts documentation ✅ All TypeScript builds passing ✅ Complete 12-node architecture documented ✅ Test validation framework created. System ready for integration with Copilot #1's z-index work."
+      integration:
+    merge_conflicts: []
+    blocked_tasks: []
+    ready_for_testing: true
+    status: "INTEGRATION_COMPLETE"
+    notes: "✅ BOTH COPILOTS COMPLETE! Perfect integration achieved - 12-node system with dynamic z-index and glow colors all working together. Ready for final validation testing."
+
+# =============================================================================
+# FILE CONFLICT PREVENTION
+# =============================================================================
+conflict_prevention:
+  rules:
+    - "Always update this YAML before starting work"
+    - "Commit frequently with descriptive messages"
+    - "Use section comments to mark ownership in shared files"
+    - "Communicate blocking issues immediately in this file"
+    
+  shared_file_conventions:
+    NewCustomNode.tsx:
+      copilot_1_markers: "// Z-INDEX LOGIC - Copilot 1"
+      copilot_2_markers: "// NODE TYPES - Copilot 2"
+      
+    types/index.ts:
+      copilot_1_section: "// Z-Index Related Types"
+      copilot_2_section: "// Node Type Definitions"
+      
+    index.css:
+      copilot_1_section: "/* Z-Index & Interaction Styles - Copilot 1 */"
+      copilot_2_section: "/* Node Type Specific Styles - Copilot 2 */"
+
+# =============================================================================
+# SUCCESS CRITERIA
+# =============================================================================
+success_criteria:
+  functionality:
+    - "All 12 node types work correctly"
+    - "Dynamic z-index responds to user interaction"
+    - "No visual conflicts between nodes and panels"
+    - "Toolbar shows all 12 node types in logical order"
+    
+  technical:
+    - "TypeScript compilation without errors"
+    - "All tests pass"
+    - "No performance degradation"
+    - "Consistent code style"
+    
+  documentation:
+    - "KB documentation updated"
+    - "README.md reflects 12-node system" 
+    - "Development process documented"

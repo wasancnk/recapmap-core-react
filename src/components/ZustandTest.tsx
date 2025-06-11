@@ -135,12 +135,11 @@ export const ZustandTest: React.FC = () => {
                 onClick={() => handleAddNode('screen')}
               >
                 Add Screen
-              </button>
-              <button 
+              </button>              <button 
                 className="btn-primary text-sm"
-                onClick={() => handleAddNode('user')}
+                onClick={() => handleAddNode('persona')}
               >
-                Add User
+                Add Persona
               </button>
               <button 
                 className="btn-primary text-sm"

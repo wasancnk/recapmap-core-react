@@ -27,11 +27,10 @@ const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: num
     return; // Don't create test nodes if they already exist
   }
 
-  console.log('🎭 Creating test nodes...');
-  // Create a few test nodes
+  console.log('🎭 Creating test nodes...');  // Create a few test nodes
   const node1Id = addNode('usecase', { x: 100, y: 100 });
   const node2Id = addNode('screen', { x: 300, y: 100 });
-  const node3Id = addNode('user', { x: 100, y: 250 });
+  const node3Id = addNode('persona', { x: 100, y: 250 });
   const node4Id = addNode('process', { x: 300, y: 250 });
 
   console.log('✅ Test nodes created:', { node1Id, node2Id, node3Id, node4Id });
