@@ -189,13 +189,13 @@ export const Toolbar: React.FC = () => {
     // Strategic Planning Nodes (Stripe Pattern)
     {
       type: 'usecase',
-      label: 'Use Case',
+      label: 'Case',
       className: 'bg-lime-700 border-lime-800 text-white hover:bg-lime-800 usecase-stripes',
-      icon: '🎯'
+      icon: '📋'
     },
     {
       type: 'presentation',
-      label: 'Presentation',
+      label: 'View',
       className: 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 presentation-stripes',
       icon: '📽️'
     },
@@ -208,7 +208,7 @@ export const Toolbar: React.FC = () => {
     },
     {
       type: 'screen',
-      label: 'Screen',
+      label: 'Interface',
       className: 'bg-green-500 border-green-600 text-white hover:bg-green-600',
       icon: '📱'
     },
@@ -221,9 +221,9 @@ export const Toolbar: React.FC = () => {
     },
     {
       type: 'expectation',
-      label: 'Expectation',
+      label: 'Capability',
       className: 'bg-blue-500 border-blue-600 text-white hover:bg-blue-600',
-      icon: '🎯'
+      icon: '⚡'
     },
     {
       type: 'outcome',
@@ -235,7 +235,7 @@ export const Toolbar: React.FC = () => {
       type: 'resource',
       label: 'Resource',
       className: 'bg-pink-500 border-pink-600 text-white hover:bg-pink-600',
-      icon: '📎'
+      icon: '📦'
     },
     {
       type: 'knowledge',

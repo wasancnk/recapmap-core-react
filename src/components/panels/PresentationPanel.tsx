@@ -255,7 +255,7 @@ export const PresentationPanel: React.FC = () => {
               <div className="text-xs text-text-muted text-center py-4">
                 No presentation-ready nodes found.
                 <br />
-                Create some Presentation, Note, Use Case, or Screen nodes.
+                Create some View, Note, Case, or Interface nodes.
               </div>
             )}
           </div>

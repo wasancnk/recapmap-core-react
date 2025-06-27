@@ -25,7 +25,8 @@ export const NodePanel: React.FC<NodePanelProps> = ({
 
   const handleClose = () => {
     closePanel(nodeId, panelState.panelType);
-  };  const handleClick = () => {
+  };  
+  const handleClick = () => {
     promoteNodeGroup(nodeId);
   };
 

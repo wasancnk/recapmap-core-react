@@ -113,15 +113,15 @@ const NewCustomNode = ({
   // Colors synchronized with Toolbar.tsx for consistency across all states
   const nodeTypeConfig = {    // Strategic Planning Nodes
     'usecase': { 
-      icon: '🎯', 
-      label: 'Use Case',
+      icon: '📋', 
+      label: 'Case',
       bgColor: '#1e1e2f',
       borderColor: '#4d7c0f', // Matches bg-lime-700 from Toolbar
       textColor: '#FFFFFF'
     },
     'expectation': { 
-      icon: '🎯', 
-      label: 'Expectation',
+      icon: '⚡', 
+      label: 'Capability',
       bgColor: '#1e1e2f',
       borderColor: '#3b82f6', // Matches bg-blue-500 from Toolbar
       textColor: '#FFFFFF'
@@ -144,14 +144,14 @@ const NewCustomNode = ({
     },
     'screen': { 
       icon: '📱', 
-      label: 'Screen',
+      label: 'Interface',
       bgColor: '#1e1e2f',
       borderColor: '#10b981', // Matches bg-green-500 from Toolbar
       textColor: '#FFFFFF'
     },
     'presentation': { 
       icon: '📽️', 
-      label: 'Presentation',
+      label: 'View',
       bgColor: '#1e1e2f',
       borderColor: '#4f46e5', // Matches bg-indigo-600 from Toolbar
       textColor: '#FFFFFF'
@@ -174,7 +174,7 @@ const NewCustomNode = ({
     
     // Information & Assets Nodes
     'resource': { 
-      icon: '📎', 
+      icon: '📦', 
       label: 'Resource',
       bgColor: '#1e1e2f',
       borderColor: '#ec4899', // Matches bg-pink-500 from Toolbar
