@@ -124,7 +124,9 @@ const NewCustomNode = ({
   
   // Dynamic glow color based on node's border color
   const glowColor = hexToRgba(config.borderColor, 0.6);
-  const selectedStyle = selected ? 'ring-2 ring-white' : '';const handleDoubleClick = (e: React.MouseEvent) => {
+  // Removed buggy ring animation: const selectedStyle = selected ? 'ring-2 ring-white' : '';
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Toggle editor panel on double-click
     if (panelStore.isPanelOpen(id, 'editor')) {
@@ -239,10 +241,9 @@ const NewCustomNode = ({
         transition-all duration-200 hover:bg-opacity-90 cursor-pointer
         relative flex flex-col
         node-uniform-size node-grid-aligned
-        node-${data.nodeType}        ${selectedStyle}
+        node-${data.nodeType}
         node-interactive
         ${(isHovered || isFocused) && nodeState !== 'elevated' ? 'node-hover-effect' : ''}
-        ${nodeState === 'selected' ? 'node-selected-effect' : ''}
         ${nodeState === 'elevated' ? 'node-elevated-effect' : ''}
         ${(isHovered || isFocused) && nodeState === 'elevated' ? 'node-elevated-hover-effect' : ''}
         ${isFocused ? 'node-focus-effect' : ''}

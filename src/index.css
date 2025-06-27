@@ -138,9 +138,10 @@
     }
   }
 
-  .node-base.selected {
+  /* .node-base.selected removed - buggy selection ring */
+  /* .node-base.selected {
     @apply shadow-node-selected;
-  }
+  } */
 
   /* Grid alignment helpers for manual positioning */
   .snap-to-grid {
@@ -347,11 +348,7 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   }
   
-  .node-selected-effect {
-    transform: scale(1.01);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 
-                0 0 20px rgba(255, 255, 255, 0.3);
-  }
+  /* .node-selected-effect removed - buggy selection animation */
     .node-elevated-effect {
     transform: scale(1.03);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
@@ -632,14 +629,14 @@
     transition: all 0.2s ease;
   }
   
-  /* Selected Effect - Slight scale with dynamic color glow */
-  .node-selected-effect {
+  /* Selected Effect - removed to eliminate buggy 2-line ring */
+  /* .node-selected-effect {
     transform: scale(1.01);
     box-shadow: 
       0 0 20px var(--node-glow-color, rgba(255, 255, 255, 0.6)),
       0 8px 25px rgba(0, 0, 0, 0.3);
     transition: all 0.2s ease;
-  }
+  } */
   
   /* Elevated Effect - Larger scale with dynamic border glow */
   .node-elevated-effect {
