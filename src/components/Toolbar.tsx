@@ -5,6 +5,7 @@ import { useUIStore } from '../stores/uiStore';
 import { useProjectStore } from '../stores/projectStore';
 import { usePanelStore } from '../stores/panelStore';
 import { useDraggable } from '../hooks/useDraggable';
+import { getAllNodeTypes } from '../config/nodeTypes';
 import type { NodeType } from '../types';
 
 interface NodeButtonProps {
@@ -180,88 +181,16 @@ export const Toolbar: React.FC = () => {
   const { position: draggablePosition, dragRef, dragHandleProps } = useDraggable({
     initialPosition,
   });
-  const nodeTypes: Array<{
-    type: NodeType;
-    label: string;
-    className: string;
-    icon: string;
-  }> = [
-    // Strategic Planning Nodes (Stripe Pattern)
-    {
-      type: 'usecase',
-      label: 'Case',
-      className: 'bg-lime-700 border-lime-800 text-white hover:bg-lime-800 usecase-stripes',
-      icon: '📋'
-    },
-    {
-      type: 'presentation',
-      label: 'View',
-      className: 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 presentation-stripes',
-      icon: '📽️'
-    },
-    // Human-Centered Design
-    {
-      type: 'persona',
-      label: 'Persona',
-      className: 'bg-orange-500 border-orange-600 text-white hover:bg-orange-600',
-      icon: '👤'
-    },
-    {
-      type: 'screen',
-      label: 'Interface',
-      className: 'bg-green-500 border-green-600 text-white hover:bg-green-600',
-      icon: '📱'
-    },
-    // Business Workflow
-    {
-      type: 'process',
-      label: 'Process',
-      className: 'bg-purple-500 border-purple-600 text-white hover:bg-purple-600',
-      icon: '⚙️'
-    },
-    {
-      type: 'expectation',
-      label: 'Capability',
-      className: 'bg-blue-500 border-blue-600 text-white hover:bg-blue-600',
-      icon: '⚡'
-    },
-    {
-      type: 'outcome',
-      label: 'Outcome',
-      className: 'bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600',
-      icon: '✅'    },
-    // Information & Assets
-    {
-      type: 'resource',
-      label: 'Resource',
-      className: 'bg-pink-500 border-pink-600 text-white hover:bg-pink-600',
-      icon: '📦'
-    },
-    {
-      type: 'knowledge',
-      label: 'Knowledge',
-      className: 'bg-cyan-500 border-cyan-600 text-white hover:bg-cyan-600',
-      icon: '🧠'
-    },
-    {
-      type: 'storage',
-      label: 'Storage',
-      className: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600',
-      icon: '💾'
-    },    // Meta-Collaboration Tools (Sticky Note Style)
-    {
-      type: 'task',
-      label: 'Task',
-      className: 'bg-pink-300 border-pink-400 text-black hover:bg-pink-400',
-      icon: '✔️'
-    },
-    {
-      type: 'note',
-      label: 'Note',
-      className: 'bg-yellow-300 border-yellow-400 text-black hover:bg-yellow-400',
-      icon: '🖊️'
-    },
-  ];const handleClearAll = () => {
+  
+  // Use centralized node configuration
+  const nodeTypes = getAllNodeTypes().map(config => ({
+    type: config.type,
+    label: config.label,
+    className: config.toolbarClassName,
+    icon: config.icon
+  }));
+
+  const handleClearAll = () => {
     if (nodes.length > 0 || connections.length > 0) {
       if (window.confirm('Are you sure you want to clear all nodes and connections?')) {
         // Clear selection first

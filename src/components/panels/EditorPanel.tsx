@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNodeStore } from '../../stores/nodeStore';
+import { getNodeConfig } from '../../config/nodeTypes';
 
 interface EditorPanelProps {
   nodeId: string;
@@ -67,23 +68,10 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ nodeId }) => {
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${node.title}"?`)) {
       deleteNode(nodeId);
-    }  };  // Get node type info
-  const nodeTypeConfig = {
-    'usecase': { icon: '🎯', label: 'Case' },
-    'presentation': { icon: '📽️', label: 'View' },
-    'persona': { icon: '👤', label: 'Persona' },
-    'screen': { icon: '📱', label: 'Interface' },
-    'process': { icon: '⚙️', label: 'Process' },
-    'expectation': { icon: '⚡', label: 'Capability' },
-    'outcome': { icon: '✅', label: 'Outcome' },
-    'resource': { icon: '�', label: 'Resource' },
-    'knowledge': { icon: '🧠', label: 'Knowledge' },
-    'storage': { icon: '💾', label: 'Storage' },
-    'task': { icon: '✔️', label: 'Task' },
-    'note': { icon: '🖊️', label: 'Note' }
-  };
+    }  };
 
-  const config = nodeTypeConfig[node.type] || nodeTypeConfig['note'];
+  // Use centralized node configuration
+  const config = getNodeConfig(node.type);
 
   return (
     <div className="p-4 h-full overflow-y-auto scrollbar-dark">{/* Header with Save Button */}

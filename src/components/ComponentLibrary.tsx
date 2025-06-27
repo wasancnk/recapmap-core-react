@@ -187,7 +187,7 @@ function CanvasLayout() {
                     📱 Interface
                   </button>
                   <button className="bg-orange-500 border-orange-600 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2 justify-center">
-                    👤 User
+                    👤 Persona
                   </button>
                   <button className="bg-purple-500 border-purple-600 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2 justify-center">
                     ⚙️ Process

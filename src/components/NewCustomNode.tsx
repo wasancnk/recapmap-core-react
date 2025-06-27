@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { useNodeStore } from '../stores/nodeStore';
 import { usePanelStore } from '../stores/panelStore';
+import { getNodeConfig } from '../config/nodeTypes';
 import type { NodeType } from '../types';
 
 // Z-INDEX LOGIC - Copilot 1
@@ -108,101 +109,10 @@ const NewCustomNode = ({
       setNodeZIndex(NODE_Z_INDEX.INACTIVE);
       setNodeState('inactive');
     }
-  }, [selected, nodeState, id]);// NODE TYPES - Copilot 2
-  // 12-Node Universal System configurations with icons and colors
-  // Colors synchronized with Toolbar.tsx for consistency across all states
-  const nodeTypeConfig = {    // Strategic Planning Nodes
-    'usecase': { 
-      icon: '📋', 
-      label: 'Case',
-      bgColor: '#1e1e2f',
-      borderColor: '#4d7c0f', // Matches bg-lime-700 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    'expectation': { 
-      icon: '⚡', 
-      label: 'Capability',
-      bgColor: '#1e1e2f',
-      borderColor: '#3b82f6', // Matches bg-blue-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    'outcome': { 
-      icon: '✅', 
-      label: 'Outcome',
-      bgColor: '#1e1e2f',
-      borderColor: '#10b981', // Matches bg-emerald-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    
-    // Human-Centered Design Nodes
-    'persona': { 
-      icon: '👤', 
-      label: 'Persona',
-      bgColor: '#1e1e2f',
-      borderColor: '#f97316', // Matches bg-orange-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    'screen': { 
-      icon: '📱', 
-      label: 'Interface',
-      bgColor: '#1e1e2f',
-      borderColor: '#10b981', // Matches bg-green-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    'presentation': { 
-      icon: '📽️', 
-      label: 'View',
-      bgColor: '#1e1e2f',
-      borderColor: '#4f46e5', // Matches bg-indigo-600 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    
-    // Business Workflow Nodes
-    'process': { 
-      icon: '⚙️', 
-      label: 'Process',
-      bgColor: '#1e1e2f',
-      borderColor: '#a855f7', // Matches bg-purple-500 from Toolbar
-      textColor: '#FFFFFF'    },
-    'storage': { 
-      icon: '💾', 
-      label: 'Storage',
-      bgColor: '#1e1e2f',
-      borderColor: '#6b7280', // Matches bg-gray-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    
-    // Information & Assets Nodes
-    'resource': { 
-      icon: '📦', 
-      label: 'Resource',
-      bgColor: '#1e1e2f',
-      borderColor: '#ec4899', // Matches bg-pink-500 from Toolbar
-      textColor: '#FFFFFF'
-    },
-    'knowledge': { 
-      icon: '🧠', 
-      label: 'Knowledge',
-      bgColor: '#1e1e2f',
-      borderColor: '#06b6d4', // Matches bg-cyan-500 from Toolbar
-      textColor: '#FFFFFF'
-    },    // Meta-Collaboration Tools Nodes (Sticky Note Style)
-    'task': { 
-      icon: '✔️', 
-      label: 'Task',
-      bgColor: '#f9a8d4', // Bright pastel rose gold background
-      borderColor: '#ec4899', // Darker pink border
-      textColor: '#000000' // Pure black text
-    },
-    'note': { 
-      icon: '🖊️', 
-      label: 'Note',
-      bgColor: '#fde047', // Bright pastel yellow background
-      borderColor: '#eab308', // Darker yellow border
-      textColor: '#000000' // Pure black text
-    },
-  };
-  const config = nodeTypeConfig[data.nodeType] || nodeTypeConfig['note'];
+  }, [selected, nodeState, id]);
+
+  // Use centralized node configuration
+  const config = getNodeConfig(data.nodeType);
   
   // Convert hex border color to rgba for glow effects
   const hexToRgba = (hex: string, alpha: number = 0.6) => {

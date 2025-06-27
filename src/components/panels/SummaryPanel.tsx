@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNodeStore } from '../../stores/nodeStore';
+import { getNodeConfig } from '../../config/nodeTypes';
 
 interface SummaryPanelProps {
   nodeId: string;
@@ -33,24 +34,12 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({ nodeId }) => {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };  // Get node type configuration for icon
-  const nodeTypeConfig = {
-    'usecase': { icon: '🎯', label: 'Case' },
-    'presentation': { icon: '📽️', label: 'View' },
-    'persona': { icon: '👤', label: 'Persona' },
-    'screen': { icon: '📱', label: 'Interface' },
-    'process': { icon: '⚙️', label: 'Process' },
-    'expectation': { icon: '⚡', label: 'Capability' },
-    'outcome': { icon: '✅', label: 'Outcome' },
-    'resource': { icon: '�', label: 'Resource' },
-    'knowledge': { icon: '🧠', label: 'Knowledge' },
-    'storage': { icon: '💾', label: 'Storage' },
-    'task': { icon: '✔️', label: 'Task' },
-    'note': { icon: '🖊️', label: 'Note' }
   };
 
-  const config = nodeTypeConfig[node.type] || nodeTypeConfig['note'];
-    return (
+  // Use centralized node configuration
+  const config = getNodeConfig(node.type);
+
+  return (
     <div className="p-4 h-full overflow-y-auto scrollbar-dark">
       {/* Node Header with Type */}
       <div className="mb-4 pb-3 border-b border-gray-700/50">
