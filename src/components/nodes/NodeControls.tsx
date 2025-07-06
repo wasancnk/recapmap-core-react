@@ -41,9 +41,10 @@ export const NodeControls: React.FC<NodeControlsProps> = ({
   }
 
   return (
-    <div className="absolute -top-8 left-0 flex gap-1">
+    <div className="flex gap-1 mb-2 relative z-50" style={{ pointerEvents: 'auto' }}>
       <button
-        className="w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded flex items-center justify-center transition-colors"
+        className="w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded flex items-center justify-center transition-colors relative z-50"
+        style={{ pointerEvents: 'auto' }}
         onClick={toggleSummaryPanel}
         title={
           isToggling 
@@ -56,7 +57,8 @@ export const NodeControls: React.FC<NodeControlsProps> = ({
         📊
       </button>
       <button
-        className="w-6 h-6 bg-green-500 hover:bg-green-600 text-white text-xs rounded flex items-center justify-center transition-colors"
+        className="w-6 h-6 bg-green-500 hover:bg-green-600 text-white text-xs rounded flex items-center justify-center transition-colors relative z-50"
+        style={{ pointerEvents: 'auto' }}
         onClick={toggleEditorPanel}
         title={
           isToggling 

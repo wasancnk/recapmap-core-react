@@ -5,9 +5,9 @@ import { useNodeStore } from '../../stores/nodeStore';
 import type { PanelState } from '../../stores/panelStore';
 import { NodePanel } from './NodePanel';
 
-// Import panels with explicit file extensions to help TypeScript resolve modules
-import { SummaryPanel } from './SummaryPanel.tsx';
-import { EditorPanel } from './EditorPanel.tsx';
+// Import panels
+import { SummaryPanel } from './SummaryPanel';
+import { EditorPanel } from './EditorPanel';
 
 export const PanelManager: React.FC = () => {
   const { panels, calculatePanelPosition } = usePanelStore();

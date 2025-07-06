@@ -2,7 +2,14 @@
  * WrappedCustomNode.tsx - Universal Node Component for RecapMap
  * 
  * This is the MAIN node component that handles ALL 12 node types in the RecapMap system.
- * It's called "Wrapped" because it wraps React Flow's basic node functionality with:
+ * It's called "Wrapped" because it wraps React Flow's basic n  } : {
+    backgroundColor: config.bgColor,
+    borderColor: config.borderColor,
+    color: config.textColor,
+    width: '200px',
+    height: '160px', 
+    padding: '12px'
+  };tionality with:
  * - Custom styling and interactions
  * - Panel management (summary, editor, AI chat, etc.)
  * - Dynamic z-index handling
@@ -373,9 +380,9 @@ const WrappedCustomNode: React.FC<NodeProps> = ({
             }}
           />
 
-          {/* Panel Controls - Top Section */}
+          {/* Panel Controls - Inside Node, Top Right */}
           {(isHovered || nodeState === 'elevated') && (
-            <div className="absolute -top-8 left-0 flex gap-1">
+            <div className="absolute top-2 right-2 flex gap-1">
               <button
                 className="w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded flex items-center justify-center transition-colors"
                 onClick={toggleSummaryPanel}
@@ -404,6 +411,12 @@ const WrappedCustomNode: React.FC<NodeProps> = ({
               </button>
             </div>
           )}
+
+          {/* Node Type Header */}
+          <div className="flex items-center gap-2 mb-2 text-sm opacity-80">
+            <span className="text-lg">{config.icon}</span>
+            <span className="font-medium">{config.label}</span>
+          </div>
 
           {/* Node Title - Center */}
           <div className="flex-1 flex flex-col justify-center">

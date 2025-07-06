@@ -48,8 +48,8 @@ const NodeWrapper: React.FC<NodeProps> = ({
     <div 
       className="relative"
       style={{
-        // Make sure the wrapper doesn't interfere with node selection/dragging
-        pointerEvents: 'none'
+        // Allow pointer events for interactive elements inside
+        pointerEvents: 'auto'
       }}
     >
       {/* The actual node */}

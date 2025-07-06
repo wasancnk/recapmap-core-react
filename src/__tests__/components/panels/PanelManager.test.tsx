@@ -13,6 +13,14 @@ vi.mock('../../../stores/nodeStore', () => ({
   useNodeStore: vi.fn()
 }));
 
+// Mock React Flow
+vi.mock('@xyflow/react', () => ({
+  useReactFlow: vi.fn(() => ({
+    getViewport: vi.fn(() => ({ x: 0, y: 0, zoom: 1 })),
+    project: vi.fn((point) => point),
+  }))
+}));
+
 import { usePanelStore } from '../../../stores/panelStore';
 import { useNodeStore } from '../../../stores/nodeStore';
 const mockUsePanelStore = vi.mocked(usePanelStore);

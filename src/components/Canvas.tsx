@@ -33,7 +33,7 @@ import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { useSmartScroll } from '../hooks/useSmartScroll';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
-import WrappedCustomNode from './nodes';
+import NodeWrapper from './nodes';
 import type { NodeType } from '../types';
 
 // Test nodes for connection testing
@@ -54,7 +54,7 @@ const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: num
 
 // Node types for React Flow
 const nodeTypes = {
-  customNode: WrappedCustomNode,
+  customNode: NodeWrapper,
 };
 
 // Inner Canvas component that uses ReactFlow hooks
@@ -126,7 +126,7 @@ const CanvasInner: React.FC = () => {
       data: {
         label: node.title,
         description: node.description,
-        nodeType: node.type,
+        type: node.type,
       },
       selected: selectedNodeIds.includes(node.id),
       connectable: true,

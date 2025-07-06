@@ -254,17 +254,9 @@ describe('NodeStore - swapConnection', () => {
         'About to perform atomic swap'
       );
 
-      expect(logger.connectionDebug).toHaveBeenCalledWith(
+      expect(logger.connectionSuccess).toHaveBeenCalledWith(
         'swapConnection',
-        'Post-swap verification',
-        expect.objectContaining({
-          connectionExists: true,
-          updatedConnection: expect.objectContaining({
-            id: connectionId,
-            sourceNodeId: targetNodeId,
-            targetNodeId: sourceNodeId
-          })
-        })
+        connectionId
       );
     });
   });

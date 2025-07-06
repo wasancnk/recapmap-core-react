@@ -26,7 +26,7 @@ export interface NodeTypeConfig {
 
 /**
  * Complete 12-Node Universal System Configuration
- * Colors synchronized across all UI states and components
+ * Unified dark theme for most nodes, with special treatments for Note/Task/Case/View
  */
 export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
   // Strategic Planning Nodes
@@ -34,7 +34,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'case',
     icon: '📋',
     label: 'Case',
-    bgColor: '#1e1e2f',
+    bgColor: '#22543d', // Special: Dark green with stripes
     borderColor: '#4d7c0f',
     textColor: '#FFFFFF',
     category: 'strategic',
@@ -47,7 +47,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'view',
     icon: '📽️',
     label: 'View',
-    bgColor: '#1e1e2f',
+    bgColor: '#312e81', // Special: Dark indigo with stripes
     borderColor: '#4f46e5',
     textColor: '#FFFFFF',
     category: 'human-centered',
@@ -60,8 +60,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'persona',
     icon: '👤',
     label: 'Persona',
-    bgColor: '#1e1e2f',
-    borderColor: '#f97316',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User personas and stakeholders',
@@ -72,8 +72,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'interface',
     icon: '📱',
     label: 'Interface',
-    bgColor: '#1e1e2f',
-    borderColor: '#10b981',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User interfaces and screens',
@@ -84,8 +84,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'process',
     icon: '⚙️',
     label: 'Process',
-    bgColor: '#1e1e2f',
-    borderColor: '#a855f7',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Business processes and workflows',
@@ -96,8 +96,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'capability',
     icon: '⚡',
     label: 'Capability',
-    bgColor: '#1e1e2f',
-    borderColor: '#3b82f6',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'System capabilities and expectations',
@@ -108,8 +108,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'outcome',
     icon: '✅',
     label: 'Outcome',
-    bgColor: '#1e1e2f',
-    borderColor: '#10b981',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'Expected outcomes and results',
@@ -120,8 +120,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'resource',
     icon: '📦',
     label: 'Resource',
-    bgColor: '#1e1e2f',
-    borderColor: '#ec4899',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Resources and assets',
@@ -132,8 +132,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'knowledge',
     icon: '🧠',
     label: 'Knowledge',
-    bgColor: '#1e1e2f',
-    borderColor: '#06b6d4',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Knowledge bases and information',
@@ -144,8 +144,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'storage',
     icon: '💾',
     label: 'Storage',
-    bgColor: '#1e1e2f',
-    borderColor: '#6b7280',
+    bgColor: '#374151', // Unified dark theme
+    borderColor: '#4b5563',
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Data storage and persistence',
@@ -182,7 +182,12 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
  * Helper functions for working with node configurations
  */
 export const getNodeConfig = (nodeType: NodeType): NodeTypeConfig => {
-  return NODE_TYPE_CONFIGS[nodeType] || NODE_TYPE_CONFIGS['note'];
+  const config = NODE_TYPE_CONFIGS[nodeType];
+  if (!config) {
+    console.error(`Invalid node type: "${nodeType}". Available types:`, Object.keys(NODE_TYPE_CONFIGS));
+    throw new Error(`Invalid node type: "${nodeType}"`);
+  }
+  return config;
 };
 
 export const getNodesByCategory = (category: NodeTypeConfig['category']): NodeTypeConfig[] => {

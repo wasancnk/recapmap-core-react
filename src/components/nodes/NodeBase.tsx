@@ -124,7 +124,13 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
         {/* Connection Handles */}
         <NodeHandles showConnectors={showConnectors} />
 
-        {/* Panel Controls */}
+        {/* Node Type Header */}
+        <div className="flex items-center gap-2 mb-2 text-sm opacity-80">
+          <span className="text-lg">{config.icon}</span>
+          <span className="font-medium">{config.label}</span>
+        </div>
+
+        {/* Panel Controls - positioned below header */}
         <NodeControls
           isHovered={isHovered}
           nodeState={nodeState}

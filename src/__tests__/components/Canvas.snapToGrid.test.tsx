@@ -57,6 +57,17 @@ vi.mock('@xyflow/react', () => ({
   },
   useNodesState: () => [[], vi.fn(), vi.fn()],
   useEdgesState: () => [[], vi.fn(), vi.fn()],
+  useReactFlow: () => ({
+    getNode: vi.fn(),
+    getNodes: vi.fn(() => []),
+    getEdges: vi.fn(() => []),
+    getViewport: vi.fn(() => ({ x: 0, y: 0, zoom: 1 })),
+    setViewport: vi.fn(),
+    project: vi.fn((point) => point),
+    getZoom: vi.fn(() => 1),
+    fitView: vi.fn(),
+    setCenter: vi.fn(),
+  }),
   BackgroundVariant: {
     Dots: 'dots',
   },

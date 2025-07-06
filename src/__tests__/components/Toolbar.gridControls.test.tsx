@@ -80,7 +80,10 @@ describe('Toolbar Grid Controls', () => {  beforeEach(() => {
     
     const snapButton = screen.getByText('Snap to Grid').closest('button')
     expect(snapButton).toHaveClass('bg-accent-primary')
-    expect(screen.getByText('⚡')).toBeInTheDocument()
+    
+    // Check for the lightning bolt icon within the snap button specifically
+    const iconInSnapButton = snapButton?.querySelector('span')
+    expect(iconInSnapButton).toHaveTextContent('⚡')
   })
   it('should show inactive state for Snap to Grid button when snap is disabled', () => {
     const disabledSnapUIStore = {

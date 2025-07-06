@@ -76,6 +76,7 @@ describe('useSmartScroll', () => {
   it('should handle wheel events when mouse is over scrollable panel', () => {
     const mockPanel = {
       matches: vi.fn().mockReturnValue(true),
+      closest: vi.fn().mockReturnValue(null),
       scrollTop: 0,
       scrollHeight: 200,
       clientHeight: 100,
@@ -119,6 +120,7 @@ describe('useSmartScroll', () => {
   it('should not intercept wheel events when mouse is not over scrollable panel', () => {
     const mockNonScrollableElement = {
       matches: vi.fn().mockReturnValue(false),
+      closest: vi.fn().mockReturnValue(null),
     };
 
     const mockEvent = {
@@ -148,6 +150,7 @@ describe('useSmartScroll', () => {
   it('should handle vertical scrolling correctly', () => {
     const mockPanel = {
       matches: vi.fn().mockReturnValue(true),
+      closest: vi.fn().mockReturnValue(null),
       scrollTop: 50,
       scrollHeight: 200,
       clientHeight: 100,
@@ -189,6 +192,7 @@ describe('useSmartScroll', () => {
   it('should handle horizontal scrolling correctly', () => {
     const mockPanel = {
       matches: vi.fn().mockReturnValue(true),
+      closest: vi.fn().mockReturnValue(null),
       scrollTop: 0,
       scrollHeight: 100,
       clientHeight: 100,
@@ -231,6 +235,7 @@ describe('useSmartScroll', () => {
   it('should not scroll when panel is at scroll limit', () => {
     const mockPanel = {
       matches: vi.fn().mockReturnValue(true),
+      closest: vi.fn().mockReturnValue(null),
       scrollTop: 100, // At bottom (scrollHeight - clientHeight = 200 - 100 = 100)
       scrollHeight: 200,
       clientHeight: 100,
@@ -304,6 +309,7 @@ describe('useSmartScroll', () => {
   it('should handle nested scrollable elements', () => {
     const mockChildPanel = {
       matches: vi.fn().mockReturnValue(true),
+      closest: vi.fn().mockReturnValue(null),
       scrollTop: 0,
       scrollHeight: 150,
       clientHeight: 75,
@@ -352,6 +358,7 @@ describe('useSmartScroll', () => {
   it('should respect custom scroll sensitivity', () => {
     const mockPanel = {
       matches: vi.fn().mockReturnValue(true),
+      closest: vi.fn().mockReturnValue(null),
       scrollTop: 0,
       scrollHeight: 200,
       clientHeight: 100,
@@ -407,6 +414,7 @@ describe('useSmartScroll', () => {
           if (testId && selector.includes('[data-testid*="panel"]') && testId.includes('panel')) return true;
           return false;
         }),
+        closest: vi.fn().mockReturnValue(null),
         scrollTop: 0,
         scrollHeight: 200,
         clientHeight: 100,
