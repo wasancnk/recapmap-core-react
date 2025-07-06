@@ -124,33 +124,33 @@ export default {
           }
         },
         
-        // UI Theme Colors
+        // UI Theme Colors - GitHub Dark Mode Palette
         background: {
-          primary: '#0f0f23',     // Deep navy background
-          secondary: '#1a1a2e',   // Secondary panels
-          tertiary: '#16213e',    // Canvas background
-          modal: 'rgba(15, 15, 35, 0.95)' // Modal overlay
+          primary: '#0d1117',     // GitHub's main dark background
+          secondary: '#161b22',   // GitHub's secondary dark background
+          tertiary: '#0d1117',    // Canvas background - GitHub's main dark
+          modal: 'rgba(13, 17, 23, 0.95)' // Modal overlay with GitHub dark
         },
         
         surface: {
-          primary: '#16213e',     // Card backgrounds
-          secondary: '#1f2937',   // Panel backgrounds
-          elevated: '#374151',    // Raised surfaces
-          border: '#4b5563'       // Border colors
+          primary: '#161b22',     // GitHub's secondary dark for cards
+          secondary: '#21262d',   // GitHub's tertiary dark for panels
+          elevated: '#30363d',    // GitHub's elevated surfaces
+          border: '#30363d'       // GitHub's border color
         },
         
         text: {
-          primary: '#f9fafb',     // Main text
-          secondary: '#d1d5db',   // Secondary text
-          muted: '#9ca3af',       // Muted text
-          accent: '#60a5fa'       // Accent text
+          primary: '#ffffff',     // Main text
+          secondary: '#d4d4d4',   // Secondary text
+          muted: '#a3a3a3',       // Muted text
+          accent: '#e5e5e5'       // Accent text - lighter neutral
         },
         
         accent: {
-          primary: '#3b82f6',     // Primary actions
-          secondary: '#10b981',   // Success states
-          warning: '#f59e0b',     // Warning states
-          danger: '#ef4444'       // Error states
+          primary: '#606060',     // Primary actions - lighter neutral gray
+          secondary: '#10b981',   // Success states (keep green)
+          warning: '#f59e0b',     // Warning states (keep orange)
+          danger: '#ef4444'       // Error states (keep red)
         }
       },
       
@@ -158,7 +158,7 @@ export default {
       boxShadow: {
         'node': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.1)',
         'node-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
-        'node-selected': '0 0 0 2px rgba(59, 130, 246, 0.5), 0 10px 15px -3px rgba(0, 0, 0, 0.4)',
+        'node-selected': '0 0 0 2px rgba(96, 96, 96, 0.8), 0 10px 15px -3px rgba(0, 0, 0, 0.4)', // Lighter gray instead of blue
         'panel': '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
         'panel-elevated': '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
       },
@@ -233,11 +233,11 @@ export default {
         },
         '.scrollbar-dark': {
           'scrollbar-width': 'auto',
-          'scrollbar-color': 'rgba(59, 130, 246, 0.5) rgba(31, 41, 55, 0.2)',
+          'scrollbar-color': 'rgba(96, 96, 96, 0.5) rgba(31, 31, 31, 0.2)',
         },
         '.scrollbar-stable': {
           'scrollbar-width': 'thin',
-          'scrollbar-color': 'rgba(59, 130, 246, 0.7) rgba(31, 41, 55, 0.3)',
+          'scrollbar-color': 'rgba(96, 96, 96, 0.7) rgba(31, 31, 31, 0.3)',
           'overflow': 'scroll',
         },
       }

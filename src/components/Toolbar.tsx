@@ -239,7 +239,7 @@ export const Toolbar: React.FC = () => {
         top: draggablePosition.y 
       }}
     >
-      <div className="bg-surface-primary border border-surface-border rounded-lg shadow-lg p-4 w-80">
+      <div className="bg-background-secondary border border-surface-border rounded-lg shadow-lg p-4 w-80">
         {/* Drag Handle */}
         <div 
           className="flex justify-center py-2 cursor-grab active:cursor-grabbing select-none"

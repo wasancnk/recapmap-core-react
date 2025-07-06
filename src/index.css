@@ -306,12 +306,12 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
   }
   
-  /* Unified active/open state - consistent blue background for all node types */
+  /* Unified active/open state - consistent neutral background for all node types */
   .panel-toggle-button.panel-open {
-    background: rgba(59, 130, 246, 0.8) !important; /* Strong blue background for all nodes */
-    border-color: rgba(0, 0, 0, 0.8) !important; /* Solid blue border */
+    background: rgba(96, 96, 96, 0.8) !important; /* Neutral gray background for all nodes */
+    border-color: rgba(0, 0, 0, 0.8) !important; /* Solid dark border */
     color: white !important;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4) !important; /* Blue glow effect */
+    box-shadow: 0 0 8px rgba(96, 96, 96, 0.4) !important; /* Neutral glow effect */
   }
 
   /* Disabled state for all buttons */
@@ -388,7 +388,7 @@
   .scrollbar-thin {
     /* Firefox support - always visible thin scrollbar */
     scrollbar-width: thin;
-    scrollbar-color: rgba(75, 85, 99, 0.6) rgba(31, 41, 55, 0.1);
+    scrollbar-color: rgba(75, 85, 99, 0.6) rgba(31, 31, 31, 0.1);
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -397,7 +397,7 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-track {
-    background: rgba(31, 41, 55, 0.3); /* Dark track with subtle transparency */
+    background: rgba(31, 31, 31, 0.3); /* Dark track with subtle transparency */
     border-radius: 4px;
   }
 
@@ -418,13 +418,13 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-corner {
-    background: rgba(31, 41, 55, 0.3);
+    background: rgba(31, 31, 31, 0.3);
   }
   /* Dark panel scrollbar - Enhanced version for panels with Firefox auto-hide control */
   .scrollbar-dark {
     /* Firefox support - auto scrollbar behavior (allows Firefox's native auto-hide) */
     scrollbar-width: auto;
-    scrollbar-color: rgba(59, 130, 246, 0.5) rgba(31, 41, 55, 0.2);
+    scrollbar-color: rgba(96, 96, 96, 0.5) rgba(31, 31, 31, 0.2);
     /* Force Firefox to show scrollbar on hover */
     overflow: overlay; /* Fallback for older browsers */
     overflow: auto;
@@ -449,12 +449,12 @@
   .scrollbar-dark::-webkit-scrollbar-thumb {
     background: linear-gradient(
       135deg, 
-      rgba(59, 130, 246, 0.6) 0%, 
-      rgba(37, 99, 235, 0.7) 50%,
-      rgba(29, 78, 216, 0.8) 100%
+      rgba(96, 96, 96, 0.6) 0%, 
+      rgba(75, 75, 75, 0.7) 50%,
+      rgba(65, 65, 65, 0.8) 100%
     );
     border-radius: 5px;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(96, 96, 96, 0.3);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
   }
@@ -462,22 +462,22 @@
   .scrollbar-dark::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(
       135deg, 
-      rgba(79, 149, 255, 0.8) 0%, 
-      rgba(59, 130, 246, 0.9) 50%,
-      rgba(37, 99, 235, 1) 100%
+      rgba(112, 112, 112, 0.8) 0%, 
+      rgba(96, 96, 96, 0.9) 50%,
+      rgba(80, 80, 80, 1) 100%
     );
-    border-color: rgba(79, 149, 255, 0.5);
-    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+    border-color: rgba(112, 112, 112, 0.5);
+    box-shadow: 0 2px 6px rgba(96, 96, 96, 0.4);
   }
 
   .scrollbar-dark::-webkit-scrollbar-thumb:active {
     background: linear-gradient(
       135deg, 
-      rgba(96, 165, 250, 0.9) 0%, 
-      rgba(79, 149, 255, 1) 50%,
-      rgba(59, 130, 246, 1) 100%
+      rgba(128, 128, 128, 0.9) 0%, 
+      rgba(112, 112, 112, 1) 50%,
+      rgba(96, 96, 96, 1) 100%
     );
-    box-shadow: 0 1px 2px rgba(59, 130, 246, 0.6);
+    box-shadow: 0 1px 2px rgba(96, 96, 96, 0.6);
   }
 
   .scrollbar-dark::-webkit-scrollbar-corner {
@@ -488,7 +488,7 @@
   .scrollbar-stable {
     /* Firefox support - forces scrollbar to be always visible (disables auto-hide) */
     scrollbar-width: thin;
-    scrollbar-color: rgba(59, 130, 246, 0.7) rgba(31, 41, 55, 0.3);
+    scrollbar-color: rgba(96, 96, 96, 0.7) rgba(31, 31, 31, 0.3);
     /* Override Firefox's overlay scrollbar behavior */
     overflow: scroll; /* Forces scrollbar to always be present */
   }
@@ -507,7 +507,7 @@
   }
 
   .scrollbar-stable::-webkit-scrollbar-track {
-    background: rgba(31, 41, 55, 0.4);
+    background: rgba(31, 31, 31, 0.4);
     border-radius: 5px;
     margin: 1px;
   }
@@ -515,25 +515,25 @@
   .scrollbar-stable::-webkit-scrollbar-thumb {
     background: linear-gradient(
       135deg,
-      rgba(59, 130, 246, 0.7) 0%,
-      rgba(37, 99, 235, 0.8) 100%
+      rgba(96, 96, 96, 0.7) 0%,
+      rgba(75, 75, 75, 0.8) 100%
     );
     border-radius: 5px;
-    border: 1px solid rgba(59, 130, 246, 0.4);
+    border: 1px solid rgba(96, 96, 96, 0.4);
     transition: all 0.2s ease;
   }
 
   .scrollbar-stable::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(
       135deg,
-      rgba(79, 149, 255, 0.8) 0%,
-      rgba(59, 130, 246, 0.9) 100%
+      rgba(112, 112, 112, 0.8) 0%,
+      rgba(96, 96, 96, 0.9) 100%
     );
-    border-color: rgba(79, 149, 255, 0.6);
+    border-color: rgba(112, 112, 112, 0.6);
   }
 
   .scrollbar-stable::-webkit-scrollbar-corner {
-    background: rgba(31, 41, 55, 0.4);
+    background: rgba(31, 31, 31, 0.4);
   }
 
   /* React Flow Canvas Styles */
@@ -596,7 +596,7 @@
     border-radius: 6px !important;
     overflow: hidden !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-    background: rgba(30, 41, 59, 0.95) !important;
+    background: rgba(30, 30, 30, 0.95) !important;
     backdrop-filter: blur(8px) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
@@ -678,7 +678,7 @@
 
   /* Legacy Node Selection Glow Effect (deprecated - use dynamic effects above) */
   .shadow-glow {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 20px rgba(96, 96, 96, 0.5);
   }
   /* Connection Type Styles */
   .connection-control {

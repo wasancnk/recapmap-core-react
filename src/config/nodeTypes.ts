@@ -60,8 +60,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'persona',
     icon: '👤',
     label: 'Persona',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User personas and stakeholders',
@@ -72,8 +72,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'interface',
     icon: '📱',
     label: 'Interface',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User interfaces and screens',
@@ -84,8 +84,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'process',
     icon: '⚙️',
     label: 'Process',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Business processes and workflows',
@@ -96,8 +96,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'capability',
     icon: '⚡',
     label: 'Capability',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'System capabilities and expectations',
@@ -108,8 +108,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'outcome',
     icon: '✅',
     label: 'Outcome',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'Expected outcomes and results',
@@ -120,8 +120,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'resource',
     icon: '📦',
     label: 'Resource',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Resources and assets',
@@ -132,8 +132,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'knowledge',
     icon: '🧠',
     label: 'Knowledge',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Knowledge bases and information',
@@ -144,8 +144,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     type: 'storage',
     icon: '💾',
     label: 'Storage',
-    bgColor: '#374151', // Unified dark theme
-    borderColor: '#4b5563',
+    bgColor: '#21262d', // GitHub's tertiary dark
+    borderColor: '#30363d',
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Data storage and persistence',
