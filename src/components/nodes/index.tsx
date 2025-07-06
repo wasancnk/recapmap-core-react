@@ -11,6 +11,8 @@ import { NodePanels } from './NodePanels';
 import { useNodeZIndex } from './hooks/useNodeZIndex';
 import { useNodeInteraction } from './hooks/useNodeInteraction';
 import { useNodePanels } from './hooks/useNodePanels';
+import { useNodeStore } from '../../stores/nodeStore';
+import { usePanelStore } from '../../stores/panelStore';
 
 const NodeWrapper: React.FC<NodeProps> = ({ 
   id, 
@@ -23,6 +25,10 @@ const NodeWrapper: React.FC<NodeProps> = ({
     description?: string; 
     type: NodeType;
   };
+
+  // Get node store functions
+  const { deleteNode } = useNodeStore();
+  const { removeNodePanels } = usePanelStore();
 
   // Custom hooks for functionality
   const { isFocused, isHovered, showConnectors, handlers } = useNodeInteraction();
@@ -44,6 +50,15 @@ const NodeWrapper: React.FC<NodeProps> = ({
     hasOpenPanels
   );
 
+  // Delete handler with panel cleanup
+  const handleDeleteNode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Clean up any open panels for this node first
+    removeNodePanels(id);
+    // Then delete the node
+    deleteNode(id);
+  };
+
   return (
     <div 
       className="relative"
@@ -64,6 +79,7 @@ const NodeWrapper: React.FC<NodeProps> = ({
         toggleSummaryPanel={toggleSummaryPanel}
         toggleEditorPanel={toggleEditorPanel}
         isPanelOpen={isPanelOpen}
+        deleteNode={handleDeleteNode}
         handlers={handlers}
       />
 

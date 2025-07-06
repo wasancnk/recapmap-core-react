@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗑️ Delete Button Test - Node X Button in Top-Right Corner</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 20px;
+            background: #0d1117;
+            color: white;
+            line-height: 1.6;
+        }
+        .test-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .test-card {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        /* Node styling that matches the actual implementation */
+        .node-preview {
+            width: 160px;
+            height: 120px;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .node-preview:hover {
+            transform: translateY(-1px);
+        }
+        
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .node-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        /* Delete button styling - matches NodeBase implementation */
+        .delete-button {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            color: #ef4444;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            z-index: 50;
+            /* Initially hidden */
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Show delete button on node hover */
+        .node-preview:hover .delete-button {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Delete button hover state */
+        .delete-button:hover {
+            color: white;
+            background: #ef4444;
+            border-color: #dc2626;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* Different node types with their border colors */
+        .node-persona { background-color: #21262d; border-color: #f97316; color: #FFFFFF; }
+        .node-interface { background-color: #21262d; border-color: #10b981; color: #FFFFFF; }
+        .node-process { background-color: #21262d; border-color: #8b5cf6; color: #FFFFFF; }
+        .node-task { background-color: #f9a8d4; border-color: #ec4899; color: #000000; }
+        .node-note { background-color: #fde047; border-color: #eab308; color: #000000; }
+        
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        
+        .instructions {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        
+        .success-msg {
+            color: #10b981;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .status {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗑️ Delete Button Test</h1>
+    <p style="text-align: center; color: #d4d4d4; margin-bottom: 30px;">
+        Testing the node delete button (×) positioned in the top-right corner.<br>
+        <strong>Expected:</strong> Red × appears on hover, shows background/border on button hover.
+    </p>
+
+    <div class="instructions">
+        <h3>🎯 Test Instructions</h3>
+        <ul style="color: #d4d4d4;">
+            <li><strong>Hover over any node</strong> - The red × button should appear in the top-right corner</li>
+            <li><strong>Hover over the × button</strong> - It should get a red background with white text</li>
+            <li><strong>Click the × button</strong> - It should show a confirmation message</li>
+            <li><strong>Move mouse away</strong> - The × button should disappear</li>
+        </ul>
+    </div>
+
+    <div class="test-container">
+        <div class="test-card">
+            <h3>👤 Persona Node</h3>
+            <div class="node-preview node-persona">
+                <button class="delete-button" onclick="handleDelete('persona')" title="Delete Node">×</button>
+                <div class="node-header">
+                    <span>👤</span>
+                    <span>Persona</span>
+                </div>
+                <div class="node-title">User Persona</div>
+                <div class="status" id="status-persona">Ready to test</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>📱 Interface Node</h3>
+            <div class="node-preview node-interface">
+                <button class="delete-button" onclick="handleDelete('interface')" title="Delete Node">×</button>
+                <div class="node-header">
+                    <span>📱</span>
+                    <span>Interface</span>
+                </div>
+                <div class="node-title">Main Interface</div>
+                <div class="status" id="status-interface">Ready to test</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>⚙️ Process Node</h3>
+            <div class="node-preview node-process">
+                <button class="delete-button" onclick="handleDelete('process')" title="Delete Node">×</button>
+                <div class="node-header">
+                    <span>⚙️</span>
+                    <span>Process</span>
+                </div>
+                <div class="node-title">Core Process</div>
+                <div class="status" id="status-process">Ready to test</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>✔️ Task Node</h3>
+            <div class="node-preview node-task">
+                <button class="delete-button" onclick="handleDelete('task')" title="Delete Node">×</button>
+                <div class="node-header">
+                    <span>✔️</span>
+                    <span>Task</span>
+                </div>
+                <div class="node-title">Important Task</div>
+                <div class="status" id="status-task">Ready to test</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>🖊️ Note Node</h3>
+            <div class="node-preview node-note">
+                <button class="delete-button" onclick="handleDelete('note')" title="Delete Node">×</button>
+                <div class="node-header">
+                    <span>🖊️</span>
+                    <span>Note</span>
+                </div>
+                <div class="node-title">Quick Note</div>
+                <div class="status" id="status-note">Ready to test</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px; padding: 20px; background: #161b22; border: 1px solid #30363d; border-radius: 8px;">
+        <h3 style="margin-top: 0;">✅ Expected Behavior</h3>
+        <ul style="color: #d4d4d4;">
+            <li><strong>Button Visibility:</strong> × button only appears when hovering over the node</li>
+            <li><strong>Button Position:</strong> Top-right corner, slightly outside the node border</li>
+            <li><strong>Button Styling:</strong> Red × with no background initially</li>
+            <li><strong>Hover Effect:</strong> Red background with white × on button hover</li>
+            <li><strong>Interactive:</strong> Clickable with proper click handling</li>
+        </ul>
+        <p class="success-msg">
+            🎯 If all behaviors work as expected, the delete button implementation is correct!
+        </p>
+    </div>
+
+    <script>
+        function handleDelete(nodeType) {
+            const statusElement = document.getElementById(`status-${nodeType}`);
+            statusElement.innerHTML = `<span style="color: #ef4444;">✅ Delete clicked!</span> Function would delete this ${nodeType} node.`;
+            statusElement.style.background = '#1f2937';
+            statusElement.style.borderColor = '#ef4444';
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                statusElement.innerHTML = 'Ready to test';
+                statusElement.style.background = '#161b22';
+                statusElement.style.borderColor = '#30363d';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -36,6 +36,7 @@ interface NodeBaseProps {
   toggleSummaryPanel: (e: React.MouseEvent) => void;
   toggleEditorPanel: (e: React.MouseEvent) => void;
   isPanelOpen: (panelType: PanelType) => boolean;
+  deleteNode: (e: React.MouseEvent) => void;
   handlers: {
     handleMouseEnter: () => void;
     handleMouseLeave: () => void;
@@ -58,6 +59,7 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
   toggleSummaryPanel,
   toggleEditorPanel,
   isPanelOpen,
+  deleteNode,
   handlers,
 }) => {
   const config = getNodeConfig(nodeData.type);
@@ -124,10 +126,26 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
         {/* Connection Handles */}
         <NodeHandles showConnectors={showConnectors} />
 
-        {/* Node Type Header */}
-        <div className="flex items-center gap-2 mb-2 text-sm opacity-80">
-          <span className="text-lg">{config.icon}</span>
-          <span className="font-medium">{config.label}</span>
+        {/* Node Type Header with Delete Button */}
+        <div className="flex items-center justify-between gap-2 mb-2 text-sm opacity-80">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">{config.icon}</span>
+            <span className="font-medium">{config.label}</span>
+          </div>
+          <button
+            className="w-6 h-6 text-white hover:text-red-500 border-none bg-transparent rounded flex items-center justify-center font-light transition-all duration-200 z-50"
+            style={{ 
+              pointerEvents: 'auto',
+              fontSize: '24px',
+              lineHeight: '1',
+              fontWeight: '300',
+              marginTop: '-2px'
+            }}
+            onClick={deleteNode}
+            title="Delete Node"
+          >
+            ×
+          </button>
         </div>
 
         {/* Panel Controls - positioned below header */}
