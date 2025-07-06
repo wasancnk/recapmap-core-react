@@ -158,53 +158,14 @@
     @apply bg-nodes-usecase-500 border-nodes-usecase-600 text-white;
   }
 
-  .node-task {
-    @apply bg-nodes-task-500 border-nodes-task-600 text-white;
-  }
-
   .node-expectation {
     @apply bg-nodes-expectation-500 border-nodes-expectation-600 text-white;
   }
 
-  .node-outcome {
-    @apply bg-nodes-outcome-500 border-nodes-outcome-600 text-white;
-  }
+  /* Regular nodes: background, border, and text colors are handled by inline styles from nodeTypes.ts config
+     This ensures the colorful borders display correctly without CSS overrides */
 
-  /* Human-Centered Design Nodes */
-  .node-persona {
-    @apply bg-nodes-persona-500 border-nodes-persona-600 text-white;
-  }
-
-  .node-screen {
-    @apply bg-nodes-screen-500 border-nodes-screen-600 text-white;
-  }
-
-  .node-presentation {
-    @apply bg-nodes-presentation-500 border-nodes-presentation-600 text-white;
-  }
-
-  /* Business Workflow Nodes */
-  .node-process {
-    @apply bg-nodes-process-500 border-nodes-process-600 text-white;
-  }
-
-  .node-storage {
-    @apply bg-nodes-storage-500 border-nodes-storage-600 text-black;
-  }
-
-  /* Information & Assets Nodes */
-  .node-resource {
-    @apply bg-nodes-resource-500 border-nodes-resource-600 text-white;
-  }
-
-  .node-knowledge {
-    @apply bg-nodes-knowledge-500 border-nodes-knowledge-600 text-white;
-  }
-
-  /* Meta-Collaboration Tools Nodes */
-  .node-note {
-    @apply bg-nodes-note-500 border-nodes-note-600 text-white;
-  }
+  /* Meta-Collaboration Tools Nodes (task, note): styling handled by nodeTypes.ts config */
 
   /* Panel Base Styles */
   .panel-base {

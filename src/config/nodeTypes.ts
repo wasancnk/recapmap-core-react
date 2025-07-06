@@ -61,7 +61,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '👤',
     label: 'Persona',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#f97316', // Orange border for distinction
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User personas and stakeholders',
@@ -73,7 +73,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '📱',
     label: 'Interface',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#10b981', // Green border for distinction
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User interfaces and screens',
@@ -85,7 +85,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '⚙️',
     label: 'Process',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#8b5cf6', // Purple border for distinction
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Business processes and workflows',
@@ -97,7 +97,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '⚡',
     label: 'Capability',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#3b82f6', // Blue border for distinction
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'System capabilities and expectations',
@@ -109,7 +109,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '✅',
     label: 'Outcome',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#10b981', // Emerald border for distinction
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'Expected outcomes and results',
@@ -121,7 +121,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '📦',
     label: 'Resource',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#ec4899', // Pink border for distinction
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Resources and assets',
@@ -133,7 +133,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '🧠',
     label: 'Knowledge',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#06b6d4', // Cyan border for distinction
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Knowledge bases and information',
@@ -145,7 +145,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '💾',
     label: 'Storage',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#30363d',
+    borderColor: '#6b7280', // Gray border for distinction
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Data storage and persistence',
