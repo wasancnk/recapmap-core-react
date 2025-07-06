@@ -135,8 +135,8 @@ describe('Toolbar Grid Controls', () => {  beforeEach(() => {
     
     // Should still have the node creation section
     expect(screen.getByText('Add Nodes')).toBeInTheDocument()
-    expect(screen.getByText('Use Case')).toBeInTheDocument()
-    expect(screen.getByText('Screen')).toBeInTheDocument()
+    expect(screen.getByText('Case')).toBeInTheDocument()
+    expect(screen.getByText('Interface')).toBeInTheDocument()
     
     // Should still have canvas actions
     expect(screen.getByText('Export YAML')).toBeInTheDocument()

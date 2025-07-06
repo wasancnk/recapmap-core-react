@@ -1,3 +1,16 @@
+/**
+ * panelStore.ts - Panel State Management Store for RecapMap
+ * 
+ * Zustand store dedicated to managing node panel states and operations:
+ * - Panel lifecycle (open, close, toggle)
+ * - Panel positioning and z-index management
+ * - Panel state persistence and coordination
+ * - Integration with node interactions
+ * - Panel type routing (summary, editor, ai-chat, share, tools)
+ * 
+ * Works alongside uiStore and nodeStore to provide seamless panel
+ * management for contextual node editing and information display.
+ */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -37,7 +50,7 @@ interface PanelStoreState {
   openPanel: (nodeId: string, panelType: PanelType) => void;
   closePanel: (nodeId: string, panelType: PanelType) => void;
   isPanelOpen: (nodeId: string, panelType: PanelType) => boolean;
-  promoteNodeGroup: (nodeId: string) => void;
+  promoteNodeGroup: (nodeId: string, _trigger?: string) => void;
   getNodePanels: (nodeId: string) => PanelState[];
   getActiveNodeGroup: () => string | null;
   getNodeZIndex: (nodeId: string) => number;
@@ -138,7 +151,9 @@ export const usePanelStore = create<PanelStoreState>()(
           };
         });
       },
-        promoteNodeGroup: (nodeId: string) => {
+        promoteNodeGroup: (nodeId: string, _trigger?: string) => {
+        // Note: _trigger parameter is for testing/debugging purposes
+        // Currently not used in the implementation but maintained for API compatibility
         set((state) => {
           const newNodeGroups = new Map(state.nodeGroups);
           const newPanels = new Map(state.panels);
@@ -215,12 +230,12 @@ export const usePanelStore = create<PanelStoreState>()(
         const panelIndex = nodePanels.findIndex(panel => panel.panelType === panelType);        if (panelIndex === -1) {
           // Panel not found, return default position
           return {
-            x: nodePosition.x + 190, // Matched with WrappedCustomNode spacing
+            x: nodePosition.x + 190, // Matched with nodes/constants.ts spacing
             y: nodePosition.y
           };
         }
           // Calculate horizontal offset for side-by-side panel layout
-        const horizontalOffset = 190 + (panelIndex * (state.PANEL_WIDTH + 10)); // Matched with WrappedCustomNode spacing
+        const horizontalOffset = 190 + (panelIndex * (state.PANEL_WIDTH + 10)); // Matched with nodes/constants.ts spacing
         
         return {
           x: nodePosition.x + horizontalOffset,

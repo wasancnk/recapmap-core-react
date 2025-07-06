@@ -9,7 +9,7 @@ import type { RecapMapNode, NodeConnection } from '../types'
 export const createMockNode = (overrides: Partial<RecapMapNode> = {}): RecapMapNode => {
   const baseNode = {
     id: 'test-node-1',
-    type: 'usecase' as const,
+    type: 'case' as const,
     position: { x: 100, y: 100 },
     title: 'Test Use Case',
     description: 'Test description',
@@ -61,7 +61,7 @@ export const createMockNodes = (count = 3): RecapMapNode[] => {
       id: `test-node-${index + 1}`,
       title: `Test Node ${index + 1}`,
       position: { x: 100 + index * 200, y: 100 },
-      type: index % 2 === 0 ? 'usecase' : 'screen',
+      type: index % 2 === 0 ? 'case' : 'interface',
     })
   )
 }

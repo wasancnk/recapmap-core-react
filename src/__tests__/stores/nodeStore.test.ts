@@ -32,8 +32,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange - create nodes using proper store methods
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'data');
       
       // Get the initial connection state
@@ -66,8 +66,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'data');
       
       // Verify initial node connection arrays
@@ -104,8 +104,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'control');
       
       // Update connection with custom metadata
@@ -140,8 +140,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'data');
       
       // Get initial handle configuration
@@ -182,7 +182,7 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange - create a self-referencing connection
-      const nodeId = addNode('usecase', { x: 100, y: 100 });
+      const nodeId = addNode('case', { x: 100, y: 100 });
       const connectionId = addConnection(nodeId, nodeId, 'data');
 
       // Act
@@ -204,8 +204,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'dependency');
       
       const initialState = useNodeStore.getState();
@@ -231,8 +231,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'data');
 
       // Act
@@ -301,8 +301,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange - create multiple connections
-      const node1Id = addNode('usecase', { x: 100, y: 100 });
-      const node2Id = addNode('screen', { x: 300, y: 100 });
+      const node1Id = addNode('case', { x: 100, y: 100 });
+      const node2Id = addNode('interface', { x: 300, y: 100 });
       const node3Id = addNode('storage', { x: 500, y: 100 });
       
       const conn1Id = addConnection(node1Id, node2Id, 'data');
@@ -352,8 +352,8 @@ describe('NodeStore - swapConnection', () => {
       } = useNodeStore.getState();
       
       // Arrange
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       const connectionId = addConnection(sourceNodeId, targetNodeId, 'data');
 
       // Act

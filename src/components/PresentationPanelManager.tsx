@@ -11,7 +11,7 @@ export const PresentationPanelManager: React.FC = () => {
   const { panels, closePanel } = useUIStore()
   
   // Find the active presentation panel
-  const presentationPanel = panels.find(panel => panel.type === 'presentation' && panel.isOpen)
+  const presentationPanel = panels.find(panel => panel.type === 'view' && panel.isOpen)
   
   if (!presentationPanel) {
     return null

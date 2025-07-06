@@ -1,3 +1,16 @@
+/**
+ * CanvasLayout.tsx - Main Layout Component for RecapMap Canvas Interface
+ * 
+ * This component provides the primary layout structure for the canvas application:
+ * - React Flow provider setup and context management
+ * - Layout coordination between canvas, toolbar, and panels
+ * - Component integration and state synchronization
+ * - Responsive layout management
+ * - Global layout state and positioning
+ * 
+ * Serves as the main container that orchestrates all major interface
+ * components including the visual canvas, tools, and property panels.
+ */
 import { useEffect } from 'react';
 import { ReactFlowProvider, useReactFlow } from '@xyflow/react';
 import { Canvas } from './Canvas';

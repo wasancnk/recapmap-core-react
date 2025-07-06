@@ -61,7 +61,7 @@ describe('PanelManager', () => {
         return nodePositions[id as keyof typeof nodePositions] ? {
           id,
           position: nodePositions[id as keyof typeof nodePositions],
-          type: 'usecase',
+          type: 'case',
           title: `Test Node ${id}`,
           metadata: {},
           connections: { inputs: [], outputs: [] },

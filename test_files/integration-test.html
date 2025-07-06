@@ -273,7 +273,7 @@
                 const initialCount = nodeStore.nodes.length;
                 
                 // Create a test node
-                const nodeId = nodeStore.addNode('usecase', { x: 100, y: 100 });
+                const nodeId = nodeStore.addNode('case', { x: 100, y: 100 });
                 testData.nodeIds.push(nodeId);
                 
                 const newCount = stores.useNodeStore.getState().nodes.length;
@@ -391,7 +391,7 @@
                 
                 // Create two nodes if we don't have enough
                 if (testData.nodeIds.length < 2) {
-                    const node1Id = nodeStore.addNode('usecase', { x: 50, y: 50 });
+                    const node1Id = nodeStore.addNode('case', { x: 50, y: 50 });
                     const node2Id = nodeStore.addNode('task', { x: 200, y: 50 });
                     testData.nodeIds.push(node1Id, node2Id);
                 }

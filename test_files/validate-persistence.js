@@ -51,7 +51,7 @@ async function validatePersistence() {
     console.log('\n🔸 Step 1: Creating test nodes...');
     
     const nodeStore = useNodeStore.getState();
-    const node1Id = nodeStore.addNode('usecase', { x: 100, y: 100 });
+    const node1Id = nodeStore.addNode('case', { x: 100, y: 100 });
     const node2Id = nodeStore.addNode('task', { x: 300, y: 100 });
     
     nodeStore.updateNode(node1Id, {

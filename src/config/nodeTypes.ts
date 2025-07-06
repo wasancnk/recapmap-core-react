@@ -4,7 +4,7 @@ import type { NodeType } from '../types';
  * CENTRALIZED NODE TYPE CONFIGURATION
  * 
  * This is the single source of truth for all node type definitions.
- * Used across components: NewCustomNode, Toolbar, Panels, etc.
+ * Used across components: nodes/NodeBase, Toolbar, Panels, etc.
  * 
  * UPDATE POLICY: Only modify this file to change node configurations.
  * All other files should import and use these definitions.
@@ -30,8 +30,8 @@ export interface NodeTypeConfig {
  */
 export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
   // Strategic Planning Nodes
-  'usecase': {
-    type: 'usecase',
+  'case': {
+    type: 'case',
     icon: '📋',
     label: 'Case',
     bgColor: '#1e1e2f',
@@ -43,8 +43,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     hasStripePattern: true
   },
   
-  'presentation': {
-    type: 'presentation',
+  'view': {
+    type: 'view',
     icon: '📽️',
     label: 'View',
     bgColor: '#1e1e2f',
@@ -68,8 +68,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     toolbarClassName: 'bg-orange-500 border-orange-600 text-white hover:bg-orange-600'
   },
   
-  'screen': {
-    type: 'screen',
+  'interface': {
+    type: 'interface',
     icon: '📱',
     label: 'Interface',
     bgColor: '#1e1e2f',
@@ -92,8 +92,8 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     toolbarClassName: 'bg-purple-500 border-purple-600 text-white hover:bg-purple-600'
   },
   
-  'expectation': {
-    type: 'expectation',
+  'capability': {
+    type: 'capability',
     icon: '⚡',
     label: 'Capability',
     bgColor: '#1e1e2f',

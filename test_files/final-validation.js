@@ -38,7 +38,7 @@ function finalValidation() {
         console.log(`📊 Current state: ${initialNodeCount} nodes`);
 
         // Create test node
-        const testNodeId = nodeStore.addNode('usecase', { x: 200, y: 200 });
+        const testNodeId = nodeStore.addNode('case', { x: 200, y: 200 });
         nodeStore.updateNode(testNodeId, { 
             title: 'Post-Reorganization Test',
             description: 'Validating persistence after file moves'

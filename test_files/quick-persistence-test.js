@@ -33,7 +33,7 @@ async function quickPersistenceTest() {
         
         // 3. Test node creation and persistence
         console.log('🔬 Testing node creation...');
-        testNodeId = useNodeStore.getState().addNode('usecase', { x: 150, y: 150 });
+        testNodeId = useNodeStore.getState().addNode('case', { x: 150, y: 150 });
         
         useNodeStore.getState().updateNode(testNodeId, {
             title: `Test Node ${new Date().toLocaleTimeString()}`,

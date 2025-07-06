@@ -66,7 +66,7 @@
             const nodeStore = stores.useNodeStore.getState();
             
             // Create a test node
-            const nodeId = nodeStore.addNode('usecase', { x: 100, y: 100 });
+            const nodeId = nodeStore.addNode('case', { x: 100, y: 100 });
             testData.nodeIds.push(nodeId);
             
             // Update the node

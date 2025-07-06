@@ -27,15 +27,15 @@ export const NodePanel: React.FC<NodePanelProps> = ({
     closePanel(nodeId, panelState.panelType);
   };  
   const handleClick = () => {
-    promoteNodeGroup(nodeId);
+    promoteNodeGroup(nodeId, 'user-click');
   };
 
   const handleMouseEnter = () => {
-    promoteNodeGroup(nodeId);
+    promoteNodeGroup(nodeId, 'panel-toggle');
   };
 
   const handleFocus = () => {
-    promoteNodeGroup(nodeId);
+    promoteNodeGroup(nodeId, 'user-click');
   };
   return (
     <div

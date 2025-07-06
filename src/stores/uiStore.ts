@@ -1,3 +1,16 @@
+/**
+ * uiStore.ts - UI State Management Store for RecapMap
+ * 
+ * Zustand store that manages all user interface state including:
+ * - Canvas state (zoom, position, bounds, viewport)
+ * - Panel management (editor, presentation, export panels)
+ * - Tool selection and UI modes (design, presentation, etc.)
+ * - Notification system for user feedback
+ * - UI interactions and temporary states
+ * 
+ * This store handles the presentation layer state while nodeStore manages
+ * the actual node data. Works in coordination with panelStore for panel-specific logic.
+ */
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
@@ -401,7 +414,7 @@ function getPanelTitle(type: PanelType): string {
     'ai-assistant': 'AI Assistant',
     'validation': 'Validation',
     'settings': 'Settings',
-    'presentation': 'Presentation',
+    'view': 'Presentation',
   }
   return titles[type]
 }
@@ -416,7 +429,7 @@ function getPanelDefaultSize(type: PanelType): { width: number; height: number }
     'ai-assistant': { width: 400, height: 500 },
     'validation': { width: 450, height: 300 },
     'settings': { width: 500, height: 400 },
-    'presentation': { width: 400, height: 600 },
+    'view': { width: 400, height: 600 },
   }
   return sizes[type]
 }

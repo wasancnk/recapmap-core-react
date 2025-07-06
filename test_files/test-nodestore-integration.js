@@ -17,20 +17,20 @@ function testNodeStorePersistence() {
     console.log('- Selected:', store.selectedNodeIds.length);
     
     // Test 1: Add a node
-    console.log('\n🔧 Test 1: Adding a usecase node...');
-    const nodeId = store.addNode('usecase', { x: 100, y: 100 });
+    console.log('\n🔧 Test 1: Adding a case node...');
+    const nodeId = store.addNode('case', { x: 100, y: 100 });
     console.log('- Created node ID:', nodeId);
     console.log('- Total nodes:', store.nodes.length);
     
     // Test 2: Add another node
-    console.log('\n🔧 Test 2: Adding a screen node...');
-    const screenId = store.addNode('screen', { x: 300, y: 100 });
-    console.log('- Created screen ID:', screenId);
+    console.log('\n🔧 Test 2: Adding an interface node...');
+    const interfaceId = store.addNode('interface', { x: 300, y: 100 });
+    console.log('- Created interface ID:', interfaceId);
     console.log('- Total nodes:', store.nodes.length);
     
     // Test 3: Create a connection
     console.log('\n🔧 Test 3: Creating connection...');
-    const connectionId = store.addConnection(nodeId, screenId);
+    const connectionId = store.addConnection(nodeId, interfaceId);
     console.log('- Created connection ID:', connectionId);
     console.log('- Total connections:', store.connections.length);
     
@@ -73,10 +73,10 @@ function testNodeStorePersistence() {
     
     // Test 7: Test type-specific queries
     console.log('\n🎯 Test 7: Type-specific queries...');
-    const usecaseNodes = store.getNodesByType('usecase');
-    const screenNodes = store.getNodesByType('screen');
-    console.log('- Usecase nodes:', usecaseNodes.length);
-    console.log('- Screen nodes:', screenNodes.length);
+    const caseNodes = store.getNodesByType('case');
+    const interfaceNodes = store.getNodesByType('interface');
+    console.log('- Case nodes:', caseNodes.length);
+    console.log('- Interface nodes:', interfaceNodes.length);
     
     console.log('\n✨ Persistence test completed!');
     console.log('================================');

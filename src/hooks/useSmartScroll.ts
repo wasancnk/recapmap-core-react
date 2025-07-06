@@ -1,3 +1,16 @@
+/**
+ * useSmartScroll.ts - Smart Scroll Management Hook for RecapMap Canvas
+ * 
+ * This hook provides intelligent scroll behavior for the canvas interface:
+ * - Redirects scroll events from panels to the main canvas
+ * - Maintains smooth scrolling experience across different UI elements
+ * - Handles scroll conflicts between overlapping interactive areas
+ * - Optimizes performance with debounced scroll handling
+ * - Integrates with React Flow's viewport management
+ * 
+ * Essential for providing intuitive navigation when panels and canvas
+ * elements overlap or when users expect consistent scrolling behavior.
+ */
 import { useEffect, useCallback, useRef } from 'react';
 
 interface SmartScrollOptions {

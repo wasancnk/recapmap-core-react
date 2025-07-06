@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TailwindTest } from './TailwindTest';
-import { ZustandTest } from './ZustandTest';
+import { ZustandTest } from '../test-utils/ZustandTest';
 
 interface ComponentShowcaseProps {
   name: string;

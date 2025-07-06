@@ -10,7 +10,7 @@ console.log('📦 Current nodes:', store.nodes.length);
 console.log('🔗 Current connections:', store.connections.length);
 
 // Add a test node
-const testNodeId = store.addNode('usecase', { x: 100, y: 100 });
+const testNodeId = store.addNode('case', { x: 100, y: 100 });
 console.log('➕ Added test node with ID:', testNodeId);
 
 // Check if node was added

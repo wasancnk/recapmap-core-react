@@ -37,8 +37,8 @@ describe('Connection Workflow Integration Tests', () => {
       } = useNodeStore.getState();
 
       // Step 1: Setup initial nodes using proper store methods
-      const sourceNodeId = addNode('usecase', { x: 100, y: 100 });
-      const targetNodeId = addNode('screen', { x: 300, y: 100 });
+      const sourceNodeId = addNode('case', { x: 100, y: 100 });
+      const targetNodeId = addNode('interface', { x: 300, y: 100 });
       
       // Verify nodes were created and IDs returned
       expect(sourceNodeId).toBeTruthy();
@@ -99,8 +99,8 @@ describe('Connection Workflow Integration Tests', () => {
       } = useNodeStore.getState();
 
       // Create multiple nodes and connections to test data integrity
-      const node1Id = addNode('usecase', { x: 0, y: 0 });
-      const node2Id = addNode('screen', { x: 100, y: 0 });
+      const node1Id = addNode('case', { x: 0, y: 0 });
+      const node2Id = addNode('interface', { x: 100, y: 0 });
       const node3Id = addNode('storage', { x: 200, y: 0 });
       
       expect(useNodeStore.getState().nodes).toHaveLength(3);
@@ -134,7 +134,7 @@ describe('Connection Workflow Integration Tests', () => {
       } = useNodeStore.getState();
 
       // Test error handling for invalid operations
-      const nodeId = addNode('usecase', { x: 0, y: 0 });
+      const nodeId = addNode('case', { x: 0, y: 0 });
       const connectionId = addConnection(nodeId, nodeId, 'data'); // Self-connection
       
       // Try to swap non-existent connection
@@ -157,7 +157,7 @@ describe('Connection Workflow Integration Tests', () => {
 
       // Create a network of 4 nodes
       const nodes = Array.from({ length: 4 }, (_, i) => 
-        addNode('usecase', { x: i * 100, y: 0 })
+        addNode('case', { x: i * 100, y: 0 })
       );
       
       expect(useNodeStore.getState().nodes).toHaveLength(4);
@@ -198,7 +198,7 @@ describe('Connection Workflow Integration Tests', () => {
 
       // Create 10 nodes
       const nodes = Array.from({ length: 10 }, (_, i) => 
-        addNode('usecase', { x: i * 50, y: 0 })
+        addNode('case', { x: i * 50, y: 0 })
       );
       
       // Create connections in various patterns
@@ -241,8 +241,8 @@ describe('Connection Workflow Integration Tests', () => {
         swapConnection
       } = useNodeStore.getState();
 
-      const nodeId1 = addNode('usecase', { x: 0, y: 0 });
-      const nodeId2 = addNode('screen', { x: 100, y: 0 });
+      const nodeId1 = addNode('case', { x: 0, y: 0 });
+      const nodeId2 = addNode('interface', { x: 100, y: 0 });
       const connectionId = addConnection(nodeId1, nodeId2, 'data');
       
       // Swap connection and verify logging
@@ -277,7 +277,7 @@ describe('Connection Workflow Integration Tests', () => {
 
       // Create a complex scenario with multiple operations
       const nodes = Array.from({ length: 5 }, (_, i) => 
-        addNode('usecase', { x: i * 100, y: 0 })
+        addNode('case', { x: i * 100, y: 0 })
       );
       
       const connections = [
@@ -315,7 +315,7 @@ describe('Connection Workflow Integration Tests', () => {
         swapConnection
       } = useNodeStore.getState();
 
-      const nodeId = addNode('usecase', { x: 0, y: 0 });
+      const nodeId = addNode('case', { x: 0, y: 0 });
       
       // Create self-referencing connection
       const selfConnectionId = addConnection(nodeId, nodeId, 'data');

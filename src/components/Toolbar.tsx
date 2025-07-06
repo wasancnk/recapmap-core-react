@@ -1,3 +1,17 @@
+/**
+ * Toolbar.tsx - Main Toolbar Component for RecapMap Interface
+ * 
+ * This component provides the primary toolbar interface with:
+ * - Node creation tools for all 12 node types
+ * - Canvas control buttons (zoom, fit, center)
+ * - Project management actions (save, load, export)
+ * - UI state management and tool selection
+ * - Grid and snap-to-grid controls
+ * - Integration with all major store systems
+ * 
+ * The toolbar serves as the main control interface for users to interact
+ * with the canvas and manage their business modeling projects.
+ */
 import { useMemo, useState, useEffect } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useNodeStore } from '../stores/nodeStore';

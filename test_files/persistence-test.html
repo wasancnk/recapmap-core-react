@@ -127,8 +127,8 @@
         <div class="test-section">
             <h3>🏗️ Data Creation</h3>
             <div class="button-group">
-                <button onclick="createTestNode('usecase')">Add Use Case</button>
-                <button onclick="createTestNode('screen')">Add Screen</button>
+                <button onclick="createTestNode('case')">Add Case</button>
+                <button onclick="createTestNode('interface')">Add Interface</button>
                 <button onclick="createTestNode('user')">Add User</button>
                 <button onclick="createTestNode('process')">Add Process</button>
             </div>
@@ -219,7 +219,7 @@
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 // Add type-specific properties
-                ...(type === 'usecase' ? { 
+                ...(type === 'case' ? { 
                     priority: 'medium', 
                     complexity: 'moderate',
                     featureName: `test_${type}_${mockStore.nodes.length + 1}`
@@ -277,8 +277,8 @@
 
         function createCompleteTestScenario() {
             // Create a complete mind map with all node types and connections
-            const usecaseId = createTestNode('usecase');
-            const screenId = createTestNode('screen');
+            const caseId = createTestNode('case');
+            const interfaceId = createTestNode('interface');
             const userId = createTestNode('user');
             const processId = createTestNode('process');
             
@@ -418,8 +418,8 @@
             mockStore = { nodes: [], connections: [], selectedNodeIds: [] };
             
             // Create test data
-            const nodeId1 = createTestNode('usecase');
-            const nodeId2 = createTestNode('screen');
+            const nodeId1 = createTestNode('case');
+            const nodeId2 = createTestNode('interface');
             createTestConnection();
             
             // Verify save

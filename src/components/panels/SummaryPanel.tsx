@@ -11,7 +11,7 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({ nodeId }) => {
   
   // Get actual node data from store
   const node = getNode(nodeId);
-  const connections = getNodeConnections(nodeId);
+  const connections = getNodeConnections(nodeId) || [];
   
   // Handle case where node is not found
   if (!node) {

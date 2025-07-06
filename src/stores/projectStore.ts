@@ -1,3 +1,16 @@
+/**
+ * projectStore.ts - Project Management Store for RecapMap
+ * 
+ * Zustand store that manages project-level operations and metadata:
+ * - Project metadata (name, description, version, tags)
+ * - Project validation and integrity checking
+ * - Import/export functionality and file operations
+ * - Project state tracking (modified, saved states)
+ * - Integration with external systems and file formats
+ * 
+ * This store coordinates with nodeStore and uiStore to provide comprehensive
+ * project management capabilities including persistence and data validation.
+ */
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
@@ -148,7 +161,7 @@ export const useProjectStore = create<ProjectStore>()(
               }
                 // Type-specific validations
               switch (node.type) {
-                case 'usecase': {
+                case 'case': {
                   const usecaseNode = node as { acceptanceCriteria?: string[] }
                   if (!usecaseNode.acceptanceCriteria || usecaseNode.acceptanceCriteria.length === 0) {
                     warnings.push({

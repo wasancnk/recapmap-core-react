@@ -1,3 +1,18 @@
+/**
+ * Canvas.tsx - Main React Flow Canvas Component for RecapMap
+ * 
+ * This is the core visual interface component that manages:
+ * - React Flow canvas rendering with background, controls, and minimap
+ * - Node and connection state management via Zustand stores
+ * - Drag & drop operations for node creation and repositioning
+ * - Connection creation workflow between nodes
+ * - Canvas interactions (zoom, pan, selection)
+ * - Smart scrolling and viewport management
+ * - Integration with all 12 node types and their panels
+ * 
+ * The canvas serves as the primary workspace where users create, edit, and
+ * connect business modeling components visually using React Flow.
+ */
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import {
   ReactFlow,
@@ -18,7 +33,7 @@ import { useNodeStore } from '../stores/nodeStore';
 import { useUIStore } from '../stores/uiStore';
 import { useSmartScroll } from '../hooks/useSmartScroll';
 import { ConnectionPropertyPanel } from './ConnectionPropertyPanel';
-import WrappedCustomNode from './WrappedCustomNode';
+import WrappedCustomNode from './nodes';
 import type { NodeType } from '../types';
 
 // Test nodes for connection testing
@@ -28,8 +43,8 @@ const createTestNodes = (addNode: (type: NodeType, position: { x: number; y: num
   }
 
   console.log('🎭 Creating test nodes...');  // Create a few test nodes
-  const node1Id = addNode('usecase', { x: 100, y: 100 });
-  const node2Id = addNode('screen', { x: 300, y: 100 });
+  const node1Id = addNode('case', { x: 100, y: 100 });
+  const node2Id = addNode('interface', { x: 300, y: 100 });
   const node3Id = addNode('persona', { x: 100, y: 250 });
   const node4Id = addNode('process', { x: 300, y: 250 });
 
@@ -327,7 +342,7 @@ const CanvasInner: React.FC = () => {
       });
 
       // Center the node on the mouse cursor by offsetting by half the node dimensions
-      // Node dimensions are 200px x 160px (defined in NewCustomNode.tsx)
+      // Node dimensions are 200px x 160px (defined in nodes/constants.ts)
       const centeredPosition = {
         x: position.x - 100, // Half of node width (200px / 2)
         y: position.y - 80,  // Half of node height (160px / 2)
@@ -415,7 +430,7 @@ const CanvasInner: React.FC = () => {
           />
         )}
         
-        {/* Panels are now handled within each WrappedCustomNode */}
+        {/* Panels are now handled within each node component */}
       </ReactFlow>{/* Connection Property Panel */}
       {selectedConnectionId && (
         <ConnectionPropertyPanel

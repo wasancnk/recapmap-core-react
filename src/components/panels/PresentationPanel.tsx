@@ -14,10 +14,10 @@ export const PresentationPanel: React.FC = () => {
   const { isPresentationMode, presentationSettings } = ui;
   // Get presentation nodes (nodes that can be used in presentations)
   const presentationNodes = nodes.filter(node => 
-    node.type === 'presentation' || 
+    node.type === 'view' || 
     node.type === 'note' ||
-    node.type === 'usecase' ||
-    node.type === 'screen'
+    node.type === 'case' ||
+    node.type === 'interface'
   );
 
   const handleTogglePresentationMode = () => {
@@ -235,10 +235,10 @@ export const PresentationPanel: React.FC = () => {
               <div
                 key={node.id}
                 className="flex items-center gap-2 p-2 bg-surface-secondary rounded border border-surface-border"
-              >                <span className="text-sm">                  {node.type === 'presentation' && '📽️'}
+              >                <span className="text-sm">                  {node.type === 'view' && '📽️'}
                   {node.type === 'note' && '🖊️'}
-                  {node.type === 'usecase' && '🎯'}
-                  {node.type === 'screen' && '📱'}
+                  {node.type === 'case' && '🎯'}
+                  {node.type === 'interface' && '📱'}
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs font-medium text-text-primary truncate">

@@ -1,3 +1,21 @@
+/**
+ * nodeStore.ts - Centralized Zustand Store for RecapMap Nodes
+ *
+ * This file manages all node and connection state for the RecapMap canvas using Zustand.
+ * It provides a single source of truth for:
+ *   - Node data (all 12 node types, their properties, and positions)
+ *   - Node selection and duplication
+ *   - Node connection management (add, update, delete, swap)
+ *   - Query utilities for nodes and connections
+ *
+ * Features:
+ * - Type-safe node creation with type-specific properties
+ * - LocalStorage persistence (excluding transient UI selection)
+ * - Devtools integration for debugging
+ *
+ * Used by: Canvas, NewCustomNode, panels, and all node-related UI logic.
+ */
+
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
@@ -41,10 +59,10 @@ interface NodeStore {
 // Helper function to create typed nodes with specific properties
 function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
   switch (type) {
-    case 'usecase':
+    case 'case':
       return {
         ...baseNode,
-        type: 'usecase',
+        type: 'case',
         // Business Context
         priority: 'medium',
         complexity: 'moderate',
@@ -59,10 +77,10 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         assumptions: [],
       }
     
-    case 'presentation':
+    case 'view':
       return {
         ...baseNode,
-        type: 'presentation',
+        type: 'view',
         // Presentation Structure
         presentationTitle: baseNode.title,
         slideOrder: 1,
@@ -106,10 +124,10 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         dataAccess: [],
       }
     
-    case 'screen':
+    case 'interface':
       return {
         ...baseNode,
-        type: 'screen',
+        type: 'interface',
         // UI Context
         screenType: 'dashboard',
         layoutType: 'responsive',
@@ -144,27 +162,35 @@ function createTypedNode(baseNode: BaseNode, type: NodeType): RecapMapNode {
         scalingConsiderations: undefined,
       }
     
-    case 'expectation':
+    case 'capability':
       return {
         ...baseNode,
-        type: 'expectation',
-        // Expectation Definition
-        expectationName: baseNode.title,
-        expectationType: 'delivery',
-        // Specification
-        criteria: [],
-        measurementMethod: '',
-        successThreshold: '',
-        // Context
-        stakeholder: '',
-        businessValue: '',
-        riskLevel: 'medium',
-        // Validation
-        validationSteps: [],
-        testingApproach: undefined,
-        // Timeline
-        expectedDate: undefined,
-        reviewDate: undefined,
+        type: 'capability',
+        // Marketplace Capability Definition
+        capabilityName: baseNode.title,
+        capabilityType: 'service',
+        // Marketplace Information
+        provider: '',
+        version: '1.0.0',
+        marketplaceId: undefined,
+        cost: 'free',
+        // Capability Specification
+        description: baseNode.description || '',
+        features: [],
+        apiEndpoints: undefined,
+        configurationOptions: [],
+        // Integration Requirements
+        dependencies: [],
+        compatibleSystems: [],
+        dataRequirements: [],
+        // Usage Context
+        useCases: [],
+        limitations: [],
+        supportLevel: 'community',
+        // Installation & Setup
+        installationNotes: undefined,
+        configurationSteps: undefined,
+        testingInstructions: undefined,
       }
     
     case 'outcome':
@@ -347,13 +373,13 @@ const useNodeStore = create<NodeStore>()(
           
           // Proper node type labels for consistent titles
           const nodeLabels: Record<NodeType, string> = {
-            'usecase': 'Use Case',
+            'case': 'Case',
             'task': 'Task', 
-            'expectation': 'Expectation',
+            'capability': 'Capability',
             'outcome': 'Outcome',
             'persona': 'Persona',
-            'screen': 'Screen',
-            'presentation': 'Presentation',
+            'interface': 'Interface',
+            'view': 'View',
             'process': 'Process',
             'storage': 'Storage',
             'resource': 'Resource',
@@ -567,6 +593,15 @@ const useNodeStore = create<NodeStore>()(
             logger.connectionError('swapConnection', id, 'Connection not found in store')
             return false
           }
+
+          // Debug log connection details
+          logger.connectionDebug('swapConnection', 'Connection found', {
+            id: connection.id,
+            sourceNodeId: connection.sourceNodeId,
+            targetNodeId: connection.targetNodeId
+          })
+
+          logger.connectionDebug('swapConnection', 'About to perform atomic swap')
 
           // Fixed handle transformation - ONLY use visible -source handles
           const getSwappedHandle = (handle: string) => {

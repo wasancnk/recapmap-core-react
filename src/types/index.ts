@@ -1,9 +1,20 @@
 /**
- * RecapMap Core Types - TypeScript interfaces for the 8-node system
- * These types define the structure of our business modeling components
+ * RecapMap Core Types - TypeScript interfaces for the 12-node system
+ * 
+ * This file contains all core type definitions for RecapMap including:
+ * - Node type definitions for all 12 node types (case, view, persona, interface, etc.)
+ * - Connection and relationship types
+ * - UI state and panel management types
+ * - Canvas and viewport state types
+ * - Project management and validation types
+ * - Export/import functionality types
+ * - Property validation and schema types
+ * 
+ * This is the central type system that ensures type safety across the entire
+ * RecapMap application and serves as the single source of truth for all interfaces.
  */
 
-// Base Node Interface - Foundation for all 8 node types
+// Base Node Interface - Foundation for all 12 node types
 export interface BaseNode {
   id: string
   type: NodeType
@@ -23,12 +34,12 @@ export interface BaseNode {
 
 // 12-Node System Types - Following Apple's Design Philosophy of Elegant Simplicity
 export type NodeType = 
-  | 'usecase'      // Business requirements, user stories
-  | 'presentation' // Presentation page for keynote-style presentations
+  | 'case'         // Business requirements, user stories (renamed from 'usecase')
+  | 'view'         // Presentation layers and views (renamed from 'presentation')
   | 'persona'      // User roles, personas, actors (renamed from 'user')
-  | 'screen'       // UI screens, interfaces, views  
+  | 'interface'    // UI screens, interfaces, views (renamed from 'screen')
   | 'process'      // Business processes, tools, systems
-  | 'expectation'  // What we expect to achieve or receive (new)
+  | 'capability'   // Ready-made capabilities from marketplace (importable apps/services)
   | 'outcome'      // What was actually achieved or delivered (new)
   | 'resource'     // Files, images, links, resources, documents (renamed from 'attachment')
   | 'knowledge'    // Structured information and insights (new)
@@ -38,8 +49,8 @@ export type NodeType =
 
 // Specific Node Type Interfaces with Enhanced Properties
 
-export interface UseCaseNode extends BaseNode {
-  type: 'usecase'
+export interface CaseNode extends BaseNode {
+  type: 'case'
   // Business Context
   priority: 'critical' | 'high' | 'medium' | 'low'
   complexity: 'simple' | 'moderate' | 'complex' | 'epic'
@@ -54,8 +65,8 @@ export interface UseCaseNode extends BaseNode {
   assumptions: string[]
 }
 
-export interface ScreenNode extends BaseNode {
-  type: 'screen'
+export interface InterfaceNode extends BaseNode {
+  type: 'interface'
   // UI Context
   screenType: 'dashboard' | 'form' | 'list' | 'detail' | 'modal' | 'wizard' | 'landing'
   layoutType: 'grid' | 'flex' | 'fixed' | 'responsive'
@@ -143,8 +154,8 @@ export interface StorageNode extends BaseNode {
   securityClassification: 'public' | 'internal' | 'confidential' | 'restricted'
 }
 
-export interface PresentationNode extends BaseNode {
-  type: 'presentation'
+export interface ViewNode extends BaseNode {
+  type: 'view'
   // Presentation Structure
   presentationTitle: string
   slideOrder: number
@@ -226,25 +237,38 @@ export interface TaskNode extends BaseNode {
   completedDate?: string
 }
 
-export interface ExpectationNode extends BaseNode {
-  type: 'expectation'
-  // Expectation Definition
-  expectationName: string
-  expectationType: 'delivery' | 'behavior' | 'performance' | 'quality' | 'timeline' | 'outcome'
-  // Specification
-  criteria: string[]
-  measurementMethod: string
-  successThreshold: string
-  // Context
-  stakeholder: string
-  businessValue: string
-  riskLevel: 'low' | 'medium' | 'high' | 'critical'
-  // Validation
-  validationSteps: string[]
-  testingApproach?: string
-  // Timeline
-  expectedDate?: string
-  reviewDate?: string
+export interface CapabilityNode extends BaseNode {
+  type: 'capability'
+  // Marketplace Capability Definition
+  capabilityName: string
+  capabilityType: 'service' | 'integration' | 'tool' | 'workflow' | 'ai_agent' | 'plugin'
+  // Marketplace Information
+  provider: string
+  version: string
+  marketplaceId?: string
+  cost: 'free' | 'paid' | 'freemium' | 'enterprise'
+  // Capability Specification
+  description: string
+  features: string[]
+  apiEndpoints?: string[]
+  configurationOptions: Array<{
+    name: string
+    type: string
+    required: boolean
+    defaultValue?: string | number | boolean
+  }>
+  // Integration Requirements
+  dependencies: string[]
+  compatibleSystems: string[]
+  dataRequirements: string[]
+  // Usage Context
+  useCases: string[]
+  limitations: string[]
+  supportLevel: 'community' | 'basic' | 'premium' | 'enterprise'
+  // Installation & Setup
+  installationNotes?: string
+  configurationSteps?: string[]
+  testingInstructions?: string[]
 }
 
 export interface OutcomeNode extends BaseNode {
@@ -323,12 +347,12 @@ export interface KnowledgeNode extends BaseNode {
 
 // Complete 12-Node System Union Type - Following Apple's Design Philosophy
 export type RecapMapNode = 
-  | UseCaseNode 
-  | PresentationNode
+  | CaseNode 
+  | ViewNode
   | PersonaNode 
-  | ScreenNode 
+  | InterfaceNode 
   | ProcessNode 
-  | ExpectationNode
+  | CapabilityNode
   | OutcomeNode
   | ResourceNode
   | KnowledgeNode
@@ -396,7 +420,7 @@ export type PanelType =
   | 'ai-assistant'
   | 'validation'
   | 'settings'
-  | 'presentation'
+  | 'view'
 
 // UI State types
 export interface UIState {
@@ -428,12 +452,12 @@ export interface UIState {
 export type Tool =
   | 'select'
   | 'pan'
-  | 'usecase'
-  | 'presentation'
+  | 'case'
+  | 'view'
   | 'persona'
-  | 'screen'
+  | 'interface'
   | 'process'
-  | 'expectation'
+  | 'capability'
   | 'outcome'
   | 'resource'
   | 'knowledge'

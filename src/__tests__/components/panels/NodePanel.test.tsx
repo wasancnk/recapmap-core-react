@@ -57,11 +57,12 @@ describe('NodePanel', () => {
       const panel = screen.getByTestId('node-panel-node-1-summary');
       expect(panel).toBeInTheDocument();
       expect(panel).toHaveStyle({
-        position: 'absolute',
         left: '100px',
         top: '200px',
-        zIndex: '1000'
+        zIndex: 1000
       });
+      // Check for absolute positioning via Tailwind class
+      expect(panel).toHaveClass('absolute');
     });
 
     it('applies correct dimensions', () => {
@@ -218,10 +219,10 @@ describe('NodePanel', () => {
         </NodePanel>
       );      const panel = screen.getByTestId('node-panel-node-1-summary');
       expect(panel).toHaveClass(
-        'bg-white/90',
+        'bg-gray-900/95',
         'backdrop-blur-md',
         'border',
-        'border-gray-200/50',
+        'border-gray-700/50',
         'rounded-lg',
         'shadow-lg'
       );

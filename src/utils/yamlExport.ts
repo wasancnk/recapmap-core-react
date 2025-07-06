@@ -103,14 +103,14 @@ function generateAIHints(nodes: RecapMapNode[], options: YAMLExportOptions) {
  */
 function determineComplexity(nodes: RecapMapNode[]): 'simple' | 'moderate' | 'complex' {
   const nodeCount = nodes.length
-  const useCaseNodes = nodes.filter(n => n.type === 'usecase')
+  const caseNodes = nodes.filter(n => n.type === 'case')
   const hasComplexNodes = nodes.some(n => 
-    (n.type === 'usecase' && (n as unknown as { complexity?: string }).complexity === 'complex') ||
+    (n.type === 'case' && (n as unknown as { complexity?: string }).complexity === 'complex') ||
     (n.type === 'process' && (n as unknown as { processType?: string }).processType === 'integration')
   )
 
   if (nodeCount <= 5 && !hasComplexNodes) return 'simple'
-  if (nodeCount <= 15 && useCaseNodes.length <= 3) return 'moderate'
+  if (nodeCount <= 15 && caseNodes.length <= 3) return 'moderate'
   return 'complex'
 }
 
@@ -119,7 +119,7 @@ function determineComplexity(nodes: RecapMapNode[]): 'simple' | 'moderate' | 'co
  */
 function extractPrimaryUseCases(nodes: RecapMapNode[]): string[] {
   return nodes
-    .filter(n => n.type === 'usecase')
+    .filter(n => n.type === 'case')
     .map(n => (n as unknown as { featureName?: string }).featureName || n.title)
     .filter(Boolean)
     .slice(0, 5) // Limit to top 5 for AI focus
