@@ -159,7 +159,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     label: 'Task',
     bgColor: '#f9a8d4', // Bright pastel rose gold background
     borderColor: '#ec4899', // Darker pink border
-    textColor: '#000000', // Pure black text
+    textColor: '#1f2937', // Dark gray text (softer than pure black)
     category: 'meta-collaboration',
     description: 'Tasks and action items',
     toolbarClassName: 'bg-rose-300 border-rose-400 text-black hover:bg-rose-400'
@@ -171,7 +171,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     label: 'Note',
     bgColor: '#fde047', // Bright pastel yellow background
     borderColor: '#eab308', // Darker yellow border
-    textColor: '#000000', // Pure black text
+    textColor: '#1f2937', // Dark gray text (softer than pure black)
     category: 'meta-collaboration',
     description: 'Notes and annotations',
     toolbarClassName: 'bg-yellow-300 border-yellow-400 text-black hover:bg-yellow-400'

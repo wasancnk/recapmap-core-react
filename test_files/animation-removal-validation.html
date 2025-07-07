@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Removal & Colored Names Validation</title>
+    <style>
+        body {
+            background: #0d1117;
+            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .validation-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #161b22;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        
+        .node-preview {
+            display: inline-block;
+            width: 200px;
+            height: 120px;
+            margin: 10px;
+            padding: 12px;
+            border: 2px solid;
+            border-radius: 8px;
+            background: #21262d;
+            position: relative;
+            cursor: pointer;
+            color: white;
+        }
+        
+        .node-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .node-type {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .delete-btn {
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            font-weight: 300;
+            margin-left: auto;
+            cursor: pointer;
+        }
+        
+        .delete-btn:hover {
+            color: #ef4444 !important;
+        }
+        
+        .node-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        .node-desc {
+            font-size: 12px;
+            opacity: 0.7;
+            line-height: 1.3;
+        }
+        
+        /* Regular nodes with colored names */
+        .persona { border-color: #f97316; }
+        .persona .node-name { color: #f97316; }
+        
+        .interface { border-color: #10b981; }
+        .interface .node-name { color: #10b981; }
+        
+        .process { border-color: #8b5cf6; }
+        .process .node-name { color: #8b5cf6; }
+        
+        .capability { border-color: #3b82f6; }
+        .capability .node-name { color: #3b82f6; }
+        
+        .outcome { border-color: #10b981; }
+        .outcome .node-name { color: #10b981; }
+        
+        .resource { border-color: #ec4899; }
+        .resource .node-name { color: #ec4899; }
+        
+        .knowledge { border-color: #06b6d4; }
+        .knowledge .node-name { color: #06b6d4; }
+        
+        .storage { border-color: #6b7280; }
+        .storage .node-name { color: #6b7280; }
+        
+        /* Task and note nodes use their configured text colors (dark gray) */
+        .task { 
+            border-color: #ec4899; 
+            background-color: #f9a8d4;
+        }
+        .task .node-name { color: #1f2937; }
+        .task .node-header { color: #1f2937 !important; }
+        .task .delete-btn { color: #374151; }
+        
+        .note { 
+            border-color: #eab308; 
+            background-color: #fde047;
+        }
+        .note .node-name { color: #1f2937; }
+        .note .node-header { color: #1f2937 !important; }
+        .note .delete-btn { color: #374151; }
+        /* Special nodes keep white names */
+        .view { border-color: #4f46e5; }
+        .case { border-color: #4d7c0f; }
+        .anchor { border-color: #9333ea; }
+        .unknown { border-color: #374151; }
+        
+        .status-check {
+            color: #22c55e;
+        }
+        
+        .validation-item {
+            margin: 10px 0;
+            padding: 8px;
+            background: #0d1117;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Animation Removal & Colored Names Validation</h1>
+    
+    <div class="validation-section">
+        <h2>✅ Changes Implemented</h2>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Removed all node scaling animations (no more transform: scale())
+        </div>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Removed all CSS transitions from nodes
+        </div>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Removed hover effects, elevated effects, and focus effects
+        </div>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Delete button animation removed (no transition)
+        </div>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Node names colored with border colors (8 regular nodes only)
+        </div>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Task & note nodes use dark gray text throughout (header and content)
+        </div>
+        <div class="validation-item">
+            <span class="status-check">✓</span> Special nodes (view, case, anchor, unknown) keep white names
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        <h2>🎨 Regular Nodes (Colored Names)</h2>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="node-preview persona">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>👤</span>
+                        <span>Persona</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">User Research Participant</div>
+                <div class="node-desc">Primary target user for the application</div>
+            </div>
+            
+            <div class="node-preview interface">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>📱</span>
+                        <span>Interface</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Dashboard UI</div>
+                <div class="node-desc">Main user interface dashboard</div>
+            </div>
+            
+            <div class="node-preview process">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>⚙️</span>
+                        <span>Process</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Authentication Flow</div>
+                <div class="node-desc">User login and verification process</div>
+            </div>
+            
+            <div class="node-preview capability">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>⚡</span>
+                        <span>Capability</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Real-time Sync</div>
+                <div class="node-desc">Live data synchronization capability</div>
+            </div>
+            
+            <div class="node-preview outcome">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>✅</span>
+                        <span>Outcome</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Improved UX</div>
+                <div class="node-desc">Enhanced user experience result</div>
+            </div>
+            
+            <div class="node-preview resource">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>📦</span>
+                        <span>Resource</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">API Endpoint</div>
+                <div class="node-desc">REST API resource for data access</div>
+            </div>
+            
+            <div class="node-preview knowledge">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>🧠</span>
+                        <span>Knowledge</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Design System</div>
+                <div class="node-desc">UI component library documentation</div>
+            </div>
+            
+            <div class="node-preview storage">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>💾</span>
+                        <span>Storage</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">User Database</div>
+                <div class="node-desc">Primary user data storage</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        <h2>📝 Task & Note Nodes (Black Text on Bright Backgrounds)</h2>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="node-preview task">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>✔️</span>
+                        <span>Task</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Complete User Testing</div>
+                <div class="node-desc">Conduct usability tests with 5 users</div>
+            </div>
+            
+            <div class="node-preview note">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>🖊️</span>
+                        <span>Note</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Design Review Notes</div>
+                <div class="node-desc">Key feedback from stakeholder meeting</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        <h2>⚪ Special Nodes (White Names)</h2>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="node-preview view">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>📽️</span>
+                        <span>View</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Project Overview</div>
+                <div class="node-desc">High-level project presentation</div>
+            </div>
+            
+            <div class="node-preview case">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>📋</span>
+                        <span>Case</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">User Journey Case</div>
+                <div class="node-desc">End-to-end user experience case</div>
+            </div>
+            
+            <div class="node-preview anchor">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>⚓</span>
+                        <span>Anchor</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">Reference Point</div>
+                <div class="node-desc">Key milestone or checkpoint</div>
+            </div>
+            
+            <div class="node-preview unknown">
+                <div class="node-header">
+                    <div class="node-type">
+                        <span>❓</span>
+                        <span>Unknown</span>
+                    </div>
+                    <button class="delete-btn">×</button>
+                </div>
+                <div class="node-name">TBD Item</div>
+                <div class="node-desc">To be determined or classified</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        <h2>🧪 Animation Test</h2>
+        <p>Hover over nodes above and verify:</p>
+        <ul>
+            <li>❌ No scaling or size changes</li>
+            <li>❌ No box shadows or glows</li>
+            <li>❌ No transitions or animations</li>
+            <li>✅ Only delete button color changes (white → red)</li>
+            <li>✅ Regular nodes have colored names (matching borders)</li>
+            <li>✅ Task & note nodes have dark gray text (easier on eyes than pure black)</li>
+            <li>✅ Special nodes have white names</li>
+            <li>✅ Static, clean appearance</li>
+        </ul>
+    </div>
+    
+    <script>
+        console.log('Animation removal validation loaded');
+        console.log('Regular nodes should have colored names matching their borders');
+        console.log('Special nodes should have white names');
+        console.log('No animations should occur on hover');
+        
+        // Test delete button functionality
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                console.log('Delete button clicked - no animation should occur');
+                alert('Delete button works! (No animation)');
+            });
+        });
+    </script>
+</body>
+</html>

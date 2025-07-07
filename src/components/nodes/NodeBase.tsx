@@ -30,7 +30,6 @@ interface NodeBaseProps {
   nodeZIndex: number;
   nodeState: NodeState;
   isHovered: boolean;
-  isFocused: boolean;
   showConnectors: boolean;
   isToggling: boolean;
   toggleSummaryPanel: (e: React.MouseEvent) => void;
@@ -53,7 +52,6 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
   nodeZIndex,
   nodeState,
   isHovered,
-  isFocused,
   showConnectors,
   isToggling,
   toggleSummaryPanel,
@@ -63,6 +61,13 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
   handlers,
 }) => {
   const config = getNodeConfig(nodeData.type);
+
+  // Define the 8 regular nodes that should have colored names (matching border color)
+  const regularNodes: NodeType[] = ['persona', 'interface', 'process', 'capability', 'outcome', 'resource', 'knowledge', 'storage'];
+  const isRegularNode = regularNodes.includes(nodeData.type);
+  
+  // Task and note nodes should use their configured textColor (black), not border color
+  const shouldUseColoredName = isRegularNode;
 
   // Special styling for anchor nodes (view and case) with stripe patterns
   const nodeStyle = nodeData.type === 'view' ? {
@@ -107,16 +112,11 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
     >
       <div 
         className={`
-          rounded-lg border-2 
-          transition-all duration-200 hover:bg-opacity-90 cursor-pointer
+          rounded-lg border-2 cursor-pointer
           relative flex flex-col
           node-uniform-size node-grid-aligned
           node-${nodeData.type}
           node-interactive
-          ${(isHovered || isFocused) && nodeState !== 'elevated' ? 'node-hover-effect' : ''}
-          ${nodeState === 'elevated' ? 'node-elevated-effect' : ''}
-          ${(isHovered || isFocused) && nodeState === 'elevated' ? 'node-elevated-hover-effect' : ''}
-          ${isFocused ? 'node-focus-effect' : ''}
         `}
         style={{
           ...nodeStyle,
@@ -127,19 +127,31 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
         <NodeHandles showConnectors={showConnectors} />
 
         {/* Node Type Header with Delete Button */}
-        <div className="flex items-center justify-between gap-2 mb-2 text-sm opacity-80">
+        <div 
+          className="flex items-center justify-between gap-2 mb-2 text-sm opacity-80"
+          style={{
+            color: (nodeData.type === 'task' || nodeData.type === 'note') ? '#1f2937' : 'inherit'
+          }}
+        >
           <div className="flex items-center gap-2">
             <span className="text-lg">{config.icon}</span>
             <span className="font-medium">{config.label}</span>
           </div>
           <button
-            className="w-6 h-6 text-white hover:text-red-500 border-none bg-transparent rounded flex items-center justify-center font-light transition-all duration-200 z-50"
+            className="w-6 h-6 border-none bg-transparent rounded flex items-center justify-center font-light z-50"
             style={{ 
               pointerEvents: 'auto',
               fontSize: '24px',
               lineHeight: '1',
               fontWeight: '300',
-              marginTop: '-2px'
+              marginTop: '-2px',
+              color: (nodeData.type === 'task' || nodeData.type === 'note') ? '#374151' : '#FFFFFF'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#ef4444'; // Red on hover regardless of node type
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = (nodeData.type === 'task' || nodeData.type === 'note') ? '#374151' : '#FFFFFF';
             }}
             onClick={deleteNode}
             title="Delete Node"
@@ -169,6 +181,7 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
               WebkitBoxOrient: 'vertical',
               wordWrap: 'break-word',
               hyphens: 'auto',
+              color: shouldUseColoredName ? config.borderColor : config.textColor,
             }}
             title={nodeData.label}
           >

@@ -299,33 +299,9 @@
   .z-node-selected { z-index: 75; }
   .z-node-elevated { z-index: 90; }
   
-  /* Interactive state transitions for nodes */
+  /* Interactive state transitions for nodes - ANIMATIONS REMOVED */
   .node-interactive {
-    transition: all 0.2s ease;
     position: relative;
-  }
-    .node-hover-effect {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* .node-selected-effect removed - buggy selection animation */
-    .node-elevated-effect {
-    transform: scale(1.03);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
-                0 0 0 3px rgba(99, 102, 241, 0.6);
-  }
-  
-  .node-elevated-hover-effect {
-    transform: scale(1.05);
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.5),
-                0 0 0 3px rgba(99, 102, 241, 0.8),
-                0 0 30px rgba(99, 102, 241, 0.4);
-  }
-  
-  .node-focus-effect {
-    outline: 2px solid rgba(99, 102, 241, 0.6);
-    outline-offset: 2px;
   }
 
   /* Node handle positions */
@@ -580,56 +556,8 @@
     z-index: 100 !important;
     margin: 12px !important;
   }
-  /* Dynamic Z-Index Visual Effects - DZINDEX_001 */
-  /* These classes use CSS custom properties to match each node's border color */
-  
-  /* Hover Effect - Subtle scale and shadow */
-  .node-hover-effect {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease;
-  }
-  
-  /* Selected Effect - removed to eliminate buggy 2-line ring */
-  /* .node-selected-effect {
-    transform: scale(1.01);
-    box-shadow: 
-      0 0 20px var(--node-glow-color, rgba(255, 255, 255, 0.6)),
-      0 8px 25px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease;
-  } */
-  
-  /* Elevated Effect - Larger scale with dynamic border glow */
-  .node-elevated-effect {
-    transform: scale(1.03);
-    box-shadow: 
-      0 0 25px var(--node-glow-color, rgba(99, 102, 241, 0.8)),
-      0 0 40px var(--node-glow-color, rgba(99, 102, 241, 0.4)),
-      0 12px 30px rgba(0, 0, 0, 0.4);
-    outline: 2px solid var(--node-border-color, #6366f1);
-    outline-offset: 2px;
-    transition: all 0.2s ease;
-  }
-  
-  /* Enhanced hover effect for elevated nodes */
-  .node-elevated-hover-effect {
-    transform: scale(1.05);
-    box-shadow: 
-      0 0 30px var(--node-glow-color, rgba(99, 102, 241, 0.9)),
-      0 0 50px var(--node-glow-color, rgba(99, 102, 241, 0.5)),
-      0 15px 35px rgba(0, 0, 0, 0.5);
-    outline: 3px solid var(--node-border-color, #6366f1);
-    outline-offset: 3px;
-    transition: all 0.2s ease;
-  }
-  
-  /* Focus Effect - Accessibility outline with dynamic color */
-  .node-focus-effect {
-    outline: 2px solid var(--node-border-color, #6366f1);
-    outline-offset: 2px;
-    box-shadow: 
-      0 0 15px var(--node-glow-color, rgba(99, 102, 241, 0.6));
-  }
+  /* Dynamic Z-Index Visual Effects - ANIMATIONS REMOVED */
+  /* Animation classes removed for clean, static appearance */
   
   /* Z-Index Utility Classes */
   .z-node-inactive { z-index: 10; }

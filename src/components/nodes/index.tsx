@@ -73,7 +73,6 @@ const NodeWrapper: React.FC<NodeProps> = ({
         nodeZIndex={nodeZIndex}
         nodeState={nodeState}
         isHovered={isHovered}
-        isFocused={isFocused}
         showConnectors={showConnectors || Boolean(selected)}
         isToggling={isToggling}
         toggleSummaryPanel={toggleSummaryPanel}
