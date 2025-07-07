@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Creation Fix Verification</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f8fafc;
+            margin-bottom: 30px;
+        }
+
+        .fix-explanation {
+            background: rgba(34, 197, 94, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #22c55e;
+            margin: 20px auto;
+            max-width: 600px;
+            color: #86efac;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px auto;
+            max-width: 800px;
+        }
+
+        .example-box {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .example-title {
+            color: #e2e8f0;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .node-example {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid;
+        }
+
+        .before {
+            border-left-color: #ef4444;
+        }
+
+        .after {
+            border-left-color: #22c55e;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            color: #94a3b8;
+        }
+
+        .highlight {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Blueprint & Snippet Node Name Fix</h1>
+    
+    <div class="fix-explanation">
+        <strong>✅ Bug Fixed!</strong> Added missing Blueprint and Snippet entries to the nodeLabels mapping in nodeStore.ts. 
+        New nodes will now show "New Blueprint" and "New Snippet" instead of "New undefined".
+    </div>
+
+    <div class="before-after">
+        <div class="example-box">
+            <div class="example-title">❌ Before (Broken)</div>
+            <div class="node-example before">
+                📐 Blueprint: "New undefined"
+            </div>
+            <div class="node-example before">
+                🧩 Snippet: "New undefined"
+            </div>
+            <p style="color: #cbd5e1; font-size: 14px; margin-top: 15px;">
+                The nodeLabels record was missing entries for the new node types, causing undefined lookups.
+            </p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">✅ After (Fixed)</div>
+            <div class="node-example after">
+                📐 Blueprint: "New Blueprint"
+            </div>
+            <div class="node-example after">
+                🧩 Snippet: "New Snippet"
+            </div>
+            <p style="color: #cbd5e1; font-size: 14px; margin-top: 15px;">
+                Added proper entries to the nodeLabels mapping for correct default naming.
+            </p>
+        </div>
+    </div>
+
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div class="example-title">Code Change</div>
+        <div class="code-block">
+const nodeLabels: Record&lt;NodeType, string&gt; = {<br>
+&nbsp;&nbsp;'case': 'Case',<br>
+&nbsp;&nbsp;'task': 'Task',<br>
+&nbsp;&nbsp;// ... other existing types ...<br>
+&nbsp;&nbsp;<span class="highlight">'blueprint': 'Blueprint',</span><br>
+&nbsp;&nbsp;<span class="highlight">'snippet': 'Snippet'</span><br>
+}
+        </div>
+        
+        <p style="color: #cbd5e1; text-align: center; margin-top: 20px;">
+            Now when creating new Blueprint or Snippet nodes, they'll get proper default names!
+        </p>
+    </div>
+</body>
+</html>

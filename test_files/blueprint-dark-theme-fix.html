@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Pattern Test - Dark Theme Fixed</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        /* Blueprint Node Pattern - Dark Theme Friendly */
+        .blueprint-pattern-new {
+            background-color: #1e293b;
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+        }
+        
+        /* Old bright pattern for comparison */
+        .blueprint-pattern-old {
+            background-color: #fdfdff;
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.25) 2px, transparent 2px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.25) 2px, transparent 2px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+        }
+        
+        .node-card {
+            padding: 20px;
+            border-radius: 8px;
+            border: 3px solid #4682b4;
+            min-height: 120px;
+            position: relative;
+        }
+        
+        .blueprint-card-new {
+            color: #ffffff;
+        }
+        
+        .blueprint-card-old {
+            color: #1e3a8a;
+        }
+        
+        .comparison-card {
+            background: #22543d;
+            color: #ffffff;
+            border-color: #4d7c0f;
+            background-image: linear-gradient(45deg, 
+                #4d7c0f 25%, 
+                #65a30d 25%, 
+                #65a30d 50%, 
+                #4d7c0f 50%, 
+                #4d7c0f 75%, 
+                #65a30d 75%);
+            background-size: 8px 8px;
+        }
+        
+        .view-card {
+            background: #312e81;
+            color: #ffffff;
+            border-color: #4f46e5;
+            background-image: linear-gradient(45deg, 
+                #4f46e5 25%, 
+                #6366f1 25%, 
+                #6366f1 50%, 
+                #4f46e5 50%, 
+                #4f46e5 75%, 
+                #6366f1 75%);
+            background-size: 8px 8px;
+        }
+        
+        .node-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .node-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .node-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .node-description {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        .node-meta {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .analysis-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #161b22;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+        
+        .toolbar-demo {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #21262d;
+            border-radius: 6px;
+        }
+        
+        .toolbar-button {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .blueprint-toolbar-new {
+            background: #334155;
+            border-color: #4682b4;
+            color: white;
+        }
+        
+        .blueprint-toolbar-new:hover {
+            background: #475569;
+        }
+        
+        .blueprint-toolbar-old {
+            background: #f8fafc;
+            border-color: #4682b4;
+            color: #1e3a8a;
+        }
+        
+        .case-toolbar {
+            background: #365314;
+            border-color: #4d7c0f;
+            color: white;
+            background-image: linear-gradient(45deg, 
+                #4d7c0f 25%, 
+                #65a30d 25%, 
+                #65a30d 50%, 
+                #4d7c0f 50%, 
+                #4d7c0f 75%, 
+                #65a30d 75%);
+            background-size: 4px 4px;
+        }
+        
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .label {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .before-label {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .after-label {
+            background: #16a34a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Blueprint Pattern - Dark Theme Fix</h1>
+        <p>Comparison: Before (eye-burning bright) vs After (dark theme friendly)</p>
+    </div>
+
+    <div class="before-after">
+        <div>
+            <div class="label before-label">❌ BEFORE - Too Bright!</div>
+            <div class="node-card blueprint-pattern-old blueprint-card-old">
+                <div class="node-header">
+                    <span class="node-icon">📐</span>
+                    <span class="node-title">Blueprint (Old)</span>
+                </div>
+                <div class="node-description">Hurts eyes in dark interface!</div>
+                <div class="node-meta">
+                    Background: #fdfdff (almost white)<br>
+                    Text: #1e3a8a (dark blue)<br>
+                    Problem: Too bright for dark theme
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="label after-label">✅ AFTER - Perfect!</div>
+            <div class="node-card blueprint-pattern-new blueprint-card-new">
+                <div class="node-header">
+                    <span class="node-icon">📐</span>
+                    <span class="node-title">Blueprint (New)</span>
+                </div>
+                <div class="node-description">Harmonious with dark interface</div>
+                <div class="node-meta">
+                    Background: #1e293b (dark blue-gray)<br>
+                    Text: #ffffff (white)<br>
+                    Solution: Dark theme friendly
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-grid">
+        <div class="node-card blueprint-pattern-new blueprint-card-new">
+            <div class="node-header">
+                <span class="node-icon">📐</span>
+                <span class="node-title">Blueprint (Fixed)</span>
+            </div>
+            <div class="node-description">Architecture blueprints and technical designs</div>
+            <div class="node-meta">
+                Dark theme friendly blueprint pattern<br>
+                Subtle grid: 20px major, 5px minor<br>
+                Opacity: 30% major, 15% minor lines
+            </div>
+        </div>
+        
+        <div class="node-card comparison-card">
+            <div class="node-header">
+                <span class="node-icon">📋</span>
+                <span class="node-title">Case Node</span>
+            </div>
+            <div class="node-description">Business use cases and scenarios</div>
+            <div class="node-meta">
+                Existing pattern for comparison<br>
+                Similar dark approach<br>
+                Visual harmony maintained
+            </div>
+        </div>
+        
+        <div class="node-card view-card">
+            <div class="node-header">
+                <span class="node-icon">📽️</span>
+                <span class="node-title">View Node</span>
+            </div>
+            <div class="node-description">Presentation layers and views</div>
+            <div class="node-meta">
+                Existing pattern for comparison<br>
+                Similar dark approach<br>
+                Visual harmony maintained
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar-demo">
+        <div class="toolbar-button blueprint-toolbar-new blueprint-pattern-new">📐 Blueprint (New)</div>
+        <div class="toolbar-button case-toolbar">📋 Case</div>
+        <div class="toolbar-button blueprint-toolbar-old blueprint-pattern-old">📐 Blueprint (Old)</div>
+    </div>
+
+    <div class="analysis-section">
+        <h3>✅ Dark Theme Fix Analysis</h3>
+        
+        <h4>🔧 Changes Made:</h4>
+        <ul>
+            <li><strong>Background:</strong> #fdfdff → #1e293b (bright white → dark blue-gray)</li>
+            <li><strong>Text Color:</strong> #1e3a8a → #ffffff (dark blue → white)</li>
+            <li><strong>Grid Size:</strong> 50px/10px → 20px/5px (smaller, more subtle)</li>
+            <li><strong>Grid Opacity:</strong> 25%/15% → 30%/15% (slightly more visible on dark)</li>
+        </ul>
+        
+        <h4>✅ Benefits:</h4>
+        <ul>
+            <li><strong>Eye Comfort:</strong> No more harsh bright flash in dark interface</li>
+            <li><strong>Visual Harmony:</strong> Matches Case/View dark pattern approach</li>
+            <li><strong>Blueprint Feel:</strong> Still maintains architectural grid aesthetic</li>
+            <li><strong>Professional:</strong> Consistent with dark theme design principles</li>
+        </ul>
+        
+        <h4>🎨 Design Principles:</h4>
+        <ul>
+            <li><strong>Consistency:</strong> Follows existing Case/View methodology</li>
+            <li><strong>Accessibility:</strong> No eye strain or harsh contrasts</li>
+            <li><strong>Identity:</strong> Still distinctly recognizable as blueprint</li>
+            <li><strong>Harmony:</strong> Fits perfectly in dark UI ecosystem</li>
+        </ul>
+    </div>
+
+    <script>
+        console.log("=== Blueprint Dark Theme Fix ===");
+        console.log("BEFORE: #fdfdff background (too bright!)");
+        console.log("AFTER: #1e293b background (dark theme friendly)");
+        console.log("Grid pattern: Subtle steel blue lines on dark blue-gray");
+        console.log("Result: No more eye strain, perfect harmony!");
+    </script>
+</body>
+</html>

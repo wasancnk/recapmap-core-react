@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snippet Node Pattern Color Exploration</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .node-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .test-node {
+            width: 180px;
+            height: 120px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+            margin: 0 auto;
+        }
+
+        .test-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .node-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .node-title {
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .node-description {
+            font-size: 14px;
+            opacity: 0.7;
+            line-height: 1.3;
+        }
+
+        /* Original Pattern (Current - Not Great) */
+        .snippet-original {
+            background: linear-gradient(135deg, #708090 21px, #d9ecff 22px, #d9ecff 24px, transparent 24px, transparent 67px, #d9ecff 67px, #d9ecff 69px, transparent 69px),
+                        linear-gradient(225deg, #708090 21px, #d9ecff 22px, #d9ecff 24px, transparent 24px, transparent 67px, #d9ecff 67px, #d9ecff 69px, transparent 69px) 0 64px;
+            background-color: #708090;
+            background-size: 64px 128px;
+            border-color: #e91e63;
+            color: #ffffff;
+        }
+
+        /* Option 1: Dark Code Theme */
+        .snippet-dark-code {
+            background: linear-gradient(135deg, #1a1a2e 21px, #16213e 22px, #16213e 24px, transparent 24px, transparent 67px, #16213e 67px, #16213e 69px, transparent 69px),
+                        linear-gradient(225deg, #1a1a2e 21px, #16213e 22px, #16213e 24px, transparent 24px, transparent 67px, #16213e 67px, #16213e 69px, transparent 69px) 0 64px;
+            background-color: #0f172a;
+            background-size: 64px 128px;
+            border-color: #e91e63;
+            color: #ffffff;
+        }
+
+        /* Option 2: GitHub-inspired */
+        .snippet-github {
+            background: linear-gradient(135deg, #21262d 21px, #30363d 22px, #30363d 24px, transparent 24px, transparent 67px, #30363d 67px, #30363d 69px, transparent 69px),
+                        linear-gradient(225deg, #21262d 21px, #30363d 22px, #30363d 24px, transparent 24px, transparent 67px, #30363d 67px, #30363d 69px, transparent 69px) 0 64px;
+            background-color: #161b22;
+            background-size: 64px 128px;
+            border-color: #f78166;
+            color: #ffffff;
+        }
+
+        /* Option 3: VS Code-inspired */
+        .snippet-vscode {
+            background: linear-gradient(135deg, #1e1e1e 21px, #2d2d30 22px, #2d2d30 24px, transparent 24px, transparent 67px, #2d2d30 67px, #2d2d30 69px, transparent 69px),
+                        linear-gradient(225deg, #1e1e1e 21px, #2d2d30 22px, #2d2d30 24px, transparent 24px, transparent 67px, #2d2d30 67px, #2d2d30 69px, transparent 69px) 0 64px;
+            background-color: #0d1117;
+            background-size: 64px 128px;
+            border-color: #569cd6;
+            color: #ffffff;
+        }
+
+        /* Option 4: Warm Purple Code */
+        .snippet-purple {
+            background: linear-gradient(135deg, #2a1f3d 21px, #3c2a57 22px, #3c2a57 24px, transparent 24px, transparent 67px, #3c2a57 67px, #3c2a57 69px, transparent 69px),
+                        linear-gradient(225deg, #2a1f3d 21px, #3c2a57 22px, #3c2a57 24px, transparent 24px, transparent 67px, #3c2a57 67px, #3c2a57 69px, transparent 69px) 0 64px;
+            background-color: #1a1327;
+            background-size: 64px 128px;
+            border-color: #a855f7;
+            color: #ffffff;
+        }
+
+        /* Option 5: Terminal Green */
+        .snippet-terminal {
+            background: linear-gradient(135deg, #0d1b1e 21px, #1e2d2f 22px, #1e2d2f 24px, transparent 24px, transparent 67px, #1e2d2f 67px, #1e2d2f 69px, transparent 69px),
+                        linear-gradient(225deg, #0d1b1e 21px, #1e2d2f 22px, #1e2d2f 24px, transparent 24px, transparent 67px, #1e2d2f 67px, #1e2d2f 69px, transparent 69px) 0 64px;
+            background-color: #0a1a1d;
+            background-size: 64px 128px;
+            border-color: #10b981;
+            color: #ffffff;
+        }
+
+        /* Option 6: Modern Pink (Current Brand Color) */
+        .snippet-pink {
+            background: linear-gradient(135deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px),
+                        linear-gradient(225deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px) 0 64px;
+            background-color: #1a1527;
+            background-size: 64px 128px;
+            border-color: #e91e63;
+            color: #ffffff;
+        }
+
+        .title {
+            color: #f8fafc;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 300;
+        }
+
+        .section-title {
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .description {
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .color-info {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .recommendation {
+            background: rgba(34, 197, 94, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #22c55e;
+            margin: 20px 0;
+        }
+
+        .recommendation-text {
+            color: #86efac;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="title">🧩 Snippet Node Pattern Color Exploration</h1>
+        
+        <div class="section">
+            <h2 class="section-title">🔍 Current vs Improved Options</h2>
+            <p class="description">
+                Exploring better color combinations for the Snippet node's geometric pattern. The current colors (#708090, #d9ecff) feel washed out and don't fit the modern code theme.
+            </p>
+            
+            <div class="node-grid">
+                <div class="test-node snippet-original">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">Current Pattern</div>
+                        <div class="node-description">Original colors - feels washed out</div>
+                    </div>
+                    <div class="color-info">Gray-blue + Light blue</div>
+                </div>
+
+                <div class="test-node snippet-dark-code">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">Dark Code Theme</div>
+                        <div class="node-description">Modern dark editor colors</div>
+                    </div>
+                    <div class="color-info">Deep navy + Dark blue</div>
+                </div>
+
+                <div class="test-node snippet-github">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">GitHub Inspired</div>
+                        <div class="node-description">GitHub dark theme colors</div>
+                    </div>
+                    <div class="color-info">GitHub grays + Orange</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🎨 Professional Code Editor Themes</h2>
+            <p class="description">
+                Options inspired by popular code editors and development environments.
+            </p>
+            
+            <div class="node-grid">
+                <div class="test-node snippet-vscode">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">VS Code Dark</div>
+                        <div class="node-description">VS Code editor theme</div>
+                    </div>
+                    <div class="color-info">VSCode grays + Blue</div>
+                </div>
+
+                <div class="test-node snippet-purple">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">Purple Code</div>
+                        <div class="node-description">Warm purple developer theme</div>
+                    </div>
+                    <div class="color-info">Purple tones + Bright purple</div>
+                </div>
+
+                <div class="test-node snippet-terminal">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">Terminal Green</div>
+                        <div class="node-description">Classic terminal colors</div>
+                    </div>
+                    <div class="color-info">Dark teal + Emerald</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🌟 Recommended Option</h2>
+            <p class="description">
+                Keeping the current pink brand color but improving the pattern colors for better contrast and modern appeal.
+            </p>
+            
+            <div class="node-grid">
+                <div class="test-node snippet-pink">
+                    <div class="node-header">
+                        <span>🧩</span>
+                        <span>Snippet</span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-title">Modern Pink</div>
+                        <div class="node-description">Improved dark theme with current pink accent</div>
+                    </div>
+                    <div class="color-info">Dark purple-grays + Pink border</div>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <p class="recommendation-text">💡 Recommended: Modern Pink theme maintains brand consistency while providing much better contrast and professional appearance. The dark purple-gray tones work beautifully with the existing pink accent color.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📝 Color Specifications</h2>
+            <p class="description">Ready-to-use CSS values for implementation:</p>
+            
+            <div style="background: rgba(15, 23, 42, 0.7); padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; color: #e2e8f0; margin-top: 20px;">
+                <div style="color: #86efac; font-weight: bold; margin-bottom: 10px;">Modern Pink (Recommended):</div>
+                <div>Base Color: #1a1527</div>
+                <div>Pattern Color 1: #2a1f2e</div>
+                <div>Pattern Color 2: #3d2f42</div>
+                <div>Border Color: #e91e63 (unchanged)</div>
+                <div>Text Color: #ffffff</div>
+                <br>
+                <div style="color: #86efac; font-weight: bold; margin-bottom: 10px;">Alternative - VS Code Dark:</div>
+                <div>Base Color: #0d1117</div>
+                <div>Pattern Color 1: #1e1e1e</div>
+                <div>Pattern Color 2: #2d2d30</div>
+                <div>Border Color: #569cd6</div>
+                <div>Text Color: #ffffff</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

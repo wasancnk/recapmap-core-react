@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint White Text Fix</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        /* Canvas node simulation */
+        .canvas-node {
+            border-radius: 8px;
+            border: 2px solid;
+            padding: 12px;
+            width: 160px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+        
+        /* Blueprint with white text (FIXED) */
+        .blueprint-fixed {
+            background-color: #1e293b;
+            border-color: #4682b4;
+            color: #ffffff; /* White text */
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+        }
+        
+        /* Blueprint with colored text (PROBLEM) */
+        .blueprint-problem {
+            background-color: #1e293b;
+            border-color: #4682b4;
+            color: #4682b4; /* Same as border color - hard to read */
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+        }
+        
+        /* Case node for comparison */
+        .case-node {
+            background-color: #22543d;
+            border-color: #4d7c0f;
+            color: #ffffff; /* White text */
+            background-image: linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%);
+            background-size: 8px 8px;
+        }
+        
+        .node-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .node-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        .node-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .node-description {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .section {
+            background: #161b22;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .problem-label {
+            background: #dc2626;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .fixed-label {
+            background: #16a34a;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .text-analysis {
+            background: #21262d;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Blueprint White Text Fix</h1>
+        <p>Ensuring readable white text on Blueprint pattern background</p>
+    </div>
+
+    <div class="comparison-grid">
+        <div>
+            <div class="problem-label">❌ BEFORE - Hard to Read</div>
+            <div class="canvas-node blueprint-problem">
+                <div class="node-header">
+                    <span class="node-icon">📐</span>
+                    <span class="node-title">Blueprint</span>
+                </div>
+                <div class="node-description">Text is hard to read!</div>
+            </div>
+            <div class="text-analysis">
+                <strong>Problem:</strong> Text color = border color (#4682b4)<br>
+                <strong>Result:</strong> Poor contrast on patterned background
+            </div>
+        </div>
+        
+        <div>
+            <div class="fixed-label">✅ AFTER - Perfect Readability</div>
+            <div class="canvas-node blueprint-fixed">
+                <div class="node-header">
+                    <span class="node-icon">📐</span>
+                    <span class="node-title">Blueprint</span>
+                </div>
+                <div class="node-description">Text is clearly readable!</div>
+            </div>
+            <div class="text-analysis">
+                <strong>Solution:</strong> Text color = white (#ffffff)<br>
+                <strong>Result:</strong> Excellent contrast and readability
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Comparison with Case Node (Reference)</h3>
+        <div style="display: flex; justify-content: center; margin: 20px 0;">
+            <div class="canvas-node case-node">
+                <div class="node-header">
+                    <span class="node-icon">📋</span>
+                    <span class="node-title">Case</span>
+                </div>
+                <div class="node-description">Reference white text</div>
+            </div>
+        </div>
+        <p><strong>Case node uses white text:</strong> Perfect readability on striped background</p>
+        <p><strong>Blueprint should match:</strong> Same white text approach for consistency</p>
+    </div>
+
+    <div class="section">
+        <h3>✅ Technical Fix Applied</h3>
+        
+        <h4>🔧 NodeBase.tsx Changes:</h4>
+        <ul>
+            <li><strong>Force white text:</strong> <code>color: '#ffffff'</code> in blueprint style</li>
+            <li><strong>Removed from regularNodes:</strong> Blueprint no longer uses colored names</li>
+            <li><strong>Consistent with Case/View:</strong> Pattern nodes use white text</li>
+        </ul>
+        
+        <h4>🎨 Design Logic:</h4>
+        <ul>
+            <li><strong>Pattern nodes:</strong> Case, View, Blueprint → White text</li>
+            <li><strong>Regular nodes:</strong> Persona, Interface, etc. → Colored text (border color)</li>
+            <li><strong>Sticky notes:</strong> Task, Note → Dark text (for light backgrounds)</li>
+        </ul>
+        
+        <h4>✅ Result:</h4>
+        <ul>
+            <li><strong>Perfect readability:</strong> White text stands out clearly</li>
+            <li><strong>Visual consistency:</strong> Matches Case/View pattern approach</li>
+            <li><strong>Professional appearance:</strong> Clean, readable blueprint aesthetic</li>
+        </ul>
+    </div>
+
+    <script>
+        console.log("=== Blueprint White Text Fix ===");
+        console.log("❌ Problem: Text color matched border color (#4682b4)");
+        console.log("✅ Solution: Force white text (#ffffff) for readability");
+        console.log("✅ Consistency: Matches Case/View white text approach");
+        console.log("Perfect readability achieved!");
+    </script>
+</body>
+</html>

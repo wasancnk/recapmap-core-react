@@ -79,11 +79,28 @@ const NodeButton: React.FC<NodeButtonProps> = ({ nodeType, label, className, ico
     dragImage.style.border = '2px solid rgba(255, 255, 255, 0.3)';
     dragImage.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
       // Add stripe pattern for presentation and use case nodes
-    if (className.includes('bg-indigo')) {      dragImage.style.backgroundImage = 'linear-gradient(45deg, #4F46E5 25%, #6366F1 25%, #6366F1 50%, #4F46E5 50%, #4F46E5 75%, #6366F1 75%)';
+    if (className.includes('bg-indigo')) {
+      dragImage.style.backgroundImage = 'linear-gradient(45deg, #4F46E5 25%, #6366F1 25%, #6366F1 50%, #4F46E5 50%, #4F46E5 75%, #6366F1 75%)';
       dragImage.style.backgroundSize = '8px 8px';
     } else if (className.includes('bg-lime')) {
       dragImage.style.backgroundImage = 'linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%)';
       dragImage.style.backgroundSize = '8px 8px';
+    } else if (className.includes('blueprint-grid')) {
+      dragImage.style.backgroundImage = `
+        linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+        linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px)
+      `;
+      dragImage.style.backgroundSize = '20px 20px, 20px 20px, 5px 5px, 5px 5px';
+      dragImage.style.backgroundPosition = '-1px -1px, -1px -1px, -1px -1px, -1px -1px';
+    } else if (className.includes('snippet-pattern')) {
+      dragImage.style.backgroundImage = `
+        linear-gradient(135deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px),
+        linear-gradient(225deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px)
+      `;
+      dragImage.style.backgroundSize = '64px 128px';
+      dragImage.style.backgroundPosition = '0 0, 0 64px';
     }
     
     dragImage.innerHTML = `${icon} ${label}`;

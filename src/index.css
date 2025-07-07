@@ -473,6 +473,28 @@
     background: rgba(31, 31, 31, 0.4);
   }
 
+  /* Blueprint Node Grid Pattern - Subtle Dark Theme Friendly */
+  .blueprint-grid {
+    background-color: #1e293b !important; /* Dark blue-gray base */
+    background-image: 
+      linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+      linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+      linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+      linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px) !important;
+    background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px !important;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px !important;
+  }
+
+  /* Snippet Node Geometric Pattern - Modern Pink Theme */
+  .snippet-pattern {
+    background-color: #1a1527 !important; /* Modern Pink base color */
+    background-image: 
+      linear-gradient(135deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px),
+      linear-gradient(225deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px) !important;
+    background-size: 64px 128px !important;
+    background-position: 0 0, 0 64px !important;
+  }
+
   /* React Flow Canvas Styles */
   .canvas-flow {
     @apply w-full h-full bg-background-tertiary;

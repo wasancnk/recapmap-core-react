@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Pattern Test - 75% Fade</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        /* Blueprint Node Pattern - 75% Fade */
+        .blueprint-pattern {
+            background-color: #fdfdff;
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.25) 2px, transparent 2px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.25) 2px, transparent 2px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+        }
+        
+        .node-card {
+            padding: 20px;
+            border-radius: 8px;
+            border: 3px solid #4682b4;
+            min-height: 120px;
+            position: relative;
+        }
+        
+        .blueprint-card {
+            color: #1e3a8a;
+        }
+        
+        .dark-card {
+            background: #21262d;
+            color: #ffffff;
+            border-color: #e91e63;
+        }
+        
+        .comparison-card {
+            background: #22543d;
+            color: #ffffff;
+            border-color: #4d7c0f;
+            background-image: linear-gradient(45deg, 
+                #4d7c0f 25%, 
+                #65a30d 25%, 
+                #65a30d 50%, 
+                #4d7c0f 50%, 
+                #4d7c0f 75%, 
+                #65a30d 75%);
+            background-size: 8px 8px;
+        }
+        
+        .node-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .node-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .node-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .node-description {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        .node-meta {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .analysis-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #161b22;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+        
+        .toolbar-demo {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            background: #21262d;
+            border-radius: 6px;
+        }
+        
+        .toolbar-button {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .blueprint-toolbar {
+            background: #f8fafc;
+            border-color: #4682b4;
+            color: #1e3a8a;
+        }
+        
+        .blueprint-toolbar:hover {
+            background: #f1f5f9;
+        }
+        
+        .snippet-toolbar {
+            background: #be185d;
+            border-color: #e91e63;
+            color: white;
+        }
+        
+        .case-toolbar {
+            background: #365314;
+            border-color: #4d7c0f;
+            color: white;
+            background-image: linear-gradient(45deg, 
+                #4d7c0f 25%, 
+                #65a30d 25%, 
+                #65a30d 50%, 
+                #4d7c0f 50%, 
+                #4d7c0f 75%, 
+                #65a30d 75%);
+            background-size: 4px 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Blueprint Pattern Test - 75% Fade Effect</h1>
+        <p>Testing the subtle grid pattern with dark blue text on near-white background</p>
+    </div>
+
+    <div class="test-grid">
+        <div class="node-card blueprint-pattern blueprint-card">
+            <div class="node-header">
+                <span class="node-icon">📐</span>
+                <span class="node-title">Blueprint Node</span>
+            </div>
+            <div class="node-description">Architecture blueprints and technical designs</div>
+            <div class="node-meta">
+                Background: #fdfdff (almost white)<br>
+                Pattern: 75% fade steel blue<br>
+                Text: #1e3a8a (dark blue)<br>
+                Border: #4682b4 (steel blue)
+            </div>
+        </div>
+        
+        <div class="node-card dark-card">
+            <div class="node-header">
+                <span class="node-icon">🧩</span>
+                <span class="node-title">Snippet Node</span>
+            </div>
+            <div class="node-description">Code snippets and reusable components</div>
+            <div class="node-meta">
+                Standard dark pattern for comparison<br>
+                Background: #21262d<br>
+                Text: #ffffff<br>
+                Border: #e91e63 (pink)
+            </div>
+        </div>
+        
+        <div class="node-card comparison-card">
+            <div class="node-header">
+                <span class="node-icon">📋</span>
+                <span class="node-title">Case Node</span>
+            </div>
+            <div class="node-description">Business use cases and scenarios</div>
+            <div class="node-meta">
+                Existing striped pattern for comparison<br>
+                Background: #22543d with stripes<br>
+                Text: #ffffff<br>
+                Border: #4d7c0f (lime)
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar-demo">
+        <div class="toolbar-button blueprint-toolbar blueprint-pattern">📐 Blueprint</div>
+        <div class="toolbar-button snippet-toolbar">🧩 Snippet</div>
+        <div class="toolbar-button case-toolbar">📋 Case</div>
+    </div>
+
+    <div class="analysis-section">
+        <h3>Visual Analysis - Blueprint 75% Fade Pattern</h3>
+        
+        <h4>✅ Readability Test:</h4>
+        <ul>
+            <li><strong>Text Contrast:</strong> Dark blue (#1e3a8a) on almost white (#fdfdff) = Excellent readability</li>
+            <li><strong>Pattern Subtlety:</strong> 75% fade (25% opacity) creates gentle grid without overwhelming text</li>
+            <li><strong>Eye Strain:</strong> Minimal - similar comfort level to Case/View nodes</li>
+        </ul>
+        
+        <h4>🎨 Visual Harmony:</h4>
+        <ul>
+            <li><strong>Consistent Approach:</strong> Follows Case/View special pattern methodology</li>
+            <li><strong>Professional Feel:</strong> Architectural blueprint paper aesthetic</li>
+            <li><strong>Distinctive Identity:</strong> Instantly recognizable as blueprint node</li>
+        </ul>
+        
+        <h4>🔧 Technical Implementation:</h4>
+        <ul>
+            <li><strong>Grid Size:</strong> 50px major grid, 10px minor grid (architectural standard)</li>
+            <li><strong>Opacity Levels:</strong> 25% for major lines, 15% for minor lines</li>
+            <li><strong>Color Harmony:</strong> Steel blue (#4682b4) family throughout</li>
+        </ul>
+    </div>
+
+    <script>
+        console.log("=== Blueprint Pattern Test ===");
+        console.log("Testing 75% fade grid pattern with dark blue text");
+        console.log("Background: #fdfdff (almost white)");
+        console.log("Pattern: rgba(70, 130, 180, 0.25) - 75% fade");
+        console.log("Text: #1e3a8a (dark blue)");
+        console.log("Border: #4682b4 (steel blue)");
+    </script>
+</body>
+</html>

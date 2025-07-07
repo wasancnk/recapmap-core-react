@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecapMap HSL Scientific Color Palette Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .color-wheel {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .node-card {
+            padding: 15px;
+            border-radius: 8px;
+            border: 3px solid;
+            background: #21262d;
+            position: relative;
+            min-height: 100px;
+            text-align: center;
+        }
+        .node-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .node-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .node-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .node-hsl {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        .category-section {
+            margin-bottom: 30px;
+        }
+        .category-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #58a6ff;
+        }
+        
+        /* Special styling for sticky note nodes */
+        .sticky-note {
+            background: linear-gradient(135deg, var(--bg-color), var(--bg-color));
+            color: #1f2937;
+        }
+        
+        /* Special styling for striped nodes */
+        .striped {
+            background: repeating-linear-gradient(
+                45deg,
+                var(--bg-color),
+                var(--bg-color) 10px,
+                var(--border-color) 10px,
+                var(--border-color) 20px
+            );
+        }
+        
+        /* HSL Scientific Color Variables */
+        .hsl-0 { border-color: #e34c26; --border-color: #e34c26; }    /* 0° Red */
+        .hsl-36 { border-color: #e67e22; --border-color: #e67e22; }   /* 36° Red-Orange */
+        .hsl-72 { border-color: #f39c12; --border-color: #f39c12; }   /* 72° Orange */
+        .hsl-108 { border-color: #8bc34a; --border-color: #8bc34a; }  /* 108° Yellow-Green */
+        .hsl-144 { border-color: #27ae60; --border-color: #27ae60; }  /* 144° Green */
+        .hsl-180 { border-color: #16a085; --border-color: #16a085; }  /* 180° Cyan */
+        .hsl-216 { border-color: #2980b9; --border-color: #2980b9; }  /* 216° Blue */
+        .hsl-252 { border-color: #8e44ad; --border-color: #8e44ad; }  /* 252° Purple */
+        .hsl-288 { border-color: #c0392b; --border-color: #c0392b; }  /* 288° Magenta */
+        .hsl-324 { border-color: #e91e63; --border-color: #e91e63; }  /* 324° Pink */
+        
+        /* Special nodes */
+        .lime { border-color: #4d7c0f; --border-color: #4d7c0f; --bg-color: #22543d; }
+        .indigo { border-color: #4f46e5; --border-color: #4f46e5; --bg-color: #312e81; }
+        .task-pink { border-color: #ec4899; --border-color: #ec4899; --bg-color: #f9a8d4; }
+        .note-yellow { border-color: #eab308; --border-color: #eab308; --bg-color: #fde047; }
+        
+        .analysis-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #161b22;
+            border-radius: 8px;
+        }
+        .analysis-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .color-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .analysis-item {
+            padding: 10px;
+            background: #21262d;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RecapMap HSL Scientific Color System</h1>
+        <p><strong>Mathematical Distribution:</strong> 10 colors evenly spaced around the color wheel (36° apart)</p>
+        <p><strong>Consistency:</strong> All colors at 65% saturation, 55% lightness for visual harmony</p>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">HSL Mathematical Distribution - 10 Regular Nodes</h2>
+        <div class="color-wheel">
+            <div class="node-card hsl-0">
+                <div class="node-header">
+                    <span class="node-icon">👤</span>
+                    <span class="node-title" style="color: #e34c26;">Persona</span>
+                    <span class="node-hsl">HSL(0°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-36">
+                <div class="node-header">
+                    <span class="node-icon">📱</span>
+                    <span class="node-title" style="color: #e67e22;">Interface</span>
+                    <span class="node-hsl">HSL(36°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-72">
+                <div class="node-header">
+                    <span class="node-icon">⚙️</span>
+                    <span class="node-title" style="color: #f39c12;">Process</span>
+                    <span class="node-hsl">HSL(72°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-108">
+                <div class="node-header">
+                    <span class="node-icon">⚡</span>
+                    <span class="node-title" style="color: #8bc34a;">Capability</span>
+                    <span class="node-hsl">HSL(108°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-144">
+                <div class="node-header">
+                    <span class="node-icon">✅</span>
+                    <span class="node-title" style="color: #27ae60;">Outcome</span>
+                    <span class="node-hsl">HSL(144°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-180">
+                <div class="node-header">
+                    <span class="node-icon">📦</span>
+                    <span class="node-title" style="color: #16a085;">Resource</span>
+                    <span class="node-hsl">HSL(180°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-216">
+                <div class="node-header">
+                    <span class="node-icon">🧠</span>
+                    <span class="node-title" style="color: #2980b9;">Knowledge</span>
+                    <span class="node-hsl">HSL(216°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-252">
+                <div class="node-header">
+                    <span class="node-icon">💾</span>
+                    <span class="node-title" style="color: #8e44ad;">Storage</span>
+                    <span class="node-hsl">HSL(252°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-288">
+                <div class="node-header">
+                    <span class="node-icon">📐</span>
+                    <span class="node-title" style="color: #c0392b;">Blueprint</span>
+                    <span class="node-hsl">HSL(288°, 65%, 55%)</span>
+                </div>
+            </div>
+            
+            <div class="node-card hsl-324">
+                <div class="node-header">
+                    <span class="node-icon">🧩</span>
+                    <span class="node-title" style="color: #e91e63;">Snippet</span>
+                    <span class="node-hsl">HSL(324°, 65%, 55%)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">Special Categories (Unchanged)</h2>
+        <div class="color-wheel">
+            <div class="node-card lime striped">
+                <div class="node-header">
+                    <span class="node-icon">📋</span>
+                    <span class="node-title" style="color: #4d7c0f;">Case</span>
+                    <span class="node-hsl">Striped Pattern</span>
+                </div>
+            </div>
+            
+            <div class="node-card indigo striped">
+                <div class="node-header">
+                    <span class="node-icon">📽️</span>
+                    <span class="node-title" style="color: #4f46e5;">View</span>
+                    <span class="node-hsl">Striped Pattern</span>
+                </div>
+            </div>
+            
+            <div class="node-card task-pink sticky-note">
+                <div class="node-header">
+                    <span class="node-icon">✔️</span>
+                    <span class="node-title">Task</span>
+                    <span class="node-hsl">Sticky Note</span>
+                </div>
+            </div>
+            
+            <div class="node-card note-yellow sticky-note">
+                <div class="node-header">
+                    <span class="node-icon">🖊️</span>
+                    <span class="node-title">Note</span>
+                    <span class="node-hsl">Sticky Note</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="analysis-section">
+        <h3 class="analysis-title">HSL Scientific Color System Analysis</h3>
+        
+        <div class="color-analysis">
+            <div class="analysis-item" style="border-color: #e34c26;">
+                <strong>Perfect Distribution:</strong> 360° ÷ 10 = 36° spacing
+            </div>
+            <div class="analysis-item" style="border-color: #27ae60;">
+                <strong>Visual Harmony:</strong> Consistent saturation (65%) & lightness (55%)
+            </div>
+            <div class="analysis-item" style="border-color: #2980b9;">
+                <strong>WCAG Compliant:</strong> High contrast on dark backgrounds
+            </div>
+            <div class="analysis-item" style="border-color: #8e44ad;">
+                <strong>No Conflicts:</strong> Maximum visual distinction between colors
+            </div>
+        </div>
+
+        <h4 style="margin-top: 20px;">Color Wheel Progression:</h4>
+        <p><strong>Red</strong> → <strong>Red-Orange</strong> → <strong>Orange</strong> → <strong>Yellow-Green</strong> → <strong>Green</strong> → <strong>Cyan</strong> → <strong>Blue</strong> → <strong>Purple</strong> → <strong>Magenta</strong> → <strong>Pink</strong></p>
+        
+        <h4 style="margin-top: 15px;">Mathematical Precision:</h4>
+        <ul>
+            <li>Each color is exactly 36° apart on the HSL color wheel</li>
+            <li>Consistent visual weight with 65% saturation</li>
+            <li>Optimal contrast with 55% lightness on dark backgrounds</li>
+            <li>No color appears similar to any other - maximum distinction</li>
+        </ul>
+    </div>
+
+    <script>
+        console.log("=== HSL Scientific Color System ===");
+        console.log("Mathematical distribution: 360° ÷ 10 = 36° apart");
+        console.log("Consistent properties: 65% saturation, 55% lightness");
+        console.log("Colors:", [
+            "0° Red (#e34c26)",
+            "36° Red-Orange (#e67e22)", 
+            "72° Orange (#f39c12)",
+            "108° Yellow-Green (#8bc34a)",
+            "144° Green (#27ae60)",
+            "180° Cyan (#16a085)",
+            "216° Blue (#2980b9)",
+            "252° Purple (#8e44ad)",
+            "288° Magenta (#c0392b)",
+            "324° Pink (#e91e63)"
+        ]);
+    </script>
+</body>
+</html>

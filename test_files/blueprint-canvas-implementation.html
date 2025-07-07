@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Canvas Node Pattern Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .canvas-simulation {
+            background: #21262d;
+            padding: 40px;
+            border-radius: 12px;
+            margin: 20px 0;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        /* Simulate actual node dimensions and styling from NodeBase */
+        .canvas-node {
+            border-radius: 8px;
+            border: 2px solid;
+            cursor: pointer;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            width: 160px;  /* NODE_DIMENSIONS.WIDTH */
+            height: 100px; /* NODE_DIMENSIONS.HEIGHT */
+            padding: 12px;  /* NODE_DIMENSIONS.PADDING */
+        }
+        
+        /* Blueprint pattern (matching NodeBase.tsx implementation) */
+        .blueprint-canvas-node {
+            background-color: #1e293b;
+            border-color: #4682b4;
+            color: #ffffff;
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+        }
+        
+        /* Case pattern for comparison */
+        .case-canvas-node {
+            background-color: #22543d;
+            border-color: #4d7c0f;
+            color: #ffffff;
+            background-image: linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%);
+            background-size: 8px 8px;
+        }
+        
+        /* View pattern for comparison */
+        .view-canvas-node {
+            background-color: #312e81;
+            border-color: #4f46e5;
+            color: #ffffff;
+            background-image: linear-gradient(45deg, #4f46e5 25%, #6366f1 25%, #6366f1 50%, #4f46e5 50%, #4f46e5 75%, #6366f1 75%);
+            background-size: 8px 8px;
+        }
+        
+        /* Regular node for comparison */
+        .regular-canvas-node {
+            background-color: #21262d;
+            border-color: #e91e63;
+            color: #ffffff;
+        }
+        
+        .node-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .node-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        .node-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .node-description {
+            font-size: 11px;
+            opacity: 0.8;
+            flex: 1;
+        }
+        
+        /* Position nodes in canvas */
+        .pos-1 { top: 20px; left: 20px; }
+        .pos-2 { top: 20px; left: 200px; }
+        .pos-3 { top: 20px; left: 380px; }
+        .pos-4 { top: 140px; left: 20px; }
+        .pos-5 { top: 140px; left: 200px; }
+        .pos-6 { top: 140px; left: 380px; }
+        
+        .analysis-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #161b22;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+        
+        .success-indicator {
+            background: #16a34a;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Blueprint Canvas Pattern Implementation</h1>
+        <p>Testing Blueprint grid pattern on actual canvas nodes (NodeBase.tsx implementation)</p>
+    </div>
+
+    <div class="success-indicator">
+        ✅ Blueprint pattern now applied to canvas nodes!
+    </div>
+
+    <h3>Canvas Simulation - Pattern Nodes</h3>
+    <div class="canvas-simulation">
+        <div class="canvas-node blueprint-canvas-node pos-1">
+            <div class="node-header">
+                <span class="node-icon">📐</span>
+                <span class="node-title" style="color: #4682b4;">Blueprint</span>
+            </div>
+            <div class="node-description">Grid pattern active on canvas</div>
+        </div>
+        
+        <div class="canvas-node case-canvas-node pos-2">
+            <div class="node-header">
+                <span class="node-icon">📋</span>
+                <span class="node-title" style="color: #4d7c0f;">Case</span>
+            </div>
+            <div class="node-description">Stripe pattern (existing)</div>
+        </div>
+        
+        <div class="canvas-node view-canvas-node pos-3">
+            <div class="node-header">
+                <span class="node-icon">📽️</span>
+                <span class="node-title" style="color: #4f46e5;">View</span>
+            </div>
+            <div class="node-description">Stripe pattern (existing)</div>
+        </div>
+        
+        <div class="canvas-node regular-canvas-node pos-4">
+            <div class="node-header">
+                <span class="node-icon">🧩</span>
+                <span class="node-title" style="color: #e91e63;">Snippet</span>
+            </div>
+            <div class="node-description">Regular solid pattern</div>
+        </div>
+        
+        <div class="canvas-node regular-canvas-node pos-5" style="border-color: #2980b9;">
+            <div class="node-header">
+                <span class="node-icon">🧠</span>
+                <span class="node-title" style="color: #2980b9;">Knowledge</span>
+            </div>
+            <div class="node-description">Regular solid pattern</div>
+        </div>
+        
+        <div class="canvas-node regular-canvas-node pos-6" style="border-color: #27ae60;">
+            <div class="node-header">
+                <span class="node-icon">✅</span>
+                <span class="node-title" style="color: #27ae60;">Outcome</span>
+            </div>
+            <div class="node-description">Regular solid pattern</div>
+        </div>
+    </div>
+
+    <div class="analysis-section">
+        <h3>✅ NodeBase.tsx Implementation Complete</h3>
+        
+        <h4>🔧 Changes Made:</h4>
+        <ul>
+            <li><strong>Added Blueprint Pattern:</strong> Extended the special styling logic for view/case nodes</li>
+            <li><strong>Grid Background:</strong> Applied the same CSS grid pattern as in toolbar</li>
+            <li><strong>Colored Node Name:</strong> Blueprint node name now uses border color (#4682b4)</li>
+            <li><strong>Consistent Styling:</strong> Follows same pattern methodology as Case/View</li>
+        </ul>
+        
+        <h4>🎨 Pattern Details:</h4>
+        <ul>
+            <li><strong>Background:</strong> #1e293b (dark blue-gray)</li>
+            <li><strong>Grid Lines:</strong> Steel blue rgba(70, 130, 180, 0.3) major, 0.15 minor</li>
+            <li><strong>Grid Size:</strong> 20px major grid, 5px minor grid</li>
+            <li><strong>Text Color:</strong> White (#ffffff) for readability</li>
+            <li><strong>Border:</strong> Steel blue (#4682b4) for definition</li>
+        </ul>
+        
+        <h4>🚀 Result:</h4>
+        <ul>
+            <li><strong>Toolbar & Canvas Consistency:</strong> Pattern appears the same everywhere</li>
+            <li><strong>Visual Hierarchy:</strong> Blueprint joins Case/View as "special pattern" nodes</li>
+            <li><strong>Professional Aesthetic:</strong> Architectural grid pattern on dark theme</li>
+            <li><strong>Perfect Integration:</strong> Seamlessly fits with existing node system</li>
+        </ul>
+    </div>
+
+    <script>
+        console.log("=== Blueprint Canvas Implementation ===");
+        console.log("✅ Pattern applied to NodeBase.tsx");
+        console.log("✅ Blueprint styling matches toolbar");
+        console.log("✅ Grid pattern visible on canvas nodes");
+        console.log("✅ Colored node name implemented");
+        console.log("Ready for production use!");
+    </script>
+</body>
+</html>

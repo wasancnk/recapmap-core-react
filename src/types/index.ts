@@ -32,7 +32,7 @@ export interface BaseNode {
   updatedAt: string
 }
 
-// 12-Node System Types - Following Apple's Design Philosophy of Elegant Simplicity
+// 14-Node System Types - Following Apple's Design Philosophy of Elegant Simplicity
 export type NodeType = 
   | 'case'         // Business requirements, user stories (renamed from 'usecase')
   | 'view'         // Presentation layers and views (renamed from 'presentation')
@@ -43,7 +43,9 @@ export type NodeType =
   | 'outcome'      // What was actually achieved or delivered (new)
   | 'resource'     // Files, images, links, resources, documents (renamed from 'attachment')
   | 'knowledge'    // Structured information and insights (new)
-  | 'storage'      // Databases, files, data stores
+  | 'storage'     // Databases, files, data stores
+  | 'blueprint'    // Architecture blueprints and technical designs (new)
+  | 'snippet'      // Code snippets and reusable components (new)
   | 'task'         // Instant work coordination (AI agents, team assignments) (new)
   | 'note'         // General documentation and annotations (new)
 
@@ -345,7 +347,77 @@ export interface KnowledgeNode extends BaseNode {
   category: string
 }
 
-// Complete 12-Node System Union Type - Following Apple's Design Philosophy
+export interface BlueprintNode extends BaseNode {
+  type: 'blueprint'
+  // Blueprint Definition
+  blueprintName: string
+  blueprintType: 'architecture' | 'system_design' | 'data_model' | 'workflow' | 'component' | 'infrastructure'
+  // Design Content
+  designContent: string
+  specifications: string[]
+  requirements: string[]
+  // Visual Elements
+  diagramUrl?: string
+  visualElements: Array<{
+    type: 'component' | 'connection' | 'annotation'
+    properties: Record<string, string | number | boolean>
+  }>
+  // Technical Details
+  technologies: string[]
+  patterns: string[]
+  principles: string[]
+  // Implementation
+  implementationNotes: string[]
+  considerations: string[]
+  alternatives: string[]
+  // Relationships
+  relatedBlueprints: string[]
+  implementedBy: string[] // Node IDs that implement this blueprint
+  // Quality
+  complexity: 'simple' | 'moderate' | 'complex' | 'enterprise'
+  maturity: 'concept' | 'draft' | 'reviewed' | 'approved'
+  version: string
+}
+
+export interface SnippetNode extends BaseNode {
+  type: 'snippet'
+  // Snippet Definition
+  snippetName: string
+  snippetType: 'code' | 'config' | 'template' | 'query' | 'script' | 'function'
+  language: string
+  // Code Content
+  code: string
+  documentation: string
+  examples: string[]
+  // Usage Context
+  purpose: string
+  useCases: string[]
+  parameters: Array<{
+    name: string
+    type: string
+    description: string
+    required: boolean
+    defaultValue?: string | number | boolean
+  }>
+  // Dependencies
+  dependencies: string[]
+  imports: string[]
+  requiredLibraries: string[]
+  // Quality & Testing
+  tested: boolean
+  testCases: string[]
+  performance: string
+  // Organization
+  category: string
+  tags: string[]
+  version: string
+  // Reusability
+  isReusable: boolean
+  adaptationNotes: string[]
+  relatedSnippets: string[]
+}
+
+// Complete 14-Node System Union Type - Following Apple's Design Philosophy
 export type RecapMapNode = 
   | CaseNode 
   | ViewNode
@@ -359,6 +431,8 @@ export type RecapMapNode =
   | StorageNode 
   | TaskNode
   | NoteNode
+  | BlueprintNode
+  | SnippetNode
 
 // Connection between nodes
 export interface NodeConnection {
@@ -462,6 +536,8 @@ export type Tool =
   | 'resource'
   | 'knowledge'
   | 'storage'
+  | 'blueprint'
+  | 'snippet'
   | 'task'
   | 'note'
   | 'connect'

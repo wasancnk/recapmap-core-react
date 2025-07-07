@@ -62,14 +62,16 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
 }) => {
   const config = getNodeConfig(nodeData.type);
 
-  // Define the 8 regular nodes that should have colored names (matching border color)
+  // Define the regular nodes that should have colored names (matching border color)
+  // Blueprint, view, case, and snippet are special - they have dark backgrounds so need white text, not colored text
   const regularNodes: NodeType[] = ['persona', 'interface', 'process', 'capability', 'outcome', 'resource', 'knowledge', 'storage'];
   const isRegularNode = regularNodes.includes(nodeData.type);
   
   // Task and note nodes should use their configured textColor (black), not border color
+  // Blueprint, view, case, and snippet nodes should use white text for readability
   const shouldUseColoredName = isRegularNode;
 
-  // Special styling for anchor nodes (view and case) with stripe patterns
+  // Special styling for nodes with patterns (view, case, blueprint, snippet)
   const nodeStyle = nodeData.type === 'view' ? {
     backgroundColor: config.bgColor,
     borderColor: config.borderColor,
@@ -88,6 +90,34 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
     padding: `${NODE_DIMENSIONS.PADDING}px`,
     backgroundImage: 'linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%)',
     backgroundSize: '8px 8px'
+  } : nodeData.type === 'blueprint' ? {
+    backgroundColor: config.bgColor,
+    borderColor: config.borderColor,
+    color: '#ffffff', // Force white text like Case node
+    width: `${NODE_DIMENSIONS.WIDTH}px`,
+    height: `${NODE_DIMENSIONS.HEIGHT}px`, 
+    padding: `${NODE_DIMENSIONS.PADDING}px`,
+    backgroundImage: `
+      linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+      linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+      linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+      linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px)
+    `,
+    backgroundSize: '20px 20px, 20px 20px, 5px 5px, 5px 5px',
+    backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
+  } : nodeData.type === 'snippet' ? {
+    backgroundColor: '#1a1527', // Modern Pink base color
+    borderColor: config.borderColor,
+    color: '#ffffff', // White text for readability
+    width: `${NODE_DIMENSIONS.WIDTH}px`,
+    height: `${NODE_DIMENSIONS.HEIGHT}px`, 
+    padding: `${NODE_DIMENSIONS.PADDING}px`,
+    backgroundImage: `
+      linear-gradient(135deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px),
+      linear-gradient(225deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px)
+    `,
+    backgroundSize: '64px 128px',
+    backgroundPosition: '0 0, 0 64px'
   } : {
     backgroundColor: config.bgColor,
     borderColor: config.borderColor,
@@ -181,7 +211,9 @@ export const NodeBase: React.FC<NodeBaseProps> = ({
               WebkitBoxOrient: 'vertical',
               wordWrap: 'break-word',
               hyphens: 'auto',
-              color: shouldUseColoredName ? config.borderColor : config.textColor,
+              color: shouldUseColoredName ? config.borderColor : 
+                     (nodeData.type === 'blueprint' || nodeData.type === 'view' || nodeData.type === 'case' || nodeData.type === 'snippet') ? '#ffffff' : 
+                     config.textColor,
             }}
             title={nodeData.label}
           >

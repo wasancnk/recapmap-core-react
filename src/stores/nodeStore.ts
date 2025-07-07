@@ -384,7 +384,9 @@ const useNodeStore = create<NodeStore>()(
             'storage': 'Storage',
             'resource': 'Resource',
             'knowledge': 'Knowledge',
-            'note': 'Note'
+            'note': 'Note',
+            'blueprint': 'Blueprint',
+            'snippet': 'Snippet'
           }
           
           // Create base node structure

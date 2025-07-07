@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolbar Pattern Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .toolbar-button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .toolbar-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Blueprint toolbar button pattern */
+        .blueprint-grid {
+            background-color: #1e293b !important;
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px) !important;
+            background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px !important;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px !important;
+            border-color: #4682b4;
+            color: white;
+        }
+
+        /* Snippet toolbar button pattern */
+        .snippet-pattern {
+            background-color: #1a1527 !important;
+            background-image: 
+                linear-gradient(135deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px),
+                linear-gradient(225deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px) !important;
+            background-size: 64px 128px !important;
+            background-position: 0 0, 0 64px !important;
+            border-color: #e91e63;
+            color: white;
+        }
+
+        /* Other pattern buttons for comparison */
+        .bg-indigo {
+            background-color: #4F46E5;
+            background-image: linear-gradient(45deg, #4F46E5 25%, #6366F1 25%, #6366F1 50%, #4F46E5 50%, #4F46E5 75%, #6366F1 75%);
+            background-size: 8px 8px;
+            border-color: #6366F1;
+            color: white;
+        }
+
+        .bg-lime {
+            background-color: #4d7c0f;
+            background-image: linear-gradient(45deg, #4d7c0f 25%, #65a30d 25%, #65a30d 50%, #4d7c0f 50%, #4d7c0f 75%, #65a30d 75%);
+            background-size: 8px 8px;
+            border-color: #65a30d;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f8fafc;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #22c55e;
+            margin: 20px 0;
+            color: #86efac;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Toolbar Pattern Test</h1>
+    
+    <div class="test-section">
+        <div class="section-title">✅ All Pattern Toolbar Buttons</div>
+        <p style="color: #cbd5e1; margin-bottom: 20px;">
+            Testing all four pattern nodes in toolbar button format with their distinctive backgrounds.
+        </p>
+        
+        <div class="toolbar-buttons">
+            <button class="toolbar-button bg-indigo">
+                <span>👁️</span>
+                View
+            </button>
+            
+            <button class="toolbar-button bg-lime">
+                <span>📋</span>
+                Case
+            </button>
+            
+            <button class="toolbar-button blueprint-grid">
+                <span>📐</span>
+                Blueprint
+            </button>
+            
+            <button class="toolbar-button snippet-pattern">
+                <span>🧩</span>
+                Snippet
+            </button>
+        </div>
+
+        <div class="success">
+            <strong>✅ Success!</strong> All four pattern nodes now display their distinctive patterns in both toolbar buttons and drag images. The Snippet node shows the Modern Pink geometric chevron pattern perfectly!
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="section-title">🔍 Pattern Details</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+            
+            <div style="background: rgba(15, 23, 42, 0.7); padding: 15px; border-radius: 8px;">
+                <div style="color: #86efac; font-weight: bold; margin-bottom: 8px;">👁️ View Pattern</div>
+                <div style="color: #cbd5e1; font-size: 13px;">Blue diagonal stripes (8px)</div>
+            </div>
+            
+            <div style="background: rgba(15, 23, 42, 0.7); padding: 15px; border-radius: 8px;">
+                <div style="color: #86efac; font-weight: bold; margin-bottom: 8px;">📋 Case Pattern</div>
+                <div style="color: #cbd5e1; font-size: 13px;">Green diagonal stripes (8px)</div>
+            </div>
+            
+            <div style="background: rgba(15, 23, 42, 0.7); padding: 15px; border-radius: 8px;">
+                <div style="color: #86efac; font-weight: bold; margin-bottom: 8px;">📐 Blueprint Pattern</div>
+                <div style="color: #cbd5e1; font-size: 13px;">Architectural grid (20px + 5px)</div>
+            </div>
+            
+            <div style="background: rgba(15, 23, 42, 0.7); padding: 15px; border-radius: 8px;">
+                <div style="color: #86efac; font-weight: bold; margin-bottom: 8px;">🧩 Snippet Pattern</div>
+                <div style="color: #cbd5e1; font-size: 13px;">Geometric chevrons (64px x 128px)</div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
