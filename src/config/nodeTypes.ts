@@ -25,19 +25,20 @@ export interface NodeTypeConfig {
 }
 
 /**
- * Complete 14-Node Universal System Configuration
- * Unified dark theme for most nodes, with special treatments for Note/Task/Case/View
+ * Complete 12-Node Universal System Configuration
+ * Professional color distribution with Storage as neutral gray
  * 
- * SCIENTIFIC COLOR PALETTE - HSL Mathematical Distribution:
- * - 10 Regular nodes: Evenly distributed across color wheel (36° apart)
- * - Consistent saturation (65%) and lightness (55%) for visual harmony
- * - WCAG AA compliant contrast ratios on dark backgrounds
+ * PROFESSIONAL COLOR PALETTE - Optimal Spectrum Distribution:
+ * - 8 Regular nodes: Strategic distribution across color spectrum for visual harmony
+ * - Storage as neutral gray (infrastructure utility)
+ * - Consistent saturation and contrast for accessibility (WCAG AA compliant)
  * - Task & Note: Bright sticky note colors (unchanged)
  * - Case & View: Special striped patterns (unchanged)
+ * - Blueprint & Snippet: Special patterns with distinctive designs
  * 
- * HSL Distribution:
- * 0° Red → 36° Red-Orange → 72° Orange → 108° Yellow-Green → 144° Green → 
- * 180° Cyan → 216° Blue → 252° Purple → 288° Magenta → 324° Pink
+ * Color Distribution:
+ * Magenta (Persona) → Red-Orange (Interface) → Yellow (Process) → Green (Capability) → 
+ * Improved Teal (Outcome) → Blue (Resource) → Purple (Knowledge) → Gray (Storage)
  */
 export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
   // Strategic Planning Nodes (Special striped patterns)
@@ -67,17 +68,17 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     hasStripePattern: true
   },
 
-  // 10 Regular Nodes - HSL Mathematical Distribution (36° apart, 65% saturation, 55% lightness)
+  // 8 Regular Nodes - Professional Spectrum Distribution with Storage as Neutral Gray
   'persona': {
     type: 'persona',
     icon: '👤',
     label: 'Persona',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#e34c26', // HSL(0°, 65%, 55%) - Red - human-centric
+    borderColor: '#e91e63', // Magenta - Human-focused, vibrant
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User personas and stakeholders',
-    toolbarClassName: 'bg-red-500 border-red-600 text-white hover:bg-red-600'
+    toolbarClassName: 'bg-pink-500 border-pink-600 text-white hover:bg-pink-600'
   },
   
   'interface': {
@@ -85,7 +86,7 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '📱',
     label: 'Interface',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#e67e22', // HSL(36°, 65%, 55%) - Red-Orange - interface-focused
+    borderColor: '#fd7e14', // Red-Orange - Digital interaction, distinct from yellow
     textColor: '#FFFFFF',
     category: 'human-centered',
     description: 'User interfaces and screens',
@@ -97,11 +98,11 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '⚙️',
     label: 'Process',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#f39c12', // HSL(72°, 65%, 55%) - Orange - workflow, process-oriented
+    borderColor: '#f1c40f', // Yellow - Active workflow, energy
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Business processes and workflows',
-    toolbarClassName: 'bg-yellow-600 border-yellow-700 text-white hover:bg-yellow-700'
+    toolbarClassName: 'bg-yellow-500 border-yellow-600 text-white hover:bg-yellow-600'
   },
   
   'capability': {
@@ -109,11 +110,11 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '⚡',
     label: 'Capability',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#8bc34a', // HSL(108°, 65%, 55%) - Yellow-Green - powerful, capability-focused
+    borderColor: '#2ecc71', // Green - Growth, power, potential
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'System capabilities and expectations',
-    toolbarClassName: 'bg-lime-600 border-lime-700 text-white hover:bg-lime-700'
+    toolbarClassName: 'bg-green-500 border-green-600 text-white hover:bg-green-600'
   },
   
   'outcome': {
@@ -121,11 +122,11 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '✅',
     label: 'Outcome',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#27ae60', // HSL(144°, 65%, 55%) - Green - success, achievement-oriented
+    borderColor: '#5fb4d0', // Brighter blue-teal - Better separation from Resource node
     textColor: '#FFFFFF',
     category: 'strategic',
     description: 'Expected outcomes and results',
-    toolbarClassName: 'bg-green-600 border-green-700 text-white hover:bg-green-700'
+    toolbarClassName: 'bg-sky-500 border-sky-600 text-white hover:bg-sky-600'
   },
   
   'resource': {
@@ -133,11 +134,11 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '📦',
     label: 'Resource',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#16a085', // HSL(180°, 65%, 55%) - Cyan - assets, resource-focused
+    borderColor: '#3498db', // Blue - Reliability, assets, materials
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Resources and assets',
-    toolbarClassName: 'bg-teal-600 border-teal-700 text-white hover:bg-teal-700'
+    toolbarClassName: 'bg-blue-500 border-blue-600 text-white hover:bg-blue-600'
   },
   
   'knowledge': {
@@ -145,11 +146,11 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '🧠',
     label: 'Knowledge',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#2980b9', // HSL(216°, 65%, 55%) - Blue - information, knowledge-focused
+    borderColor: '#9b59b6', // Purple - Wisdom, intellect, information
     textColor: '#FFFFFF',
     category: 'information-assets',
     description: 'Knowledge bases and information',
-    toolbarClassName: 'bg-blue-600 border-blue-700 text-white hover:bg-blue-700'
+    toolbarClassName: 'bg-purple-500 border-purple-600 text-white hover:bg-purple-600'
   },
   
   'storage': {
@@ -157,11 +158,11 @@ export const NODE_TYPE_CONFIGS: Record<NodeType, NodeTypeConfig> = {
     icon: '💾',
     label: 'Storage',
     bgColor: '#21262d', // GitHub's tertiary dark
-    borderColor: '#8e44ad', // HSL(252°, 65%, 55%) - Purple - neutral, storage-oriented
+    borderColor: '#7f8c8d', // Gray - Neutral infrastructure, utility
     textColor: '#FFFFFF',
     category: 'business-workflow',
     description: 'Data storage and persistence',
-    toolbarClassName: 'bg-purple-600 border-purple-700 text-white hover:bg-purple-700'
+    toolbarClassName: 'bg-gray-500 border-gray-600 text-white hover:bg-gray-600'
   },
 
   // New Node Types - Blueprint with Subtle Dark Pattern, Snippet with HSL Distribution
@@ -234,7 +235,25 @@ export const getNodesByCategory = (category: NodeTypeConfig['category']): NodeTy
 };
 
 export const getAllNodeTypes = (): NodeTypeConfig[] => {
-  return Object.values(NODE_TYPE_CONFIGS);
+  // Custom order for toolbar: regular nodes first, then internal-only nodes at bottom
+  const nodeOrder: NodeType[] = [
+    // Row 1: Strategic Planning (striped patterns)
+    'case', 'view',
+    // Row 2: Human-Centered Design  
+    'persona', 'interface',
+    // Row 3: Business Workflow
+    'process', 'capability',
+    // Row 4: Information Assets & Outcomes
+    'outcome', 'resource',
+    // Row 5: Knowledge & Storage
+    'knowledge', 'storage',
+    // Row 6: Meta-Collaboration (sticky notes)
+    'task', 'note',
+    // Row 7: Internal-Only Tools (visually separated)
+    'blueprint', 'snippet'
+  ];
+  
+  return nodeOrder.map(nodeType => NODE_TYPE_CONFIGS[nodeType]);
 };
 
 // Legacy format for backward compatibility (can be removed after migration)

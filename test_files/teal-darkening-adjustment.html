@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darkening Teal - Brightness Adjustment</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4ade80;
+        }
+
+        .color-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .color-card {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .node-preview {
+            background: #21262d;
+            border: 3px solid;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .node-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .node-label {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .color-info {
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.4);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .current { border-color: #4fc3b7; }
+        .darker1 { border-color: #48b5aa; }
+        .darker2 { border-color: #42a89d; }
+        .darker3 { border-color: #3d9b91; }
+
+        .wcag-test {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .contrast-result {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .pass { background: #4ade80; color: #000; }
+        .warning { background: #fbbf24; color: #000; }
+        .fail { background: #ef4444; color: #fff; }
+
+        .recommendation {
+            background: rgba(30, 200, 30, 0.1);
+            border: 2px solid #4ade80;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Darkening Teal - Brightness Adjustment</h1>
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 40px;">
+            Adjusting brightness by adding 0.025 alpha of black to match your intended shade
+        </p>
+
+        <div class="color-comparison">
+            <div class="color-card">
+                <h3>Current Implementation</h3>
+                <div class="color-swatch" style="background: #4fc3b7;">#4fc3b7</div>
+                <div class="node-preview current">
+                    <span class="node-icon">✅</span>
+                    <div class="node-label">Outcome</div>
+                    <div class="color-info">Current bright teal</div>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <h3>Darkened Version 1</h3>
+                <div class="color-swatch" style="background: #48b5aa;">#48b5aa</div>
+                <div class="node-preview darker1">
+                    <span class="node-icon">✅</span>
+                    <div class="node-label">Outcome</div>
+                    <div class="color-info">0.025 alpha darker</div>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <h3>Darkened Version 2</h3>
+                <div class="color-swatch" style="background: #42a89d;">#42a89d</div>
+                <div class="node-preview darker2">
+                    <span class="node-icon">✅</span>
+                    <div class="node-label">Outcome</div>
+                    <div class="color-info">0.05 alpha darker</div>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <h3>Darkened Version 3</h3>
+                <div class="color-swatch" style="background: #3d9b91;">#3d9b91</div>
+                <div class="node-preview darker3">
+                    <span class="node-icon">✅</span>
+                    <div class="node-label">Outcome</div>
+                    <div class="color-info">0.075 alpha darker</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wcag-test">
+            <h3>🔒 WCAG Compliance Check</h3>
+            <div id="wcag-results">Calculating contrast ratios...</div>
+        </div>
+
+        <div class="recommendation">
+            <h3>🎯 Recommendation</h3>
+            <p id="recommendation-text">Analyzing which darkened version best matches your intention while maintaining accessibility...</p>
+        </div>
+
+        <div style="background: rgba(100, 100, 100, 0.2); padding: 20px; border-radius: 8px; margin-top: 30px;">
+            <h3>🔬 Color Calculation Method</h3>
+            <p><strong>Original Color:</strong> #4fc3b7 (RGB: 79, 195, 183)</p>
+            <p><strong>Adding Black Alpha:</strong> Each RGB value reduced by alpha percentage</p>
+            <ul>
+                <li><strong>0.025 alpha:</strong> RGB × (1 - 0.025) = RGB × 0.975</li>
+                <li><strong>Result:</strong> More subdued, professional appearance</li>
+                <li><strong>Maintains:</strong> Teal character and semantic meaning</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function getLuminance(rgb) {
+            const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(c => {
+                c = c / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        function getContrastRatio(color1, color2) {
+            const rgb1 = hexToRgb(color1);
+            const rgb2 = hexToRgb(color2);
+            
+            const lum1 = getLuminance(rgb1);
+            const lum2 = getLuminance(rgb2);
+            
+            const brightest = Math.max(lum1, lum2);
+            const darkest = Math.min(lum1, lum2);
+            
+            return (brightest + 0.05) / (darkest + 0.05);
+        }
+
+        function getComplianceLevel(ratio) {
+            if (ratio >= 7) return { level: 'AAA', class: 'pass', text: '✅ PASS AAA' };
+            if (ratio >= 4.5) return { level: 'AA', class: 'pass', text: '✅ PASS AA' };
+            if (ratio >= 3) return { level: 'A', class: 'warning', text: '⚠️ PASS A only' };
+            return { level: 'Fail', class: 'fail', text: '❌ FAIL' };
+        }
+
+        // Test all color variations
+        const colors = [
+            { name: 'Current', hex: '#4fc3b7' },
+            { name: 'Darkened 0.025', hex: '#48b5aa' },
+            { name: 'Darkened 0.05', hex: '#42a89d' },
+            { name: 'Darkened 0.075', hex: '#3d9b91' }
+        ];
+
+        const white = '#ffffff';
+        const darkBg = '#21262d';
+
+        let results = '<h4>White text on colored background:</h4>';
+        let bestOption = null;
+        let bestRatio = 0;
+
+        colors.forEach(color => {
+            const ratio = getContrastRatio(color.hex, white);
+            const compliance = getComplianceLevel(ratio);
+            
+            results += `<p><strong>${color.name} (${color.hex}):</strong> ${ratio.toFixed(2)}:1 
+                <span class="contrast-result ${compliance.class}">${compliance.text}</span></p>`;
+            
+            // Find best balance of darkness and compliance
+            if (ratio >= 4.5 && ratio > bestRatio) {
+                bestOption = color;
+                bestRatio = ratio;
+            }
+        });
+
+        document.getElementById('wcag-results').innerHTML = results;
+
+        if (bestOption) {
+            document.getElementById('recommendation-text').innerHTML = `
+                <strong>Recommended: ${bestOption.name} (${bestOption.hex})</strong><br>
+                This provides the right balance of being darker (closer to your intended shade) 
+                while maintaining excellent WCAG AA compliance with a ${bestRatio.toFixed(2)}:1 contrast ratio.
+                <br><br>
+                <strong>Ready to implement this darker version?</strong>
+            `;
+        }
+    </script>
+</body>
+</html>

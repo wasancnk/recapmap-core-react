@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolbar Node Separation Test - Internal vs External</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .toolbar-mockup {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 16px;
+            width: 320px;
+            margin: 20px 0;
+        }
+        .nodes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .node-button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .node-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* Row styling for visual separation */
+        .row-1 { order: 1; }
+        .row-2 { order: 2; }
+        .row-3 { order: 3; }
+        .row-4 { order: 4; }
+        .row-5 { order: 5; }
+        .row-6 { order: 6; }
+        .row-7 { 
+            order: 7; 
+            border-top: 2px solid #555;
+            margin-top: 8px;
+            padding-top: 8px;
+        }
+        
+        /* Node colors and patterns */
+        .case { background: #22543d; border-color: #4d7c0f; color: white; background-image: linear-gradient(45deg, #22543d 25%, #2d6a4f 25%, #2d6a4f 50%, #22543d 50%, #22543d 75%, #2d6a4f 75%); background-size: 8px 8px; }
+        .view { background: #4F46E5; border-color: #6366F1; color: white; background-image: linear-gradient(45deg, #4F46E5 25%, #6366F1 25%, #6366F1 50%, #4F46E5 50%, #4F46E5 75%, #6366F1 75%); background-size: 8px 8px; }
+        .persona { background: #e91e63; border-color: #d81b60; color: white; }
+        .interface { background: #ff5722; border-color: #f4511e; color: white; }
+        .process { background: #f1c40f; border-color: #f39c12; color: white; }
+        .capability { background: #2ecc71; border-color: #27ae60; color: white; }
+        .outcome { background: #5fb4d0; border-color: #3498db; color: white; }
+        .resource { background: #3498db; border-color: #2980b9; color: white; }
+        .knowledge { background: #9b59b6; border-color: #8e44ad; color: white; }
+        .storage { background: #7f8c8d; border-color: #95a5a6; color: white; }
+        .task { background: #f9a8d4; border-color: #ec4899; color: #1f2937; }
+        .note { background: #fde047; border-color: #eab308; color: #1f2937; }
+        
+        /* Internal-only patterns */
+        .blueprint { 
+            background: #1e293b; 
+            border-color: #4682b4; 
+            color: white;
+            background-image: 
+                linear-gradient(rgba(70, 130, 180, 0.3) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.3) 1px, transparent 1px),
+                linear-gradient(rgba(70, 130, 180, 0.15) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(70, 130, 180, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+        }
+        .snippet { 
+            background: #1a1527; 
+            border-color: #e91e63; 
+            color: white;
+            background-image: 
+                linear-gradient(135deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px),
+                linear-gradient(225deg, #2a1f2e 21px, #3d2f42 22px, #3d2f42 24px, transparent 24px, transparent 67px, #3d2f42 67px, #3d2f42 69px, transparent 69px);
+            background-size: 100px 100px;
+        }
+        
+        .separator {
+            grid-column: 1 / -1;
+            height: 1px;
+            background: #555;
+            margin: 8px 0;
+            position: relative;
+        }
+        .separator::after {
+            content: "Internal Tools";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2a2a;
+            padding: 0 8px;
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            color: #fff;
+        }
+        
+        .description {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Toolbar Node Separation Test</h1>
+    <p>Testing the visual separation of Blueprint and Snippet nodes in the toolbar for internal-only use.</p>
+    
+    <div class="section-title">New Toolbar Layout (Blueprint & Snippet at Bottom)</div>
+    <div class="description">Blueprint and Snippet are now visually separated at the bottom as internal-only tools</div>
+    
+    <div class="toolbar-mockup">
+        <div class="nodes-grid">
+            <!-- Row 1: Strategic Planning (striped patterns) -->
+            <div class="node-button case">📋 Case</div>
+            <div class="node-button view">👁️ View</div>
+            
+            <!-- Row 2: Human-Centered Design -->
+            <div class="node-button persona">👤 Persona</div>
+            <div class="node-button interface">🖥️ Interface</div>
+            
+            <!-- Row 3: Business Workflow -->
+            <div class="node-button process">⚙️ Process</div>
+            <div class="node-button capability">⚡ Capability</div>
+            
+            <!-- Row 4: Information Assets & Outcomes -->
+            <div class="node-button outcome">✅ Outcome</div>
+            <div class="node-button resource">📦 Resource</div>
+            
+            <!-- Row 5: Knowledge & Storage -->
+            <div class="node-button knowledge">🧠 Knowledge</div>
+            <div class="node-button storage">💾 Storage</div>
+            
+            <!-- Row 6: Meta-Collaboration (sticky notes) -->
+            <div class="node-button task">✔️ Task</div>
+            <div class="node-button note">🖊️ Note</div>
+            
+            <!-- Visual Separator -->
+            <div class="separator"></div>
+            
+            <!-- Row 7: Internal-Only Tools (visually separated) -->
+            <div class="node-button blueprint">📐 Blueprint</div>
+            <div class="node-button snippet">🧩 Snippet</div>
+        </div>
+    </div>
+    
+    <div class="section-title">Benefits of This Arrangement:</div>
+    <ul>
+        <li><strong>Clear Visual Separation:</strong> Internal tools are below a divider line</li>
+        <li><strong>User Experience:</strong> Regular users focus on the top 6 rows (12 nodes)</li>
+        <li><strong>Internal Access:</strong> Blueprint and Snippet remain available but clearly marked as specialized tools</li>
+        <li><strong>Professional Layout:</strong> Maintains visual hierarchy and tool categorization</li>
+        <li><strong>Patterns Preserved:</strong> Blueprint grid and Snippet chevron patterns remain distinct</li>
+    </ul>
+    
+    <div class="section-title">Node Categories:</div>
+    <div class="description">
+        <strong>Regular Nodes (Rows 1-6):</strong><br>
+        • Strategic Planning: Case, View (striped patterns)<br>
+        • Human-Centered: Persona, Interface<br>
+        • Business Workflow: Process, Capability<br>
+        • Information Assets: Outcome, Resource<br>
+        • Knowledge Management: Knowledge, Storage<br>
+        • Meta-Collaboration: Task, Note (sticky note style)<br><br>
+        
+        <strong>Internal Tools (Row 7):</strong><br>
+        • Blueprint: Architecture and technical designs<br>
+        • Snippet: Code snippets and reusable components
+    </div>
+    
+    <script>
+        console.log('Toolbar Node Separation Test');
+        console.log('Blueprint and Snippet are now at the bottom for internal use');
+        console.log('Regular users can focus on the top 12 nodes');
+        console.log('Internal users have clear access to specialized tools');
+    </script>
+</body>
+</html>

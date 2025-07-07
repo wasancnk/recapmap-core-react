@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precise WCAG Compliance Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-color {
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .results {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .pass { color: #4ade80; }
+        .fail { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Precise WCAG Compliance Calculator</h1>
+        
+        <div id="results" class="results">
+            <h3>Testing your proposed teal color...</h3>
+        </div>
+
+        <div class="test-color" id="test1" style="background-color: #4fc3b7; color: #ffffff;">
+            White text on your proposed teal background
+        </div>
+
+        <div class="test-color" id="test2" style="background-color: #21262d; border: 3px solid #4fc3b7; color: #ffffff;">
+            White text with your teal border (node style)
+        </div>
+    </div>
+
+    <script>
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function getLuminance(rgb) {
+            const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(c => {
+                c = c / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        function getContrastRatio(color1, color2) {
+            const rgb1 = hexToRgb(color1);
+            const rgb2 = hexToRgb(color2);
+            
+            const lum1 = getLuminance(rgb1);
+            const lum2 = getLuminance(rgb2);
+            
+            const brightest = Math.max(lum1, lum2);
+            const darkest = Math.min(lum1, lum2);
+            
+            return (brightest + 0.05) / (darkest + 0.05);
+        }
+
+        function checkCompliance(ratio) {
+            return {
+                aa: ratio >= 4.5,
+                aaa: ratio >= 7
+            };
+        }
+
+        // Test your proposed color
+        const proposedTeal = '#4fc3b7';
+        const white = '#ffffff';
+        const darkBackground = '#21262d';
+
+        // Test 1: White text on teal background
+        const ratio1 = getContrastRatio(proposedTeal, white);
+        const compliance1 = checkCompliance(ratio1);
+
+        // Test 2: Teal border visibility against dark background  
+        const ratio2 = getContrastRatio(proposedTeal, darkBackground);
+        const compliance2 = checkCompliance(ratio2);
+
+        // Current colors for comparison
+        const currentCapability = '#2ecc71';
+        const currentOutcome = '#1abc9c';
+        const ratioCurrentCap = getContrastRatio(currentCapability, white);
+        const ratioCurrentOut = getContrastRatio(currentOutcome, white);
+
+        const results = document.getElementById('results');
+        results.innerHTML = `
+            <h3>🔬 Precise WCAG Analysis Results</h3>
+            
+            <h4>Your Proposed Teal #4fc3b7:</h4>
+            <p><strong>White text on teal background:</strong> 
+                ${ratio1.toFixed(2)}:1 
+                <span class="${compliance1.aa ? 'pass' : 'fail'}">
+                    ${compliance1.aa ? '✅ PASS AA' : '❌ FAIL AA'}
+                </span>
+                <span class="${compliance1.aaa ? 'pass' : 'fail'}">
+                    ${compliance1.aaa ? '✅ PASS AAA' : '⚠️ FAIL AAA'}
+                </span>
+            </p>
+            
+            <p><strong>Teal border on dark background:</strong> 
+                ${ratio2.toFixed(2)}:1 
+                <span class="${compliance2.aa ? 'pass' : 'fail'}">
+                    ${compliance2.aa ? '✅ Visible' : '❌ Low contrast'}
+                </span>
+            </p>
+
+            <hr style="margin: 20px 0; border-color: #333;">
+            
+            <h4>Current Colors for Comparison:</h4>
+            <p><strong>Current Capability #2ecc71:</strong> ${ratioCurrentCap.toFixed(2)}:1 
+                <span class="pass">✅ PASS AA</span>
+            </p>
+            <p><strong>Current Outcome #1abc9c:</strong> ${ratioCurrentOut.toFixed(2)}:1 
+                <span class="pass">✅ PASS AA</span>
+            </p>
+
+            <hr style="margin: 20px 0; border-color: #333;">
+            
+            <div style="background: rgba(30, 200, 30, 0.2); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <h4>🎯 Final Verdict:</h4>
+                <p><strong>${compliance1.aa ? '✅ YOUR PROPOSED COLOR IS WCAG AA COMPLIANT!' : '❌ Your proposed color fails WCAG AA'}</strong></p>
+                ${compliance1.aa ? 
+                    '<p>The contrast ratio is excellent and provides good accessibility. Ready to implement!</p>' : 
+                    '<p>We should adjust the color to meet accessibility standards.</p>'
+                }
+            </div>
+        `;
+    </script>
+</body>
+</html>
