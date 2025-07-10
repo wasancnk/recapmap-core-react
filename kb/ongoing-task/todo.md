@@ -24,10 +24,11 @@
 
 ---
 
-## **2. 📝 Add 3rd Panel: Markdown Detail Panel**
+## **2. 📝 Dual Markdown Editor System (Notion Replacement)**
 
-**Goal**: Replace Notion-like functionality within RecapMap with rich markdown editor
+**Goal**: Create comprehensive knowledge capture & processing system with two editor types
 
+### **Phase 1: Node-Attached Detail Panel**
 **Tasks**:
 - [ ] **Install Library**: `react-markdown-editor-lite`
 - [ ] **Create New Panel Type**: Rich markdown editor for detailed documentation
@@ -38,10 +39,27 @@
 - [ ] **Scope**: Make available for ALL node types
 - [ ] Add panel switching/navigation UI
 
+### **Phase 2: Central Capture Editor**
+**Tasks**:
+- [ ] **Central Editor UI**: Bottom-center positioned markdown editor
+- [ ] **Real-time AI Suggestions**: Live parsing and node suggestions as user types
+- [ ] **Content Persistence**: Keep original notes with relationship tracking to created nodes
+- [ ] **Batch Processing Mode**: Review and approve AI-suggested nodes
+- [ ] **Node Creation Pipeline**: One-click conversion from suggestions to actual nodes
+
+### **Phase 3: Backend Integration (Future)**
+**Tasks**:
+- [ ] **Java Backend API**: Sophisticated content parsing service
+- [ ] **Custom LangChain System**: Advanced AI processing pipeline
+- [ ] **Cloud Processing**: Real-time content analysis and node suggestions
+- [ ] **Mobile Sync**: Voice-to-text and photo annotation integration
+
 **Files to modify**:
 - `src/components/panels/` - Add new DetailPanel component
+- `src/components/CentralEditor.tsx` - NEW: Central capture editor
 - `src/stores/panelStore.ts` - Add panel type management
-- `src/types/index.ts` - Update panel type definitions
+- `src/stores/editorStore.ts` - NEW: Central editor state management
+- `src/types/index.ts` - Update panel and editor type definitions
 - Package installation and configuration
 
 ---
